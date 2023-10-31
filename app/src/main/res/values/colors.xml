@@ -7,4 +7,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="federal_blue">#03045E</color>
+    <color name="marian_blue">#023E8A</color>
+    <color name="honolulu_blue">#0077B6</color>
+    <color name="blue_green">#0096C7</color>
+    <color name="pasific_cyan">#00B4D8</color>
+    <color name="vivid_sky_blue">#48CAE4</color>
+    <color name="neo_photo_blue">#90E0EF</color>
+    <color name="non_photo_blue">#ADE8F4</color>
+    <color name="light_cyan">#CAF0F8</color>
 </resources>
