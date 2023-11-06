@@ -31,6 +31,10 @@ class WelcomePageAdapter(fragment: Fragment, val listOfPagerContents: List<Array
                 fragment.arguments = Bundle().apply {
                     putStringArray(INTRO_STRING_OBJECT, listOfPagerContents[3])
                 }
+            4 ->
+                fragment.arguments = Bundle().apply {
+                    putStringArray(INTRO_STRING_OBJECT, listOfPagerContents[4])
+                }
         }
         return fragment
     }

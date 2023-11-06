@@ -16,7 +16,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class WelcomePageFragment : Fragment() {
     private lateinit var binding: FragmentWelcomePageBinding
-    private val mPageNumber = 4
+    private val mPageNumber = 5
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,9 +59,10 @@ class WelcomePageFragment : Fragment() {
 
         val ar1 = arrayOf(getString(R.string.intro_title_1), getString(R.string.intro_sub_title_1),"R" )
         val ar2 = arrayOf(getString(R.string.intro_title_2), getString(R.string.intro_sub_title_2) ,"G")
-        val ar3 = arrayOf(getString(R.string.intro_title_3), getString(R.string.intro_sub_title_3) ,"B")
-        val ar4 = arrayOf(getString(R.string.intro_title_4), getString(R.string.intro_sub_title_4) ,"D")
-        return listOf(ar1,ar2,ar3, ar4)
+        val ar3 = arrayOf(getString(R.string.intro_title_5), getString(R.string.intro_sub_title_5) ,"A")
+        val ar4 = arrayOf(getString(R.string.intro_title_3), getString(R.string.intro_sub_title_3) ,"B")
+        val ar5 = arrayOf(getString(R.string.intro_title_4), getString(R.string.intro_sub_title_4) ,"D")
+        return listOf(ar1,ar2,ar3, ar4, ar5)
     }
 
 

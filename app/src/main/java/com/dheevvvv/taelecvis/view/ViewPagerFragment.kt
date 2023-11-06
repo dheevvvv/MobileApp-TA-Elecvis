@@ -51,6 +51,11 @@ class ViewPagerFragment : Fragment() {
                 binding.ivWelcome.setImageResource(R.drawable.graph)
             }
 
+            "A" -> {
+                binding.baseLinear.setBackgroundResource(R.drawable.welcome_background)
+                binding.ivWelcome.setImageResource(R.drawable.recomm)
+            }
+
             "B" -> {
                 binding.baseLinear.setBackgroundResource(R.drawable.welcome_background)
                 binding.ivWelcome.setImageResource(R.drawable.notif)
