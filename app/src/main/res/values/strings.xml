@@ -2,4 +2,14 @@
     <string name="app_name">TAElecvis</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="skip">SKIP</string>
+    <string name="lanjutkan">Lanjutkan</string>
+    <string name="intro_title_1">Selamat Datang!</string>
+    <string name="intro_title_2">Visualization</string>
+    <string name="intro_title_3">Notification</string>
+    <string name="intro_title_4">Report Consumption</string>
+    <string name="intro_sub_title_1">Elecvis merupakan aplikasi yang dapat kamu gunakan untuk memantau konsumsi listrik di ruahmu dengan mudah !</string>
+    <string name="intro_sub_title_2">Kamu bisa melihat grafil keseluruhan beserta detail penggunaan energi Listrik di setiap perangkat dan waktu</string>
+    <string name="intro_sub_title_3">Kamu akan mendapat pesan notifikasi apabila penggunaan listrik sudah diatas batas ataupun jika kamu lupa mematikan perangkat listrik</string>
+    <string name="intro_sub_title_4">Kamu akan mendapat laporan setiap bulan tentang penggunaan listrik kamu secara lengkap</string>
 </resources>

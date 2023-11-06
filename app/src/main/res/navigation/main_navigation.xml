@@ -18,5 +18,14 @@
         android:id="@+id/welcomePageFragment"
         android:name="com.dheevvvv.taelecvis.view.WelcomePageFragment"
         android:label="fragment_welcome_page"
-        tools:layout="@layout/fragment_welcome_page" />
+        tools:layout="@layout/fragment_welcome_page" >
+        <action
+            android:id="@+id/action_welcomePageFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.dheevvvv.taelecvis.view.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>

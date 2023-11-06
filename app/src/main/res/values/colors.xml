@@ -16,4 +16,11 @@
     <color name="neo_photo_blue">#90E0EF</color>
     <color name="non_photo_blue">#ADE8F4</color>
     <color name="light_cyan">#CAF0F8</color>
+    <color name="blue1">#164863</color>
+    <color name="blue2">#427D9D</color>
+    <color name="earth_02">#40513B</color>
+    <color name="medium_siate_blue">#9D69FF</color>
+    <color name="tropical_indigo">#8B7CFF</color>
+    <color name="blue3">#9BBEC8</color>
+    <color name="blue4">#DDF2FD</color>
 </resources>
