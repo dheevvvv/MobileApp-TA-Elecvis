@@ -25,4 +25,9 @@
     <string name="email">Email</string>
     <string name="confirm_password">Confirm password</string>
     <string name="sudah_punya_akun_masuk">Sudah Punya Akun? Masuk</string>
+    <string name="home">Home</string>
+    <string name="recommendation">Recommendation</string>
+    <string name="report">Report</string>
+    <string name="notification">Notification</string>
+    <string name="account">Account</string>
 </resources>
