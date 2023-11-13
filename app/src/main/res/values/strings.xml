@@ -30,4 +30,8 @@
     <string name="report">Report</string>
     <string name="notification">Notification</string>
     <string name="account">Account</string>
+    <string name="change_profile">Change Profile</string>
+    <string name="account_setting">Account Setting</string>
+    <string name="logout">Logout</string>
+    <string name="version_1_0_0">Version 1.0.0</string>
 </resources>
