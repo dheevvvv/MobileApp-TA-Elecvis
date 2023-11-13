@@ -14,4 +14,15 @@
     <string name="intro_sub_title_3">Kamu akan mendapat pesan notifikasi apabila penggunaan listrik sudah diatas batas ataupun jika kamu lupa mematikan perangkat listrik</string>
     <string name="intro_sub_title_4">Kamu akan mendapat laporan setiap bulan tentang penggunaan listrik kamu secara lengkap</string>
     <string name="intro_sub_title_5">Kamu akan mendapat recommendasi agar konsumsi listrik kamu menjadi lebih efisien dan hemat</string>
+    <string name="masuk">Masuk</string>
+    <string name="emai">Emai</string>
+    <string name="password">password</string>
+    <string name="atau">atau</string>
+    <string name="buat_akun_baru">Buat akun baru</string>
+    <string name="masuk_dengan_google">Masuk dengan Google</string>
+    <string name="daftar">Daftar</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="sudah_punya_akun_masuk">Sudah Punya Akun? Masuk</string>
 </resources>

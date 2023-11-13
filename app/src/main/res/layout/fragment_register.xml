@@ -1,14 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@drawable/basebackground"
+    android:padding="20dp"
     android:layout_height="match_parent"
     tools:context=".view.RegisterFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <ImageView
+        android:id="@+id/iv_Register"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/logo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="ContentDescription" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/daftar"
+        android:textStyle="bold"
+        android:fontFamily="@font/poppins_bold"
+        android:textColor="@color/earth_02"
+        android:layout_marginTop="@dimen/margin_10"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_Register"
+        tools:ignore="TextContrastCheck" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/outlinedTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:hint="@string/username"
+        app:boxStrokeColor="@color/earth_02"
+        android:textColorHint="@color/earth_02"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_login">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etUsername_regist"
+            android:textColor="@color/earth_02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/outlinedTextField2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:hint="@string/email"
+        app:boxStrokeColor="@color/earth_02"
+        android:textColorHint="@color/earth_02"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/outlinedTextField">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail_regist"
+            android:textColor="@color/earth_02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/outlinedTextField3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:hint="@string/password"
+        app:boxStrokeColor="@color/earth_02"
+        android:textColorHint="@color/earth_02"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:endIconMode="password_toggle"
+        app:endIconTint="@color/earth_02"
+        app:layout_constraintTop_toBottomOf="@id/outlinedTextField2">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassword_regist"
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+            android:textColor="@color/earth_02"
+            android:layout_height="wrap_content"
+            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/outlinedTextField4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:hint="@string/confirm_password"
+        android:textColorHint="@color/earth_02"
+        app:boxStrokeColor="@color/earth_02"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:endIconMode="password_toggle"
+        app:endIconTint="@color/earth_02"
+        app:layout_constraintTop_toBottomOf="@id/outlinedTextField3">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etConfirmPassword_regist"
+            android:inputType="textPassword"
+            android:textColor="@color/earth_02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/federal_blue"
+        android:text="@string/daftar"
+        app:cornerRadius="@dimen/margin_25"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/outlinedTextField4"
+        tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,VisualLintButtonSize"
+        />
+
+    <TextView
+        android:id="@+id/tv_link_masuk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btn_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/earth_02"
+        android:layout_marginTop="@dimen/margin_10"
+        android:text="@string/sudah_punya_akun_masuk"
+        />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="@dimen/margin_10"
+                android:src="@drawable/logo"
+                />
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="@dimen/margin_10"
+                android:src="@drawable/logougm"
+                />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
