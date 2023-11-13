@@ -25,6 +25,32 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { item->
+            when(item.itemId) {
+                R.id.account -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+                    true
+                }
+
+                R.id.recommendation -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+                    true
+                }
+
+                R.id.report -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_reportFragment)
+                    true
+                }
+
+                R.id.notification -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_notificationFragment)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
     }
 
 

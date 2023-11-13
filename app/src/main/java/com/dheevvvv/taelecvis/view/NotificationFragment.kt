@@ -5,18 +5,53 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.dheevvvv.taelecvis.R
+import com.dheevvvv.taelecvis.databinding.FragmentNotificationBinding
 
 
 class NotificationFragment : Fragment() {
-
+    private lateinit var binding: FragmentNotificationBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification, container, false)
+        binding = FragmentNotificationBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { item->
+            when(item.itemId) {
+                R.id.home -> {
+                    findNavController().navigate(R.id.action_notificationFragment_to_homeFragment)
+                    true
+                }
+
+                R.id.recommendation -> {
+                    findNavController().navigate(R.id.action_notificationFragment_to_recomendationFragment)
+                    true
+                }
+
+                R.id.report -> {
+                    findNavController().navigate(R.id.action_notificationFragment_to_reportFragment)
+                    true
+                }
+
+                R.id.account -> {
+                    findNavController().navigate(R.id.action_notificationFragment_to_profileFragment)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+
     }
 
 
