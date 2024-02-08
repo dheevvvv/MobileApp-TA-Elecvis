@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.dheevvvv.taelecvis.R
@@ -24,6 +26,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.internal.Contexts
+import dagger.hilt.android.internal.Contexts.getApplication
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
@@ -34,7 +39,7 @@ class LoginFragment : Fragment() {
     private val REQ_CODE = 2
     private lateinit var auth: FirebaseAuth
     private lateinit var userManager: UserManager
-    private lateinit var userViewModel: UserViewModel
+    private val userViewModel: UserViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,7 +52,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+
         binding.tvRegisterLogin.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
@@ -68,6 +73,10 @@ class LoginFragment : Fragment() {
         binding.btnGoogleSignIn.setOnClickListener {
             Toast.makeText(requireContext(), "Logging In", Toast.LENGTH_SHORT).show()
             signInGoogle()
+        }
+
+        binding.btnLogin.setOnClickListener {
+            login()
         }
 
 
@@ -117,6 +126,28 @@ class LoginFragment : Fragment() {
                 }
                 findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
             }
+        }
+    }
+
+    private fun login(){
+        val inputEmail = binding.etEmailLogin.text.toString()
+        val inputPassword = binding.etPasswordLogin.text.toString()
+
+        if (inputEmail.isEmpty() || inputPassword.isEmpty()) {
+            Toast.makeText(requireActivity(), "Please fill all the fields", Toast.LENGTH_SHORT).show()
+        } else{
+            userViewModel.callApiUserPostLogin(inputEmail, inputPassword)
+            userViewModel.loginUsers.observe(viewLifecycleOwner, Observer {
+                if (it!=null){
+                    GlobalScope.async {
+                        userManager.saveData(it.data.username, it.data.email, is_login_key = true)
+                    }
+                    Toast.makeText(requireContext(), "Login Success", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                } else{
+                    Toast.makeText(requireContext(), "Login Failed, Incorrect Email/Password", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
     }
 

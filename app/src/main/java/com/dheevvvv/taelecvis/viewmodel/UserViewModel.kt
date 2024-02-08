@@ -15,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserViewModel(private val userManager: UserManager, private val apiService: ApiService):ViewModel() {
+class UserViewModel(val userManager: UserManager, val apiService: ApiService):ViewModel() {
 
     private val _username = MutableLiveData<String>()
     val username: LiveData<String> = _username
@@ -37,7 +37,7 @@ class UserViewModel(private val userManager: UserManager, private val apiService
         }
     }
 
-    private fun callApiUserPostLogin(email:String, password:String){
+    fun callApiUserPostLogin(email:String, password:String){
         apiService.loginUser(UserPostLoginRequest(email, password)).enqueue(object :
             Callback<UserPostResponse>{
             override fun onResponse(
@@ -60,7 +60,7 @@ class UserViewModel(private val userManager: UserManager, private val apiService
         })
     }
 
-    private fun callApiUserPostRegister(email: String, password: String, name:String, username:String, phoneNumber:String){
+    fun callApiUserPostRegister(email: String, password: String, name:String, username:String, phoneNumber:String){
         apiService.registerUser(UserPostRequest(email, password, name, username, phoneNumber)).enqueue(object : Callback<UserPostResponse>{
             override fun onResponse(
                 call: Call<UserPostResponse>,
