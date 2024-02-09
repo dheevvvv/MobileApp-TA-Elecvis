@@ -9,9 +9,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.os.postDelayed
 import androidx.lifecycle.lifecycleScope
 import com.dheevvvv.taelecvis.datastore_preferences.UserManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var userManager: UserManager
     private var doubleBackToExitPressedOnce = false

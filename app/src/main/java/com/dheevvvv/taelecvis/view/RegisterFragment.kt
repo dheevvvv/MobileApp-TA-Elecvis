@@ -16,9 +16,10 @@ import androidx.navigation.fragment.findNavController
 import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.databinding.FragmentRegisterBinding
 import com.dheevvvv.taelecvis.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.internal.Contexts.getApplication
 
-
+@AndroidEntryPoint
 class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
     private val userViewModel: UserViewModel by viewModels()

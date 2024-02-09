@@ -1,10 +1,17 @@
 package com.dheevvvv.taelecvis.networking
 
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
+
 
 object RetrofitClient {
+
     object RetrofitClient {
         private const val BASE_URL ="http://localhost:8080/api/"
         private const val API_KEY = "DHEVA"

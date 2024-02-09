@@ -10,12 +10,15 @@ import com.dheevvvv.taelecvis.model.UserPostLoginRequest
 import com.dheevvvv.taelecvis.model.UserPostRequest
 import com.dheevvvv.taelecvis.model.UserPostResponse
 import com.dheevvvv.taelecvis.networking.ApiService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class UserViewModel(val userManager: UserManager, val apiService: ApiService):ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(val userManager: UserManager, val apiService: ApiService):ViewModel() {
 
     private val _username = MutableLiveData<String>()
     val username: LiveData<String> = _username

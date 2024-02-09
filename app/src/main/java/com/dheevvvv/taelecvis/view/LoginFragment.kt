@@ -32,7 +32,7 @@ import dagger.hilt.android.internal.Contexts.getApplication
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private lateinit var mGoogleSignInClient: GoogleSignInClient
