@@ -4,14 +4,248 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".view.HomeFragment">
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Home"
-        android:textSize="40sp"
-        />
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/margin_20"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/blue2"
+                app:cardCornerRadius="@dimen/margin_20"
+                >
+
+                <TextView
+                    android:id="@+id/tv_welcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome Back, Depp!"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:layout_marginStart="@dimen/margin_20"
+                    android:fontFamily="@font/poppins_bold"
+                    />
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/margin_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/bio_energy"
+                    />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="#E8E7E7"
+                    app:cardCornerRadius="@dimen/margin_20"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kamu Telah Menghemat Konsumsi Listrik 7 Hari Terakhir"
+                        android:textSize="16sp"
+                        android:layout_marginStart="@dimen/margin_20"
+                        />
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_20"
+                >
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="@dimen/margin_10"
+                    app:cardBackgroundColor="#E8E7E7"
+                    app:cardCornerRadius="@dimen/margin_20">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="200"
+                        android:layout_gravity="center"
+                        android:textColor="#45C81E"
+                        android:textSize="24sp"
+                        android:fontFamily="@font/poppins_extra_bold"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Kwh"
+                        android:layout_marginBottom="@dimen/margin_10"
+                        android:layout_gravity="bottom|center"
+                        />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="@dimen/margin_10"
+                    app:cardBackgroundColor="#E8E7E7"
+                    app:cardCornerRadius="@dimen/margin_20">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="80"
+                        android:layout_gravity="center"
+                        android:textColor="#45C81E"
+                        android:textSize="24sp"
+                        android:fontFamily="@font/poppins_extra_bold"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Peak Power"
+                        android:layout_marginBottom="@dimen/margin_10"
+                        android:layout_gravity="bottom|center"
+                        />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="@dimen/margin_10"
+                    app:cardBackgroundColor="#E8E7E7"
+                    app:cardCornerRadius="@dimen/margin_20">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="120"
+                        android:layout_gravity="center"
+                        android:textColor="#45C81E"
+                        android:textSize="24sp"
+                        android:fontFamily="@font/poppins_extra_bold"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Wasted"
+                        android:layout_marginBottom="@dimen/margin_10"
+                        android:layout_gravity="bottom|center"
+                        />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="@dimen/margin_10"
+                    app:cardBackgroundColor="#E8E7E7"
+                    app:cardCornerRadius="@dimen/margin_20">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="40"
+                        android:layout_gravity="center"
+                        android:textColor="#45C81E"
+                        android:textSize="24sp"
+                        android:fontFamily="@font/poppins_extra_bold"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Efisiensi%"
+                        android:layout_marginBottom="@dimen/margin_10"
+                        android:layout_gravity="bottom|center"
+                        />
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hari ini, 09, September 2024"
+                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_40"
+                android:fontFamily="@font/poppins_extra_bold"
+                android:textColor="#CDCDCD"
+                />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:cardBackgroundColor="#E8E7E7"
+                app:cardCornerRadius="@dimen/margin_20">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chart Data Konsumsi Listrik"
+                    android:layout_gravity="center"
+                    />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cornerRadius="@dimen/margin_20"
+                android:backgroundTint="#816591A8"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_gravity="end"
+                android:textAllCaps="false"
+                android:text="Lihat Selengkapnya"
+                />
+
+            <TextView
+                android:layout_marginTop="@dimen/margin_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Listrik yang Sedang Digunakan"
+                android:textSize="20sp"
+                android:textColor="@color/blue3"
+                android:fontFamily="@font/poppins_bold"
+                />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:cardBackgroundColor="#E8E7E7"
+                app:cardCornerRadius="@dimen/margin_20">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="hostogram list perangkat Konsumsi Listrik"
+                    android:layout_gravity="center"
+                    />
+            </com.google.android.material.card.MaterialCardView>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

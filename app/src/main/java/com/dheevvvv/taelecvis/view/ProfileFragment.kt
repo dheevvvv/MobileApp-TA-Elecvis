@@ -15,10 +15,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var userManager: UserManager
@@ -38,7 +39,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        userManager = UserManager.getInstance(requireContext())
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item->
             when(item.itemId) {
                 R.id.home -> {
@@ -82,7 +83,12 @@ class ProfileFragment : Fragment() {
         alertDialogBuilder.setTitle("Konfirmasi Logout")
         alertDialogBuilder.setMessage("Apakah Anda yakin ingin keluar?")
         alertDialogBuilder.setPositiveButton("Ya") { _, _ ->
-            performLogout()
+            GlobalScope.async {
+                userManager.clearData()
+            }
+            mGoogleSignInClient.signOut()
+            Toast.makeText(requireContext(), "Logout Berhasil, Anda telah Logout", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_profileFragment_to_splashFragment)
         }
         alertDialogBuilder.setNegativeButton("Tidak") { dialog, _ ->
             dialog.dismiss()
@@ -91,14 +97,6 @@ class ProfileFragment : Fragment() {
         alertDialog.show()
     }
 
-    private fun performLogout() {
-        mGoogleSignInClient.signOut()
-        GlobalScope.async {
-            userManager.clearData()
-        }
-        Toast.makeText(requireContext(), "Logout Berhasil, Anda telah Logout", Toast.LENGTH_SHORT).show()
-        findNavController().navigate(R.id.action_profileFragment_to_splashFragment)
-    }
 
 
 }
