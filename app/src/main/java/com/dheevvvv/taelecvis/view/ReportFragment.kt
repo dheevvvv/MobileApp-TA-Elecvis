@@ -47,7 +47,10 @@ class ReportFragment : Fragment() {
                     true
                 }
 
-                else -> false
+                else -> {
+                    binding.bottomNavigation.menu.findItem(R.id.report).isChecked = true
+                    false
+                }
             }
         }
 

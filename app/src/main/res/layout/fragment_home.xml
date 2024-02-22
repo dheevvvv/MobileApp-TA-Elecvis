@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:scrollbars="vertical"
+        android:layout_marginBottom="60dp"
         >
 
         <LinearLayout
@@ -199,12 +200,11 @@
                 app:cardBackgroundColor="#E8E7E7"
                 app:cardCornerRadius="@dimen/margin_20">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Chart Data Konsumsi Listrik"
-                    android:layout_gravity="center"
-                    />
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/lineChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton

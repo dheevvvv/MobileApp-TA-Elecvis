@@ -47,6 +47,7 @@ class ProfileFragment : Fragment() {
                     true
                 }
 
+
                 R.id.recommendation -> {
                     findNavController().navigate(R.id.action_profileFragment_to_recomendationFragment)
                     true
@@ -62,7 +63,10 @@ class ProfileFragment : Fragment() {
                     true
                 }
 
-                else -> false
+                else -> {
+                    binding.bottomNavigation.menu.findItem(R.id.account).isChecked = true
+                    true
+                }
             }
         }
 

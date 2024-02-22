@@ -17,6 +17,6 @@ interface ApiService {
     @POST("users/login")
     fun loginUser(
         @Body request : UserPostLoginRequest
-    ) : Call<UserPostResponse>
+    ) : Call<Any>
 
 }

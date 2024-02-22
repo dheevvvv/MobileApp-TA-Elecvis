@@ -29,25 +29,25 @@ class HomeFragment : Fragment() {
             when(item.itemId) {
                 R.id.account -> {
                     findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
-                    true
+                    false
                 }
 
                 R.id.recommendation -> {
                     findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
-                    true
+                    false
                 }
 
                 R.id.report -> {
                     findNavController().navigate(R.id.action_homeFragment_to_reportFragment)
-                    true
+                    false
                 }
 
                 R.id.notification -> {
                     findNavController().navigate(R.id.action_homeFragment_to_notificationFragment)
-                    true
+                    false
                 }
 
-                else -> false
+                else -> true
             }
         }
 

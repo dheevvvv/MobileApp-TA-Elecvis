@@ -29,25 +29,28 @@ class RecomendationFragment : Fragment() {
             when(item.itemId) {
                 R.id.home -> {
                     findNavController().navigate(R.id.action_recomendationFragment_to_homeFragment)
-                    true
+                    false
                 }
 
                 R.id.notification -> {
                     findNavController().navigate(R.id.action_recomendationFragment_to_notificationFragment)
-                    true
+                    false
                 }
 
                 R.id.report -> {
                     findNavController().navigate(R.id.action_recomendationFragment_to_reportFragment)
-                    true
+                    false
                 }
 
                 R.id.account -> {
                     findNavController().navigate(R.id.action_recomendationFragment_to_profileFragment)
-                    true
+                    false
                 }
 
-                else -> false
+                else -> {
+                    binding.bottomNavigation.menu.findItem(R.id.recommendation).isChecked = true
+                    true
+                }
             }
         }
 

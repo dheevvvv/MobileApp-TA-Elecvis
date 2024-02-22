@@ -140,7 +140,7 @@ class LoginFragment : Fragment() {
             userViewModel.loginUsers.observe(viewLifecycleOwner, Observer {
                 if (it!=null){
                     GlobalScope.async {
-                        userManager.saveData(it.data.username, it.data.email, is_login_key = true)
+                        userManager.saveData(it.username, it.email, is_login_key = true)
                     }
                     Toast.makeText(requireContext(), "Login Success", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
