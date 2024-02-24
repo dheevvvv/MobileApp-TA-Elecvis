@@ -33,8 +33,8 @@ class UserViewModel @Inject constructor(val userManager: UserManager, val apiSer
     private val _loginUsers: MutableLiveData<Data?> = MutableLiveData()
     val loginUsers: MutableLiveData<Data?> get() = _loginUsers
 
-    private val _registerUser: MutableLiveData<UserPostResponse?> = MutableLiveData()
-    val registerUser: MutableLiveData<UserPostResponse?> get() = _registerUser
+    private val _registerUser: MutableLiveData<Data> = MutableLiveData()
+    val registerUser: MutableLiveData<Data> get() = _registerUser
 
 
     fun getUsername() {
@@ -44,52 +44,47 @@ class UserViewModel @Inject constructor(val userManager: UserManager, val apiSer
         }
     }
 
+
     fun callApiUserPostLogin(email:String, password:String){
         apiService.loginUser(UserPostLoginRequest(email, password)).enqueue(object :
-            Callback<Any>{
+            Callback<Data>{
             override fun onResponse(
-                call: Call<Any>,
-                response: Response<Any>
+                call: Call<Data>,
+                response: Response<Data>
             ) {
                 if (response.isSuccessful){
-                    val body = response.body().toString()
-                    try {
-                        val jsonObject = JSONObject(body)
-                        val responseObject = Gson().fromJson(body, Data::class.java)
-                        _loginUsers.postValue(responseObject)
-
-                    } catch (e:JSONException){
-                        _loginUsers.postValue(null)
-                    }
+                    val body = response.body()
+                    _loginUsers.postValue(body)
                 } else{
                     _loginUsers.postValue(null)
                     Log.e("Error:", "onFailure: ${response.message()}")
                 }
             }
 
-            override fun onFailure(call: Call<Any>, t: Throwable) {
+            override fun onFailure(call: Call<Data>, t: Throwable) {
                 _loginUsers.postValue(null)
                 Log.e("Error:", "onFailure: ${t.message}")
             }
         })
     }
 
-    fun callApiUserPostRegister(email: String, password: String, name:String, username:String, phoneNumber:String){
-        apiService.registerUser(UserPostRequest(email, password, name, username, phoneNumber)).enqueue(object : Callback<UserPostResponse>{
+    fun callApiUserPostRegister(name: String, username: String, email:String, password:String, phoneNumber:String){
+        apiService.registerUser(UserPostRequest(name, username, email, password, phoneNumber)).enqueue(object : Callback<Data>{
             override fun onResponse(
-                call: Call<UserPostResponse>,
-                response: Response<UserPostResponse>
+                call: Call<Data>,
+                response: Response<Data>
             ) {
                 if (response.isSuccessful){
+                    Log.d("ConnectionStatus", "Connected to API successfully")
                     val data = response.body()
-                    _registerUser.postValue(data!!)
+                    _registerUser.postValue(data)
                 } else{
                     _registerUser.postValue(null)
                     Log.e("Error:", "onFailure: ${response.message()}")
                 }
             }
 
-            override fun onFailure(call: Call<UserPostResponse>, t: Throwable) {
+            override fun onFailure(call: Call<Data>, t: Throwable) {
                 _registerUser.postValue(null)
                 Log.e("Error:", "onFailure: ${t.message}")
             }
