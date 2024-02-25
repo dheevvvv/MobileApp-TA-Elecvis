@@ -135,7 +135,7 @@ class RegisterFragment : Fragment() {
             userViewModel.callApiUserPostRegister(name = inputName, username = inputUsername, email = inputEmail, password = password, phoneNumber = phoneNumber)
             userViewModel.registerUser.observe(viewLifecycleOwner, Observer {
                 if (it != null) {
-                    Toast.makeText(requireContext(), "Register Success ${it.name}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Register Success ${it.email}", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
                 } else {
                     Toast.makeText(requireContext(), "Register Failed", Toast.LENGTH_SHORT).show()

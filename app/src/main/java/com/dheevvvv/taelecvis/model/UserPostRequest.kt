@@ -15,7 +15,7 @@ data class UserPostRequest(
     @SerializedName("password")
     var password: String,
 
-    @SerializedName("phone_number")
+    @SerializedName("phoneNumber")
     var phoneNumber: String
 
 )

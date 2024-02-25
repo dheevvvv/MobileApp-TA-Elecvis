@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/basebackground"
     android:padding="20dp"
+    android:scrollbars="vertical"
     android:layout_height="match_parent"
     tools:context=".view.LoginFragment">
 
@@ -98,8 +99,9 @@
         android:id="@+id/btnGoogleSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/btn_Login"
+        app:layout_constraintTop_toBottomOf="@+id/tv_text_signin"
         android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:cardBackgroundColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         >
@@ -134,8 +136,9 @@
         android:id="@+id/tv_text_signin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/tv_Register_login"
-        app:layout_constraintTop_toBottomOf="@+id/btn_Login"
+        app:layout_constraintTop_toBottomOf="@+id/tv_Register_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="15dp"
         android:textStyle="italic"
         android:fontFamily="@font/poppins_medium"
@@ -155,6 +158,7 @@
         android:textSize="15sp"
         android:fontFamily="@font/poppins_bold"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_Login"
         />
 

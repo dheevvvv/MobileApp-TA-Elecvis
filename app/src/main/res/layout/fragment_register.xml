@@ -18,9 +18,9 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="ContentDescription" />
 
-   <androidx.core.widget.NestedScrollView
+   <ScrollView
        android:layout_width="match_parent"
-       android:layout_height="0dp"
+       android:layout_height="550dp"
        android:orientation="vertical"
        android:scrollbars="vertical"
        app:layout_constraintTop_toBottomOf="@+id/iv_Register"
@@ -28,7 +28,7 @@
 
        <LinearLayout
            android:layout_width="match_parent"
-           android:layout_height="0dp"
+           android:layout_height="wrap_content"
            android:orientation="vertical"
            >
 
@@ -98,7 +98,7 @@
                android:hint="@string/email"
                app:boxStrokeColor="@color/earth_02"
                android:textColorHint="@color/earth_02"
-               android:layout_marginTop="10dp"
+               android:layout_marginTop="20dp"
                app:layout_constraintStart_toStartOf="parent"
                app:layout_constraintEnd_toEndOf="parent"
                app:layout_constraintTop_toBottomOf="@id/outlinedTextField">
@@ -119,7 +119,7 @@
                android:hint="@string/no_handphone"
                app:boxStrokeColor="@color/earth_02"
                android:textColorHint="@color/earth_02"
-               android:layout_marginTop="10dp"
+               android:layout_marginTop="20dp"
                app:endIconDrawable="@drawable/ic_check"
                app:layout_constraintStart_toStartOf="parent"
                app:layout_constraintEnd_toEndOf="parent"
@@ -203,13 +203,14 @@
                app:layout_constraintTop_toBottomOf="@+id/btn_register"
                app:layout_constraintEnd_toEndOf="parent"
                android:textColor="@color/earth_02"
+               android:layout_marginBottom="200dp"
                android:layout_marginTop="@dimen/margin_10"
                android:text="@string/sudah_punya_akun_masuk"
                />
 
        </LinearLayout>
 
-   </androidx.core.widget.NestedScrollView>
+   </ScrollView>
 
 
 
