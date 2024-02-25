@@ -30,6 +30,9 @@ class UserViewModel @Inject constructor(val userManager: UserManager, val apiSer
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email
 
+    private val _userId = MutableLiveData<Int>()
+    val userId: LiveData<Int> = _userId
+
     private val _loginUsers: MutableLiveData<Data?> = MutableLiveData()
     val loginUsers: MutableLiveData<Data?> get() = _loginUsers
 
@@ -41,6 +44,13 @@ class UserViewModel @Inject constructor(val userManager: UserManager, val apiSer
         viewModelScope.launch {
             val username = userManager.getUsername()
             _username.postValue(username)
+        }
+    }
+
+    fun getUserId(){
+        viewModelScope.launch {
+            val userId = userManager.getUserId()
+            _userId.postValue(userId)
         }
     }
 

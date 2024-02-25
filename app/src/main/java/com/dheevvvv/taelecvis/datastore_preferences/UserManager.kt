@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,7 @@ class UserManager(private val context:Context) {
 
     private val USERNAME = stringPreferencesKey("username")
     private val EMAIL = stringPreferencesKey("email")
+    private val USERID = intPreferencesKey("userId")
     private val IS_LOGIN_KEY = booleanPreferencesKey("is_login")
 
     companion object {
@@ -30,10 +32,11 @@ class UserManager(private val context:Context) {
         }
     }
 
-    suspend fun saveData (username:String, email:String, is_login_key:Boolean){
+    suspend fun saveData (username:String, email:String, userId:Int, is_login_key:Boolean){
         context.datastore.edit {
             it [USERNAME] = username
             it [EMAIL] = email
+            it [USERID] = userId
             it [IS_LOGIN_KEY] = is_login_key
         }
     }
@@ -65,5 +68,10 @@ class UserManager(private val context:Context) {
     suspend fun getUsername(): String {
         val preferences = context.datastore.data.first()
         return preferences[USERNAME] ?: ""
+    }
+
+    suspend fun getUserId(): Int {
+        val preferences = context.datastore.data.first()
+        return preferences[USERID] ?: 0
     }
 }

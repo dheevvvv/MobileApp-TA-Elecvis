@@ -17,7 +17,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="@dimen/margin_20"
             android:orientation="vertical">
 
@@ -222,7 +222,7 @@
                 android:layout_marginTop="@dimen/margin_40"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Listrik yang Sedang Digunakan"
+                android:text="Aktivitas Pemakaian Perangkat"
                 android:textSize="20sp"
                 android:textColor="@color/blue3"
                 android:fontFamily="@font/poppins_bold"
@@ -233,13 +233,23 @@
                 app:cardBackgroundColor="#E8E7E7"
                 app:cardCornerRadius="@dimen/margin_20">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="hostogram list perangkat Konsumsi Listrik"
-                    android:layout_gravity="center"
-                    />
+                <com.github.mikephil.charting.charts.BarChart
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cornerRadius="@dimen/margin_20"
+                android:backgroundTint="#816591A8"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_gravity="end"
+                android:textAllCaps="false"
+                android:layout_marginBottom="100dp"
+                android:text="@string/lihat_selengkapnya"
+                />
 
 
 

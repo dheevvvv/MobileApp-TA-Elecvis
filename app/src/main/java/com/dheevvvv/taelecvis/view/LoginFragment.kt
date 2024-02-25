@@ -122,7 +122,7 @@ class LoginFragment : Fragment() {
         auth.signInWithCredential(credential).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 GlobalScope.async {
-                    userManager.saveData(username = account.displayName.toString(), email = account.email.toString(), is_login_key = true)
+                    userManager.saveData(username = account.displayName.toString(), email = account.email.toString(), userId = 0, is_login_key = true)
                 }
                 findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
             }
@@ -140,7 +140,7 @@ class LoginFragment : Fragment() {
             userViewModel.loginUsers.observe(viewLifecycleOwner, Observer {
                 if (it!=null){
                     GlobalScope.async {
-                        userManager.saveData(it.username, it.email, is_login_key = true)
+                        userManager.saveData(it.username, it.email, it.userId, is_login_key = true)
                     }
                     Toast.makeText(requireContext(), "Login Success", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
