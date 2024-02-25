@@ -16,7 +16,7 @@ data class Data(
     val role: String,
     @SerializedName("updatedAt")
     val updatedAt: String,
-    @SerializedName("user_id")
+    @SerializedName("userId")
     val userId: Int,
     @SerializedName("username")
     val username: String
