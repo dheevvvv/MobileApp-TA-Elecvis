@@ -54,7 +54,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#E8E7E7"
+                    app:cardBackgroundColor="#F6F6F6"
                     app:cardCornerRadius="@dimen/margin_20"
                     >
 
@@ -76,10 +76,10 @@
                 >
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="80dp"
+                    android:layout_width="70dp"
                     android:layout_height="80dp"
                     android:layout_marginEnd="@dimen/margin_10"
-                    app:cardBackgroundColor="#E8E7E7"
+                    app:cardBackgroundColor="#F6F6F6"
                     app:cardCornerRadius="@dimen/margin_20">
 
                     <TextView
@@ -102,10 +102,10 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="80dp"
                     android:layout_marginEnd="@dimen/margin_10"
-                    app:cardBackgroundColor="#E8E7E7"
+                    app:cardBackgroundColor="#F6F6F6"
                     app:cardCornerRadius="@dimen/margin_20">
 
                     <TextView
@@ -128,10 +128,10 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="80dp"
+                    android:layout_width="70dp"
                     android:layout_height="80dp"
                     android:layout_marginEnd="@dimen/margin_10"
-                    app:cardBackgroundColor="#E8E7E7"
+                    app:cardBackgroundColor="#F6F6F6"
                     app:cardCornerRadius="@dimen/margin_20">
 
                     <TextView
@@ -154,10 +154,9 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="80dp"
+                    android:layout_width="70dp"
                     android:layout_height="80dp"
-                    android:layout_marginEnd="@dimen/margin_10"
-                    app:cardBackgroundColor="#E8E7E7"
+                    app:cardBackgroundColor="#F6F6F6"
                     app:cardCornerRadius="@dimen/margin_20">
 
                     <TextView
@@ -197,7 +196,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                app:cardBackgroundColor="#E8E7E7"
+                app:cardBackgroundColor="#F6F6F6"
                 app:cardCornerRadius="@dimen/margin_20">
 
                 <com.github.mikephil.charting.charts.LineChart
@@ -230,7 +229,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                app:cardBackgroundColor="#E8E7E7"
+                app:cardBackgroundColor="#F6F6F6"
                 app:cardCornerRadius="@dimen/margin_20">
 
                 <com.github.mikephil.charting.charts.BarChart

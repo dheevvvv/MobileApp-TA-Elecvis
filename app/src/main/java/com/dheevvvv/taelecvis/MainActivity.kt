@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.postDelayed
 import androidx.lifecycle.lifecycleScope
 import com.dheevvvv.taelecvis.datastore_preferences.UserManager
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var userManager: UserManager
     private var doubleBackToExitPressedOnce = false
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         userManager = UserManager.getInstance(this)
