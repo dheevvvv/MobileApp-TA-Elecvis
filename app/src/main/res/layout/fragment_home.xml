@@ -258,6 +258,18 @@
                 android:textColor="@color/blue3"
                 android:fontFamily="@font/poppins_bold"
                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hari Ini"
+                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_10"
+                android:fontFamily="@font/poppins_extra_bold"
+                android:textColor="#CDCDCD"
+                />
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
@@ -265,6 +277,7 @@
                 app:cardCornerRadius="@dimen/margin_20">
 
                 <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/chartPuncakKonsumsiEnergi"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 

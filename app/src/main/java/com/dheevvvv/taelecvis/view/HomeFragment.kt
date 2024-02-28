@@ -21,12 +21,11 @@ import com.dheevvvv.taelecvis.datastore_preferences.UserManager
 import com.dheevvvv.taelecvis.model.power_usage.Data
 import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
 import com.dheevvvv.taelecvis.viewmodel.UserViewModel
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -87,18 +86,38 @@ class HomeFragment : Fragment() {
             }
         })
         userViewModel.getUserId()
+
+        //Tren Konsumsi Energi
         userViewModel.userId.observe(viewLifecycleOwner, Observer {userId->
             if (userId!=null){
                 homeViewModel.callApiGetPowerUsage(userId = userId, startDate = "2007-12-20", endDate = "2007-12-26")
                 homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer {
                     if (it!=null){
-                        Log.e("fetch", "success")
-                        Log.e("data", "${it.size}")
+                        Log.e("fetch daily consumption", "success")
+                        Log.e("data daily consumption", "${it.size}")
                         val lineChart = binding.lineChart
                         showDailyConsumptionTrend(lineChart, it, startDate = "2007-12-20", endDate = "2007-12-26")
 
                     } else{
-                        Log.e("fetch", "null")
+                        Log.e("fetch daily consumption", "null")
+                    }
+                })
+            }
+        })
+
+        //Puncak Konsumsi Energi
+        userViewModel.userId.observe(viewLifecycleOwner, Observer {userId->
+            if (userId!=null){
+                homeViewModel.callApiGetPowerUsage(userId = userId, startDate = "2007-12-20", endDate = "2007-12-20")
+                homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer {
+                    if (it!=null){
+                        Log.e("fetch Peak", "success")
+                        Log.e("data Peak", "${it.size}")
+                        val barChartPuncakKonsumsi = binding.chartPuncakKonsumsiEnergi
+                        showPeakConsumptionTrend(barChartPuncakKonsumsi, it, startDate = "2007-12-20", endDate = "2007-12-20")
+
+                    } else{
+                        Log.e("fetch Peak", "null")
                     }
                 })
             }
@@ -143,41 +162,6 @@ class HomeFragment : Fragment() {
         lineChart.invalidate()
     }
 
-//    private fun calculateDailyAverages(dataList: List<Data>): List<Float> {
-//        val dailyAverages = mutableListOf<Float>()
-//        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-//        val cal = Calendar.getInstance()
-//
-//        var currentDate = ""
-//        var totalConsumption = 0f
-//        var count = 0
-//
-//        for (data in dataList) {
-//            val date = data.date
-//            if (date != currentDate) {
-//                // Hitung rata-rata untuk hari sebelumnya
-//                if (count != 0) {
-//                    dailyAverages.add(totalConsumption / count)
-//                }
-//
-//                // Reset variabel untuk hari baru
-//                currentDate = date
-//                totalConsumption = 0f
-//                count = 0
-//            }
-//
-//            totalConsumption += data.globalActivePower.toFloat()
-//            count++
-//        }
-//
-//        // Tambahkan rata-rata untuk hari terakhir
-//        if (count != 0) {
-//            dailyAverages.add(totalConsumption / count)
-//        }
-//
-//        return dailyAverages
-//    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateDailyAverages(dataList: List<Data>, startDate: String, endDate: String): List<Float> {
         val dailyAverages = mutableListOf<Float>()
@@ -217,7 +201,79 @@ class HomeFragment : Fragment() {
         }
 
         return dailyAverages
+    }private fun calculatePeakConsumption(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
+        val peakConsumptions = mutableMapOf<Int, Float>()
+        val hourDataCount = mutableMapOf<Int, Int>()
+
+        // Iterate through the data to sum up consumption for each hour within the specified date range
+        for (data in dataList) {
+            val dataDate = data.date
+            val dataHour = data.time.split(":")[0].toInt() // Extract hour from time
+
+            // Check if the data is within the specified date range
+            if (dataDate >= startDate && dataDate <= endDate) {
+                val consumption = data.globalActivePower.toFloat()
+
+                // Update total consumption and data count for the hour
+                if (!peakConsumptions.containsKey(dataHour)) {
+                    peakConsumptions[dataHour] = consumption
+                    hourDataCount[dataHour] = 1
+                } else {
+                    peakConsumptions[dataHour] = peakConsumptions[dataHour]!! + consumption
+                    hourDataCount[dataHour] = hourDataCount[dataHour]!! + 1
+                }
+            }
+        }
+
+        // Calculate average consumption for each hour
+        for ((hour, totalConsumption) in peakConsumptions) {
+            val dataCount = hourDataCount[hour] ?: 0
+            if (dataCount > 0) {
+                peakConsumptions[hour] = totalConsumption / dataCount
+            }
+        }
+
+        return peakConsumptions
     }
+
+    private fun showPeakConsumptionTrend(barChart: BarChart, dataList: List<Data>, startDate: String, endDate: String) {
+        // Calculate peak consumption for each hour
+        val peakConsumptions = calculatePeakConsumption(dataList, startDate, endDate)
+
+        // Prepare entries for the chart
+        val entries = ArrayList<BarEntry>()
+        val labels = ArrayList<String>()
+
+        for ((hour, consumption) in peakConsumptions) {
+            entries.add(BarEntry(hour.toFloat(), consumption))
+            labels.add("$hour:00") // Add a label for each hour
+        }
+
+        // Create a dataset and add entries to it
+        val dataSet = BarDataSet(entries, "Peak Consumption")
+        val barData = BarData(dataSet)
+        barChart.data = barData
+
+        // Set description for the chart
+        val description = Description()
+        description.text = "Peak Consumption Trend"
+        barChart.description = description
+
+        // Customize X axis
+        val xAxis = barChart.xAxis
+        xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        // Customize Y axis
+        val yAxis = barChart.axisLeft
+        yAxis.axisMinimum = 0f
+
+        // Invalidate and refresh the chart
+        barChart.invalidate()
+    }
+
+
+
 
 
 
