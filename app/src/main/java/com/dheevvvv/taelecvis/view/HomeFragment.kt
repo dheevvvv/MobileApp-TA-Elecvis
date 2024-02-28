@@ -93,8 +93,8 @@ class HomeFragment : Fragment() {
                 homeViewModel.callApiGetPowerUsage(userId = userId, startDate = "2007-12-20", endDate = "2007-12-26")
                 homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer {
                     if (it!=null){
-                        Log.e("fetch daily consumption", "success")
-                        Log.e("data daily consumption", "${it.size}")
+//                        Log.e("fetch daily consumption", "success")
+//                        Log.e("data daily consumption", "${it.size}")
                         val lineChart = binding.lineChart
                         showDailyConsumptionTrend(lineChart, it, startDate = "2007-12-20", endDate = "2007-12-26")
 
@@ -111,10 +111,29 @@ class HomeFragment : Fragment() {
                 homeViewModel.callApiGetPowerUsage(userId = userId, startDate = "2007-12-20", endDate = "2007-12-20")
                 homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer {
                     if (it!=null){
-                        Log.e("fetch Peak", "success")
-                        Log.e("data Peak", "${it.size}")
+//                        Log.e("fetch Peak", "success")
+//                        Log.e("data Peak", "${it.size}")
                         val barChartPuncakKonsumsi = binding.chartPuncakKonsumsiEnergi
                         showPeakConsumptionTrend(barChartPuncakKonsumsi, it, startDate = "2007-12-20", endDate = "2007-12-20")
+
+                    } else{
+                        Log.e("fetch Peak", "null")
+                    }
+                })
+            }
+        })
+
+
+        //Puncak Intensitas
+        userViewModel.userId.observe(viewLifecycleOwner, Observer {userId->
+            if (userId!=null){
+                homeViewModel.callApiGetPowerUsage(userId = userId, startDate = "2007-12-20", endDate = "2007-12-20")
+                homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer {
+                    if (it!=null){
+                        Log.e("fetch Peak", "success")
+                        Log.e("data Peak", "${it.size}")
+                        val barChartPuncakIntensitas = binding.chartPuncakIntesitas
+                        showPeakGlobalIntensityTrend(barChartPuncakIntensitas, it, startDate = "2007-12-20", endDate = "2007-12-20")
 
                     } else{
                         Log.e("fetch Peak", "null")
@@ -272,6 +291,76 @@ class HomeFragment : Fragment() {
         barChart.invalidate()
     }
 
+
+
+    // Function to calculate maximum global intensity for each hour
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calculateMaxGlobalIntensity(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
+        val maxGlobalIntensity = mutableMapOf<Int, Float>()
+        val hourDataCount = mutableMapOf<Int, Int>()
+
+        // Iterate through the data to sum up global intensity for each hour within the specified date range
+        for (data in dataList) {
+            val dataDate = LocalDate.parse(data.date)
+            val dataHour = data.time.split(":")[0].toInt() // Extract hour from time
+
+            // Check if the data is within the specified date range
+            if (dataDate >= LocalDate.parse(startDate) && dataDate <= LocalDate.parse(endDate)) {
+                val intensity = data.globalIntensity
+
+                // Update total global intensity and data count for the hour
+                if (!maxGlobalIntensity.containsKey(dataHour)) {
+                    maxGlobalIntensity[dataHour] = intensity.toFloat()
+                    hourDataCount[dataHour] = 1
+                } else {
+                    if (intensity > maxGlobalIntensity[dataHour]!!) {
+                        maxGlobalIntensity[dataHour] = intensity.toFloat()
+                    }
+                    hourDataCount[dataHour] = hourDataCount[dataHour]!! + 1
+                }
+            }
+        }
+
+        return maxGlobalIntensity
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showPeakGlobalIntensityTrend(barChart: BarChart, dataList: List<Data>, startDate: String, endDate: String) {
+        // Calculate maximum global intensity for each hour
+        val maxGlobalIntensity = calculateMaxGlobalIntensity(dataList, startDate, endDate)
+
+        // Prepare entries for the chart
+        val entries = ArrayList<BarEntry>()
+        val labels = ArrayList<String>()
+
+        for ((hour, intensity) in maxGlobalIntensity) {
+            entries.add(BarEntry(hour.toFloat(), intensity))
+            labels.add("$hour:00") // Add a label for each hour
+        }
+
+        // Create a dataset and add entries to it
+        val dataSet = BarDataSet(entries, "Peak Global Intensity")
+        val barData = BarData(dataSet)
+        barChart.data = barData
+
+        // Set description for the chart
+        val description = Description()
+        description.text = "Peak Global Intensity Trend"
+        barChart.description = description
+
+        // Customize X axis
+        val xAxis = barChart.xAxis
+        xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        // Customize Y axis
+        val yAxis = barChart.axisLeft
+        yAxis.axisMinimum = 0f
+
+        // Invalidate and refresh the chart
+        barChart.invalidate()
+    }
 
 
 
