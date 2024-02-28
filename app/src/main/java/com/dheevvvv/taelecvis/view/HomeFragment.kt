@@ -23,6 +23,7 @@ import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
 import com.dheevvvv.taelecvis.viewmodel.UserViewModel
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.ScatterChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
@@ -33,11 +34,14 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 
+private const val LOW_VOLTAGE_THRESHOLD = 100
+private const val HIGH_VOLTAGE_THRESHOLD = 240 // batas tinggi tegangan
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val userViewModel: UserViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -131,10 +135,29 @@ class HomeFragment : Fragment() {
                 homeViewModel.callApiGetPowerUsage(userId = userId, startDate = "2007-12-20", endDate = "2007-12-20")
                 homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer {
                     if (it!=null){
-                        Log.e("fetch Peak", "success")
-                        Log.e("data Peak", "${it.size}")
+//                        Log.e("fetch Peak", "success")
+//                        Log.e("data Peak", "${it.size}")
                         val barChartPuncakIntensitas = binding.chartPuncakIntesitas
                         showPeakGlobalIntensityTrend(barChartPuncakIntensitas, it, startDate = "2007-12-20", endDate = "2007-12-20")
+
+                    } else{
+                        Log.e("fetch Peak", "null")
+                    }
+                })
+            }
+        })
+
+
+        //Stabilitas Tegangan Voltage
+        userViewModel.userId.observe(viewLifecycleOwner, Observer {userId->
+            if (userId!=null){
+                homeViewModel.callApiGetPowerUsage(userId = userId, startDate = "2007-12-20", endDate = "2007-12-20")
+                homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer {
+                    if (it!=null){
+//                        Log.e("fetch Peak", "success")
+//                        Log.e("data Peak", "${it.size}")
+                        val scatterChartStabilitasTegangan = binding.chartVoltageScatter
+                        showVoltageStabilityScatterPlot(scatterChartStabilitasTegangan, it, startDate = "2007-12-20", endDate = "2007-12-20")
 
                     } else{
                         Log.e("fetch Peak", "null")
@@ -364,6 +387,103 @@ class HomeFragment : Fragment() {
         // Invalidate and refresh the chart
         barChart.invalidate()
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calculateAverageVoltage(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
+        val averageVoltages = mutableMapOf<Int, Float>()
+        val hourDataCount = mutableMapOf<Int, Int>()
+
+        // Iterate through the data to sum up voltage for each hour within the specified date range
+        for (data in dataList) {
+            val dataDate = LocalDate.parse(data.date)
+            val dataHour = data.time.split(":")[0].toInt() // Extract hour from time
+
+            // Check if the data is within the specified date range
+            if (dataDate >= LocalDate.parse(startDate) && dataDate <= LocalDate.parse(endDate)) {
+                val voltage = data.voltage
+
+                // Update total voltage and data count for the hour
+                if (!averageVoltages.containsKey(dataHour)) {
+                    averageVoltages[dataHour] = voltage.toFloat()
+                    hourDataCount[dataHour] = 1
+                } else {
+                    averageVoltages[dataHour] = averageVoltages[dataHour]!! + voltage.toFloat()
+                    hourDataCount[dataHour] = hourDataCount[dataHour]!! + 1
+                }
+            }
+        }
+
+        // Calculate average voltage for each hour
+        for ((hour, totalVoltage) in averageVoltages) {
+            val dataCount = hourDataCount[hour] ?: 0
+            if (dataCount > 0) {
+                averageVoltages[hour] = totalVoltage / dataCount
+            }
+        }
+
+        return averageVoltages
+    }
+
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showVoltageStabilityScatterPlot(scatterChart: ScatterChart, dataList: List<Data>, startDate: String, endDate: String) {
+        // Calculate average voltage for each hour
+        val averageVoltages = calculateAverageVoltage(dataList, startDate, endDate)
+
+        // Prepare entries for the chart
+        val entries = ArrayList<Entry>()
+        val disturbedEntries = ArrayList<Entry>()
+        val labels = ArrayList<String>()
+
+        for ((hour, voltage) in averageVoltages) {
+            entries.add(Entry(hour.toFloat(), voltage))
+            labels.add("$hour:00") // Add a label for each hour
+
+            // Check for disturbed points
+            if (voltage < LOW_VOLTAGE_THRESHOLD || voltage > HIGH_VOLTAGE_THRESHOLD) {
+                disturbedEntries.add(Entry(hour.toFloat(), voltage))
+            }
+        }
+
+        // Create dataset for average voltages
+        val dataSet = ScatterDataSet(entries, "Average Voltage")
+        dataSet.color = Color.BLUE // Set color for the scatter points
+        dataSet.setDrawValues(false) // Hide values for scatter points
+
+        // Create dataset for disturbed points
+        val disturbedDataSet = ScatterDataSet(disturbedEntries, "Disturbed Voltage")
+        disturbedDataSet.color = Color.RED // Set color for disturbed points
+        disturbedDataSet.setDrawValues(true) // Show values for disturbed points
+
+        // Create scatter data and add datasets to it
+        val scatterData = ScatterData(dataSet, disturbedDataSet)
+        scatterChart.data = scatterData
+        scatterChart.setTouchEnabled(true)
+        scatterChart.isDragEnabled = true
+        scatterChart.setScaleEnabled(true)
+        scatterChart.setPinchZoom(true)
+
+        // Set description for the chart
+        val description = Description()
+        description.text = "Voltage Stability Scatter Plot"
+        scatterChart.description = description
+
+        // Customize X axis
+        val xAxis = scatterChart.xAxis
+        xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        // Customize Y axis
+        val yAxis = scatterChart.axisLeft
+        yAxis.axisMinimum = 0f
+
+        // Invalidate and refresh the chart
+        scatterChart.invalidate()
+    }
+
+
+
 
 
 

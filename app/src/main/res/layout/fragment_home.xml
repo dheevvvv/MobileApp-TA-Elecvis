@@ -310,7 +310,8 @@
                 app:cardBackgroundColor="#F6F6F6"
                 app:cardCornerRadius="@dimen/margin_20">
 
-                <com.github.mikephil.charting.charts.BarChart
+                <com.github.mikephil.charting.charts.ScatterChart
+                    android:id="@+id/chartVoltageScatter"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
