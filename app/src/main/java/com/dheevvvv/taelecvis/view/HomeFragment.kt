@@ -27,6 +27,7 @@ import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -161,7 +162,7 @@ class HomeFragment : Fragment() {
             labels.add("Day ${index}") // Add a label for each data point
         }
 
-        val dataSet = LineDataSet(entries, "Daily Consumption")
+        val dataSet = LineDataSet(entries, "Daily Consumption (kW)")
         val lineData = LineData(dataSet)
         lineChart.data = lineData
 
@@ -177,6 +178,7 @@ class HomeFragment : Fragment() {
         // Pengaturan sumbu Y
         val yAxis = lineChart.axisLeft
         yAxis.axisMinimum = 0f
+
 
         lineChart.invalidate()
     }
@@ -220,11 +222,13 @@ class HomeFragment : Fragment() {
         }
 
         return dailyAverages
-    }private fun calculatePeakConsumption(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
+    }
+
+    private fun calculatePeakConsumption(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
         val peakConsumptions = mutableMapOf<Int, Float>()
         val hourDataCount = mutableMapOf<Int, Int>()
 
-        // Iterate through the data to sum up consumption for each hour within the specified date range
+        // Iterate through the data to find the peak consumption for each hour within the specified date range
         for (data in dataList) {
             val dataDate = data.date
             val dataHour = data.time.split(":")[0].toInt() // Extract hour from time
@@ -238,22 +242,18 @@ class HomeFragment : Fragment() {
                     peakConsumptions[dataHour] = consumption
                     hourDataCount[dataHour] = 1
                 } else {
-                    peakConsumptions[dataHour] = peakConsumptions[dataHour]!! + consumption
+                    val currentPeak = peakConsumptions[dataHour]!!
+                    if (consumption > currentPeak) {
+                        peakConsumptions[dataHour] = consumption
+                    }
                     hourDataCount[dataHour] = hourDataCount[dataHour]!! + 1
                 }
             }
         }
 
-        // Calculate average consumption for each hour
-        for ((hour, totalConsumption) in peakConsumptions) {
-            val dataCount = hourDataCount[hour] ?: 0
-            if (dataCount > 0) {
-                peakConsumptions[hour] = totalConsumption / dataCount
-            }
-        }
-
         return peakConsumptions
     }
+
 
     private fun showPeakConsumptionTrend(barChart: BarChart, dataList: List<Data>, startDate: String, endDate: String) {
         // Calculate peak consumption for each hour
@@ -269,7 +269,7 @@ class HomeFragment : Fragment() {
         }
 
         // Create a dataset and add entries to it
-        val dataSet = BarDataSet(entries, "Peak Consumption")
+        val dataSet = BarDataSet(entries, "Peak Consumption (kW)")
         val barData = BarData(dataSet)
         barChart.data = barData
 
@@ -286,6 +286,7 @@ class HomeFragment : Fragment() {
         // Customize Y axis
         val yAxis = barChart.axisLeft
         yAxis.axisMinimum = 0f
+
 
         // Invalidate and refresh the chart
         barChart.invalidate()
@@ -340,7 +341,7 @@ class HomeFragment : Fragment() {
         }
 
         // Create a dataset and add entries to it
-        val dataSet = BarDataSet(entries, "Peak Global Intensity")
+        val dataSet = BarDataSet(entries, "Peak Global Intensity (ampere)")
         val barData = BarData(dataSet)
         barChart.data = barData
 
@@ -348,6 +349,7 @@ class HomeFragment : Fragment() {
         val description = Description()
         description.text = "Peak Global Intensity Trend"
         barChart.description = description
+
 
         // Customize X axis
         val xAxis = barChart.xAxis
@@ -357,6 +359,7 @@ class HomeFragment : Fragment() {
         // Customize Y axis
         val yAxis = barChart.axisLeft
         yAxis.axisMinimum = 0f
+
 
         // Invalidate and refresh the chart
         barChart.invalidate()
