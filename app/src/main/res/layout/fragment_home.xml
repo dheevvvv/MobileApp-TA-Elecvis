@@ -63,16 +63,29 @@
                         android:layout_height="wrap_content"
                         android:text="Kamu Telah Menghemat Konsumsi Listrik 7 Hari Terakhir"
                         android:textSize="16sp"
+                        android:textColor="#CDCDCD"
+                        android:fontFamily="@font/poppins_bold"
                         android:layout_marginStart="@dimen/margin_20"
                         />
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ringkasan 7 Hari Terakhir"
+                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_20"
+                android:fontFamily="@font/poppins_extra_bold"
+                android:textColor="#CDCDCD"
+                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="@dimen/margin_20"
+                android:layout_marginTop="@dimen/margin_10"
                 >
 
                 <com.google.android.material.card.MaterialCardView
@@ -95,6 +108,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total Kwh"
+                        android:textColor="#B5B5B5"
+                        android:fontFamily="@font/poppins_light"
                         android:layout_marginBottom="@dimen/margin_10"
                         android:layout_gravity="bottom|center"
                         />
@@ -117,13 +132,15 @@
                         android:textSize="24sp"
                         android:fontFamily="@font/poppins_extra_bold"
                         />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Peak Power"
-                        android:layout_marginBottom="@dimen/margin_10"
                         android:layout_gravity="bottom|center"
-                        />
+                        android:layout_marginBottom="@dimen/margin_10"
+                        android:fontFamily="@font/poppins_light"
+                        android:text="Peak Power"
+                        android:textColor="#B5B5B5" />
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -147,6 +164,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Wasted"
+                        android:textColor="#B5B5B5"
+                        android:fontFamily="@font/poppins_light"
                         android:layout_marginBottom="@dimen/margin_10"
                         android:layout_gravity="bottom|center"
                         />
@@ -172,6 +191,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Efisiensi%"
+                        android:textColor="#B5B5B5"
+                        android:fontFamily="@font/poppins_light"
                         android:layout_marginBottom="@dimen/margin_10"
                         android:layout_gravity="bottom|center"
                         />
@@ -183,12 +204,22 @@
             </LinearLayout>
 
             <TextView
+                android:layout_marginTop="@dimen/margin_40"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hari ini, 09, September 2024"
+                android:text="Tren Konsumsi Harian"
+                android:textSize="20sp"
+                android:textColor="@color/blue3"
+                android:fontFamily="@font/poppins_bold"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7 Hari Terakhir"
                 android:textSize="14sp"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/margin_40"
+                android:layout_marginTop="@dimen/margin_20"
                 android:fontFamily="@font/poppins_extra_bold"
                 android:textColor="#CDCDCD"
                 />
@@ -213,6 +244,7 @@
                 android:backgroundTint="#816591A8"
                 android:layout_marginTop="@dimen/margin_10"
                 android:layout_gravity="end"
+                android:fontFamily="@font/poppins_bold"
                 android:textAllCaps="false"
                 android:text="Lihat Selengkapnya"
                 />
@@ -221,7 +253,7 @@
                 android:layout_marginTop="@dimen/margin_40"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Aktivitas Pemakaian Perangkat"
+                android:text="Puncak Konsumsi Energi"
                 android:textSize="20sp"
                 android:textColor="@color/blue3"
                 android:fontFamily="@font/poppins_bold"
@@ -246,6 +278,106 @@
                 android:layout_marginTop="@dimen/margin_10"
                 android:layout_gravity="end"
                 android:textAllCaps="false"
+                android:fontFamily="@font/poppins_bold"
+                android:text="@string/lihat_selengkapnya"
+                />
+
+            <TextView
+                android:layout_marginTop="@dimen/margin_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Voltase Tegangan"
+                android:textSize="20sp"
+                android:textColor="@color/blue3"
+                android:fontFamily="@font/poppins_bold"
+                />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:cardBackgroundColor="#F6F6F6"
+                app:cardCornerRadius="@dimen/margin_20">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cornerRadius="@dimen/margin_20"
+                android:backgroundTint="#816591A8"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_gravity="end"
+                android:fontFamily="@font/poppins_bold"
+                android:textAllCaps="false"
+                android:text="@string/lihat_selengkapnya"
+                />
+
+            <TextView
+                android:layout_marginTop="@dimen/margin_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Puncak Intensitas Listrik"
+                android:textSize="20sp"
+                android:textColor="@color/blue3"
+                android:fontFamily="@font/poppins_bold"
+                />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:cardBackgroundColor="#F6F6F6"
+                app:cardCornerRadius="@dimen/margin_20">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cornerRadius="@dimen/margin_20"
+                android:backgroundTint="#816591A8"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_gravity="end"
+                android:fontFamily="@font/poppins_bold"
+                android:textAllCaps="false"
+                android:text="@string/lihat_selengkapnya"
+                />
+
+            <TextView
+                android:layout_marginTop="@dimen/margin_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pemantauan Submetering"
+                android:textSize="20sp"
+                android:textColor="@color/blue3"
+                android:fontFamily="@font/poppins_bold"
+                />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:cardBackgroundColor="#F6F6F6"
+                app:cardCornerRadius="@dimen/margin_20">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cornerRadius="@dimen/margin_20"
+                android:backgroundTint="#816591A8"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_gravity="end"
+                android:textAllCaps="false"
+                android:fontFamily="@font/poppins_bold"
                 android:layout_marginBottom="100dp"
                 android:text="@string/lihat_selengkapnya"
                 />
