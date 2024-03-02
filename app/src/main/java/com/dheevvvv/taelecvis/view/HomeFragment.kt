@@ -23,12 +23,16 @@ import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
 import com.dheevvvv.taelecvis.viewmodel.UserViewModel
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.charts.ScatterChart
 import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.utils.ColorTemplate
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -156,8 +160,8 @@ class HomeFragment : Fragment() {
                     if (it!=null){
 //                        Log.e("fetch Peak", "success")
 //                        Log.e("data Peak", "${it.size}")
-                        val scatterChartStabilitasTegangan = binding.chartVoltageScatter
-                        showVoltageStabilityScatterPlot(scatterChartStabilitasTegangan, it, startDate = "2007-12-20", endDate = "2007-12-20")
+                        val barChartStabilitasTegangan = binding.chartVoltageBar
+                        showVoltageStabilityBarChart(barChartStabilitasTegangan, it, startDate = "2007-12-20", endDate = "2007-12-20")
 
                     } else{
                         Log.e("fetch Peak", "null")
@@ -166,6 +170,23 @@ class HomeFragment : Fragment() {
             }
         })
 
+        //sub metering
+        userViewModel.userId.observe(viewLifecycleOwner, Observer {userId->
+            if (userId!=null){
+                homeViewModel.callApiGetPowerUsage(userId = userId, startDate = "2007-12-20", endDate = "2007-12-20")
+                homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer {
+                    if (it!=null){
+//                        Log.e("fetch Peak", "success")
+//                        Log.e("data Peak", "${it.size}")
+                        val pieChartSubMetering = binding.pieCharrSubMetering
+                        showSubMeteringCompositionPieChart(pieChartSubMetering, it, startDate = "2007-12-20", endDate = "2007-12-20")
+
+                    } else{
+                        Log.e("fetch Peak", "null")
+                    }
+                })
+            }
+        })
     }
 
 
@@ -427,63 +448,132 @@ class HomeFragment : Fragment() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun showVoltageStabilityScatterPlot(scatterChart: ScatterChart, dataList: List<Data>, startDate: String, endDate: String) {
+    private fun showVoltageStabilityBarChart(barChart: BarChart, dataList: List<Data>, startDate: String, endDate: String) {
         // Calculate average voltage for each hour
         val averageVoltages = calculateAverageVoltage(dataList, startDate, endDate)
 
         // Prepare entries for the chart
-        val entries = ArrayList<Entry>()
-        val disturbedEntries = ArrayList<Entry>()
+        val entries = ArrayList<BarEntry>()
+        val disturbedEntries = ArrayList<BarEntry>()
         val labels = ArrayList<String>()
 
         for ((hour, voltage) in averageVoltages) {
-            entries.add(Entry(hour.toFloat(), voltage))
+            entries.add(BarEntry(hour.toFloat(), voltage))
             labels.add("$hour:00") // Add a label for each hour
 
             // Check for disturbed points
             if (voltage < LOW_VOLTAGE_THRESHOLD || voltage > HIGH_VOLTAGE_THRESHOLD) {
-                disturbedEntries.add(Entry(hour.toFloat(), voltage))
+                disturbedEntries.add(BarEntry(hour.toFloat(), voltage))
             }
         }
 
         // Create dataset for average voltages
-        val dataSet = ScatterDataSet(entries, "Average Voltage")
-        dataSet.color = Color.BLUE // Set color for the scatter points
-        dataSet.setDrawValues(false) // Hide values for scatter points
+        val dataSet = BarDataSet(entries, "Average Voltage")
+        dataSet.color = Color.BLUE // Set color for the bars
 
         // Create dataset for disturbed points
-        val disturbedDataSet = ScatterDataSet(disturbedEntries, "Disturbed Voltage")
-        disturbedDataSet.color = Color.RED // Set color for disturbed points
-        disturbedDataSet.setDrawValues(true) // Show values for disturbed points
+        val disturbedDataSet = BarDataSet(disturbedEntries, "Disturbed Voltage")
+        disturbedDataSet.color = Color.RED // Set color for disturbed bars
 
-        // Create scatter data and add datasets to it
-        val scatterData = ScatterData(dataSet, disturbedDataSet)
-        scatterChart.data = scatterData
-        scatterChart.setTouchEnabled(true)
-        scatterChart.isDragEnabled = true
-        scatterChart.setScaleEnabled(true)
-        scatterChart.setPinchZoom(true)
+        // Create bar data and add datasets to it
+        val barData = BarData(dataSet, disturbedDataSet)
+        barChart.data = barData
 
         // Set description for the chart
         val description = Description()
-        description.text = "Voltage Stability Scatter Plot"
-        scatterChart.description = description
+        description.text = "Voltage Stability Bar Chart"
+        barChart.description = description
 
         // Customize X axis
-        val xAxis = scatterChart.xAxis
+        val xAxis = barChart.xAxis
         xAxis.valueFormatter = IndexAxisValueFormatter(labels)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
 
         // Customize Y axis
-        val yAxis = scatterChart.axisLeft
+        val yAxis = barChart.axisLeft
         yAxis.axisMinimum = 0f
 
         // Invalidate and refresh the chart
-        scatterChart.invalidate()
+        barChart.invalidate()
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calculateSubMeteringComposition(dataList: List<Data>, startDate: String, endDate: String): Map<String, Float> {
+        val subMeteringComposition = mutableMapOf<String, Float>()
 
+        // Filter data for the specified date range
+        val filteredData = dataList.filter { it.date in startDate..endDate }
+
+        // Calculate total energy consumption for the specified date range
+        val totalEnergy = filteredData.sumOf { it.subMetering1.toDouble() + it.subMetering2.toDouble() + it.subMetering3.toDouble() }
+            .toFloat()
+
+        // Calculate composition of sub-metering
+        val subMetering1Energy = filteredData.sumOf { it.subMetering1.toDouble() }.toFloat()
+        val subMetering2Energy = filteredData.sumOf { it.subMetering2.toDouble() }.toFloat()
+        val subMetering3Energy = filteredData.sumOf { it.subMetering3.toDouble() }.toFloat()
+
+        // Calculate percentage composition
+        subMeteringComposition["Sub-Metering 1"] = (subMetering1Energy / totalEnergy) * 100
+        subMeteringComposition["Sub-Metering 2"] = (subMetering2Energy / totalEnergy) * 100
+        subMeteringComposition["Sub-Metering 3"] = (subMetering3Energy / totalEnergy) * 100
+
+        return subMeteringComposition
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showSubMeteringCompositionPieChart(pieChart: PieChart, dataList: List<Data>, startDate: String, endDate: String) {
+        // Calculate sub-metering composition
+        val subMeteringComposition = calculateSubMeteringComposition(dataList, startDate, endDate)
+
+        // Prepare entries for the pie chart
+        val entries = ArrayList<PieEntry>()
+        val labels = ArrayList<String>()
+
+        subMeteringComposition.forEach { (subMeter, percentage) ->
+            val descriptionl = getSubMeterDescription(subMeter)
+            val label = "$descriptionl"
+            entries.add(PieEntry(percentage, label))
+            labels.add(descriptionl)
+        }
+
+        // Create a dataset and add entries to it
+        val dataSet = PieDataSet(entries, "")
+        dataSet.setColors(*ColorTemplate.MATERIAL_COLORS)
+        pieChart.setDrawEntryLabels(false)
+        dataSet.valueTextSize = 14f
+
+
+        // Create pie data and set dataset
+        val pieData = PieData(dataSet)
+        pieData.setValueFormatter(PercentFormatter(pieChart))
+
+        // Set description for the chart
+        val description = Description()
+        description.text = "Sub-Metering Composition"
+        pieChart.description = description
+
+        // Set labels for the chart
+        pieChart.setDrawMarkers(true)
+
+
+        // Set data for the chart
+        pieChart.data = pieData
+
+        // Invalidate and refresh the chart
+        pieChart.invalidate()
+    }
+
+
+    private fun getSubMeterDescription(subMeter: String): String {
+        return when (subMeter) {
+            "Sub-Metering 1" -> "Kitchen"
+            "Sub-Metering 2" -> "Laundry Room"
+            "Sub-Metering 3" -> " Water-heater and an Air-conditioner."
+            else -> ""
+        }
+    }
 
 
 
