@@ -37,4 +37,9 @@
     <string name="no_handphone">No.Handphone</string>
     <string name="nama">Nama</string>
     <string name="lihat_selengkapnya">Lihat Selengkapnya</string>
+    <string name="overview">Overview</string>
+    <string name="high">High</string>
+    <string name="low">Low</string>
+    <string name="total">Total</string>
+    <string name="average">Average</string>
 </resources>
