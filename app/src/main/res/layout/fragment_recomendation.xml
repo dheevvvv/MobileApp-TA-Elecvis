@@ -20,222 +20,218 @@
             android:padding="@dimen/margin_20"
             >
 
-            <com.google.android.material.card.MaterialCardView
+            <TextView
+                android:id="@+id/tv_welcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Energy Reccomendation"
+                android:textColor="@color/blue3"
+                android:textSize="24sp"
+                android:layout_marginStart="@dimen/margin_20"
+                android:fontFamily="@font/poppins_bold"
+                />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#60CC65"
-                app:cardCornerRadius="@dimen/margin_10"
+                android:orientation="horizontal"
                 >
+
+                <RelativeLayout
+                    android:id="@+id/rl_circle"
+                    android:layout_width="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/circularProgressBar"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_centerInParent="true"
+                        app:indicatorColor="@color/medium_siate_blue"
+                        app:trackColor="#37C81D"
+                        app:trackThickness="15dp"
+                        app:indicatorSize="100dp" />
+
+                    <TextView
+                        android:id="@+id/progressText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="80%"
+                        android:fontFamily="@font/poppins_extra_bold"
+                        android:textColor="#37C81D"
+                        android:textSize="24sp" />
+                </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/tv_welcome"
+                    android:id="@+id/tvRecommendationIndikator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Energy Reccomendation"
-                    android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:layout_marginStart="@dimen/margin_20"
-                    android:fontFamily="@font/poppins_bold"
-                    />
-            </com.google.android.material.card.MaterialCardView>
+                    android:text="Indikator ini Bersadasarkan perhitungan indikator teknikal dari konsumsi harian energi"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textAlignment="center"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20"
+                android:text="Indikator Acuan"
+                android:textColor="@color/blue3"
+                android:textSize="16sp"
+                android:layout_marginStart="@dimen/margin_20"
+                android:fontFamily="@font/poppins_bold"
+                />
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="200dp"
-                android:layout_marginTop="@dimen/margin_40"
-                app:cardCornerRadius="@dimen/margin_10"
+                app:cardBackgroundColor="#EAEAEA"
+                app:cardElevation="@dimen/margin_10"
                 >
-                <LinearLayout
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:src="@drawable/ic_check"
-                        />
+                    android:padding="@dimen/margin_10">
 
                     <TextView
+                        android:id="@+id/tvNilai"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Turn Off Air Conditioner"
-                        android:textColor="@color/earth_02"
-                        android:textSize="18sp"
-                        android:layout_marginStart="@dimen/margin_20"
+                        android:text="@string/nilai"
                         android:fontFamily="@font/poppins_medium"
-                        />
+                        android:textAlignment="center"
+                        android:textColor="@color/grey"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tv80"
+                        app:layout_constraintTop_toBottomOf="@+id/tvNilai"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginTop="@dimen/margin_10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="> 80%"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tv40"
+                        app:layout_constraintTop_toBottomOf="@+id/tv80"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginTop="@dimen/margin_10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="40% - 80%"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tv20"
+                        app:layout_constraintTop_toBottomOf="@+id/tv40"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="@dimen/margin_10"
+                        android:layout_height="wrap_content"
+                        android:text="< 20%"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
 
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="@dimen/margin_20"
-                        android:src="@drawable/baseline_expand_more_24"
-                        />
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvAksi"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="@dimen/margin_20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Aksi"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tvOver"
+                        app:layout_constraintTop_toBottomOf="@+id/tvNilai"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="@dimen/margin_20"
+                        android:layout_marginTop="@dimen/margin_10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Over"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tvNetral"
+                        app:layout_constraintTop_toBottomOf="@+id/tv80"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="@dimen/margin_20"
+                        android:layout_marginTop="@dimen/margin_10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Netral"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tvSaving"
+                        app:layout_constraintTop_toBottomOf="@+id/tv40"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="@dimen/margin_20"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="@dimen/margin_10"
+                        android:layout_height="wrap_content"
+                        android:text="Saving"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:elevation="200dp"
-                android:layout_marginTop="@dimen/margin_40"
-                app:cardCornerRadius="@dimen/margin_10"
-                >
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                android:layout_marginTop="@dimen/margin_25"
+                android:text="Recommendation"
+                android:textColor="@color/blue3"
+                android:textSize="16sp"
+                android:layout_marginStart="@dimen/margin_20"
+                android:fontFamily="@font/poppins_bold"
+                />
 
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:src="@drawable/ic_check"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Put Sleep Timer on Smart TV"
-                        android:textColor="@color/earth_02"
-                        android:textSize="18sp"
-                        android:layout_marginStart="@dimen/margin_20"
-                        android:fontFamily="@font/poppins_medium"
-                        />
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="@dimen/margin_20"
-                        android:src="@drawable/baseline_expand_more_24"
-                        />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvRecommendation"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_10"
                 android:layout_height="wrap_content"
-                android:elevation="200dp"
-                android:layout_marginTop="@dimen/margin_40"
-                app:cardCornerRadius="@dimen/margin_10"
-                >
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:src="@drawable/ic_check"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lower Monitor Refresh rate"
-                        android:textColor="@color/earth_02"
-                        android:textSize="18sp"
-                        android:layout_marginStart="@dimen/margin_20"
-                        android:fontFamily="@font/poppins_medium"
-                        />
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="@dimen/margin_20"
-                        android:src="@drawable/baseline_expand_more_24"
-                        />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="200dp"
-                android:layout_marginTop="@dimen/margin_40"
-                app:cardCornerRadius="@dimen/margin_10"
-                >
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:src="@drawable/ic_check"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Set Your PC to Best efficiency"
-                        android:textColor="@color/earth_02"
-                        android:textSize="18sp"
-                        android:layout_marginStart="@dimen/margin_20"
-                        android:fontFamily="@font/poppins_medium"
-                        />
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="@dimen/margin_20"
-                        android:src="@drawable/baseline_expand_more_24"
-                        />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="200dp"
-                android:layout_marginTop="@dimen/margin_40"
-                app:cardCornerRadius="@dimen/margin_10"
-                >
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:src="@drawable/ic_check"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Turn Off Air Conditioner"
-                        android:textColor="@color/earth_02"
-                        android:textSize="18sp"
-                        android:layout_marginStart="@dimen/margin_20"
-                        android:fontFamily="@font/poppins_medium"
-                        />
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="@dimen/margin_20"
-                        android:src="@drawable/baseline_expand_more_24"
-                        />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:text="Indikator ini Bersadasarkan perhitungan indikator teknikal dari konsumsi harian energi"
+                android:fontFamily="@font/poppins_medium"
+                android:textColor="@color/grey"
+                android:textSize="14sp" />
 
 
 
         </LinearLayout>
 
     </ScrollView>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/main_bottommenu"
-        android:layout_gravity="bottom"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

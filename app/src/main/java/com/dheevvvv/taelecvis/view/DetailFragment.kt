@@ -5,10 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.databinding.FragmentDetailBinding
-import com.dheevvvv.taelecvis.view.adapter.DetailAdapter
-import com.google.android.material.tabs.TabLayoutMediator
+import com.dheevvvv.taelecvis.view.adapter.DetailPagerAdapter
 
 
 class DetailFragment : Fragment() {
@@ -32,7 +30,7 @@ class DetailFragment : Fragment() {
         val tabTitlesList = listOf("Description Info", "Recommendation")
 
         val fragments = listOf(ElectricInfoFragment(), RecomendationFragment())
-        val adapter = DetailAdapter(childFragmentManager, fragments, tabTitlesList)
+        val adapter = DetailPagerAdapter(childFragmentManager, fragments, tabTitlesList)
         viewPager.adapter = adapter
 
 

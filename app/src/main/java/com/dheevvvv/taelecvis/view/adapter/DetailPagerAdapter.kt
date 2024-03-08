@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 
-class DetailAdapter (fm: FragmentManager, private val fragments: List<Fragment>, private val titles: List<String>) :
+class DetailPagerAdapter (fm: FragmentManager, private val fragments: List<Fragment>, private val titles: List<String>) :
     FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getCount(): Int = fragments.size
