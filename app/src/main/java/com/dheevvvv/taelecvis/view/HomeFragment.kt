@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -44,7 +45,7 @@ private const val HIGH_VOLTAGE_THRESHOLD = 240 // batas tinggi tegangan
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val userViewModel: UserViewModel by viewModels()
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -187,6 +188,15 @@ class HomeFragment : Fragment() {
                 })
             }
         })
+
+        binding.btnTrenKonsumsiHarian.setOnClickListener {
+            val idChartData = 1
+            val bundle = Bundle()
+            bundle.putInt("dataChartId", idChartData)
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        }
+
+
     }
 
 
@@ -209,6 +219,8 @@ class HomeFragment : Fragment() {
         val dataSet = LineDataSet(entries, "Daily Consumption (kW)")
         val lineData = LineData(dataSet)
         lineChart.data = lineData
+        homeViewModel.updateChartDataTrenKonsumsiHarian(lineData)
+        homeViewModel.saveLabelsTrenKonsumsiHarian(labels)
 
         val description = Description()
         description.text = "Daily Consumption Trend"

@@ -43,4 +43,8 @@
     <string name="total">Total</string>
     <string name="average">Average</string>
     <string name="nilai">Nilai</string>
+    <string name="deskripsi">Deskripsi</string>
+    <string name="_20"><![CDATA[< 20%]]></string>
+    <string name="_80"><![CDATA[> 80%]]></string>
+    <string name="_40_80">40% - 80%</string>
 </resources>

@@ -232,6 +232,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTrenKonsumsiHarian"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cornerRadius="@dimen/margin_20"
@@ -279,6 +280,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPuncakKonsumsiEnergi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cornerRadius="@dimen/margin_20"
@@ -314,6 +316,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnVoltage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cornerRadius="@dimen/margin_20"
@@ -359,6 +362,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPuncakIntensitas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cornerRadius="@dimen/margin_20"
@@ -394,6 +398,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubMetering"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cornerRadius="@dimen/margin_20"

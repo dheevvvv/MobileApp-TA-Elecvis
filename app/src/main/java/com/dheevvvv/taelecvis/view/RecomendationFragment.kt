@@ -25,34 +25,7 @@ class RecomendationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { item->
-            when(item.itemId) {
-                R.id.home -> {
-                    findNavController().navigate(R.id.action_recomendationFragment_to_homeFragment)
-                    false
-                }
 
-                R.id.notification -> {
-                    findNavController().navigate(R.id.action_recomendationFragment_to_notificationFragment)
-                    false
-                }
-
-                R.id.report -> {
-                    findNavController().navigate(R.id.action_recomendationFragment_to_reportFragment)
-                    false
-                }
-
-                R.id.account -> {
-                    findNavController().navigate(R.id.action_recomendationFragment_to_profileFragment)
-                    false
-                }
-
-                else -> {
-                    binding.bottomNavigation.menu.findItem(R.id.recommendation).isChecked = true
-                    true
-                }
-            }
-        }
 
     }
 
