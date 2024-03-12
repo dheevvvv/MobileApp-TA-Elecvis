@@ -1,29 +1,26 @@
 package com.dheevvvv.taelecvis.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.dheevvvv.taelecvis.databinding.FragmentDetailBinding
-import com.dheevvvv.taelecvis.model.power_usage.Data
 import com.dheevvvv.taelecvis.view.adapter.DetailPagerAdapter
 import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.ArrayList
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -51,20 +48,50 @@ class DetailFragment : Fragment() {
         displayChart(idChartData)
 
 
+        val tabLayout = binding.tabLayoutDetail
+        val viewPager2 = binding.viewPagerDetail
+        val adapter = DetailPagerAdapter(childFragmentManager, lifecycle)
+        viewPager2.adapter = adapter
+
+//        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+//            tab.text = when (position) {
+//                0 -> "Info"
+//                1 -> "Recommendation"
+//                else -> throw IllegalArgumentException("Invalid position")
+//            }
+//        }.attach()
+
+        tabLayout.addTab(tabLayout.newTab().setText("Info"))
+        tabLayout.addTab(tabLayout.newTab().setText("Recommendation"))
 
 
-//        val tabLayout = binding.tabLayoutDetail
-//        val viewPager = binding.viewPagerDetail
-//        val tabTitlesList = listOf("Description Info", "Recommendation")
-//
-//        val fragments = listOf(ElectricInfoFragment(), RecomendationFragment())
-//        val adapter = DetailPagerAdapter(requireFragmentManager(), fragments, tabTitlesList)
-//        viewPager.adapter = adapter
-//
-//
-//        tabLayout.setupWithViewPager(viewPager)
+
+
+        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                viewPager2.currentItem = tab!!.position
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                //
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                //
+            }
+
+        })
+
+        viewPager2.registerOnPageChangeCallback(object : OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                tabLayout.selectTab(tabLayout.getTabAt(position))
+            }
+        })
+
     }
 
+    @SuppressLint("SetTextI18n")
     private fun displayChart(idChartData: Int?) {
         when (idChartData) {
             1 -> {
@@ -92,6 +119,7 @@ class DetailFragment : Fragment() {
                                 yAxis.axisMinimum = 0f
 
                                 lineChart.invalidate()
+                                binding.tvTitleDetail.text = "Tren Konsumsi Harian"
                                 binding.mcBar.visibility = View.GONE
                             } else {
                                 Toast.makeText(requireContext(), "Labels null", Toast.LENGTH_SHORT).show()

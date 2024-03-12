@@ -2,14 +2,27 @@ package com.dheevvvv.taelecvis.view.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.bumptech.glide.manager.Lifecycle
+import com.dheevvvv.taelecvis.view.ElectricInfoFragment
+import com.dheevvvv.taelecvis.view.RecomendationFragment
 
-class DetailPagerAdapter (fm: FragmentManager, private val fragments: List<Fragment>, private val titles: List<String>) :
-    FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class DetailPagerAdapter(fragment: FragmentManager, lifecycle: androidx.lifecycle.Lifecycle) :
+    FragmentStateAdapter(fragment, lifecycle) {
 
-    override fun getCount(): Int = fragments.size
+    override fun getItemCount(): Int {
+        return 2
+    }
 
-    override fun getItem(position: Int): Fragment = fragments[position]
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> ElectricInfoFragment()
+            1 -> RecomendationFragment()
+            else -> throw IllegalArgumentException("Invalid position")
+        }
+    }
 
-    override fun getPageTitle(position: Int): CharSequence? = titles[position]
+
 }

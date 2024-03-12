@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dheevvvv.taelecvis.R
+import com.dheevvvv.taelecvis.databinding.FragmentElectricInfoBinding
 
 
 class ElectricInfoFragment : Fragment() {
+    private lateinit var binding : FragmentElectricInfoBinding
 
 
     override fun onCreateView(
@@ -16,7 +18,8 @@ class ElectricInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_electric_info, container, false)
+        binding = FragmentElectricInfoBinding.inflate(layoutInflater, container, false)
+        return binding!!.root
     }
 
 
