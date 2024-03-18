@@ -47,4 +47,7 @@
     <string name="_20"><![CDATA[< 20%]]></string>
     <string name="_80"><![CDATA[> 80%]]></string>
     <string name="_40_80">40% - 80%</string>
+    <string name="peak_power">Peak Power</string>
+    <string name="wasted">Wasted</string>
+    <string name="eficiency">Eficiency</string>
 </resources>
