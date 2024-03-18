@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/basebackground"
     tools:context=".view.ConsumptionTransactionFragment">
 
     <ScrollView
@@ -18,12 +20,143 @@
             android:orientation="vertical"
             >
 
+            <TextView
+                android:id="@+id/tvTitleDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Energy"
+                android:fontFamily="@font/poppins_semi_bold"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_20"
+                android:textColor="#EAEAEA"
+                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                
+                android:padding="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_40"
+                android:layout_marginBottom="@dimen/margin_20"
+                android:orientation="horizontal"
                 >
 
+                <ImageView
+                    android:layout_width="@dimen/margin_40"
+                    android:layout_height="@dimen/margin_40"
+                    android:layout_gravity="center"
+                    android:src="@drawable/bio_energy"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Usage"
+                    android:textColor="@color/blue3"
+                    android:layout_marginEnd="@dimen/margin_10"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:fontFamily="@font/poppins_semi_bold"
+                    android:layout_gravity="center"
+                    />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="100dp"
+                    android:layout_height="75dp"
+                    app:cardBackgroundColor="@color/white2"
+                    app:cardCornerRadius="@dimen/margin_20">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/margin_10"
+                        >
+
+                        <ImageView
+                            android:id="@+id/ivLightning"
+                            android:layout_width="@dimen/margin_25"
+                            android:layout_height="@dimen/margin_25"
+                            android:src="@drawable/lightning2"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+                        <TextView
+                            android:id="@+id/tvTxtEnergy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Energy"
+                            app:layout_constraintStart_toEndOf="@+id/ivLightning"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textSize="12sp"
+                            android:layout_gravity="center"
+                            android:textColor="@color/earth_02"
+                            />
+                        <TextView
+                            android:id="@+id/tvTotalKwh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="245 kWh"
+                            android:layout_marginStart="@dimen/margin_10"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ivLightning"
+                            android:fontFamily="@font/poppins_semi_bold"
+                            android:textSize="16sp"
+                            android:layout_gravity="center"
+                            android:textColor="@color/earth_02"
+                            />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="150dp"
+                    android:layout_height="75dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    app:cardBackgroundColor="@color/white2"
+                    app:cardCornerRadius="@dimen/margin_20">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/margin_10"
+                        >
+
+                        <ImageView
+                            android:id="@+id/ivMoney"
+                            android:layout_width="@dimen/margin_25"
+                            android:layout_height="@dimen/margin_25"
+                            android:src="@drawable/money"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+                        <TextView
+                            android:id="@+id/tvTxtEstimated"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Estimated"
+                            android:layout_marginStart="@dimen/margin_10"
+                            app:layout_constraintStart_toEndOf="@+id/ivMoney"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textSize="12sp"
+                            android:layout_gravity="center"
+                            android:textColor="@color/earth_02"
+                            />
+                        <TextView
+                            android:id="@+id/tvTotalPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="IDR. 2.500.000"
+                            android:layout_marginStart="@dimen/margin_10"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ivMoney"
+                            android:fontFamily="@font/poppins_semi_bold"
+                            android:textSize="14sp"
+                            android:layout_gravity="center"
+                            android:textColor="@color/earth_02"
+                            />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 
@@ -71,5 +204,13 @@
 
 
     </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/main_bottommenu"
+        android:layout_gravity="bottom"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
