@@ -87,11 +87,7 @@ class DetailFragment : Fragment() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 //                tabLayout.selectTab(tabLayout.getTabAt(position))
-                val navController = findNavController()
-                when (position) {
-                    0 -> navController.navigate(R.id.electricInfoFragment)
-                    1 -> navController.navigate(R.id.recomendationFragment)
-                }
+
             }
         })
 
@@ -147,6 +143,10 @@ class DetailFragment : Fragment() {
                         var totalValue = 0f
                         var entryCount = 0
 
+
+
+
+
                         // Iterasi melalui set data dalam LineData
                         for (i in 0 until lineData.dataSetCount) {
                             val dataSet = lineData.getDataSetByIndex(i)
@@ -170,11 +170,15 @@ class DetailFragment : Fragment() {
                             }
                         }
                         val averageValue = totalValue / entryCount
+                        val highestValueFormatted = String.format("%.3f", highestValue)
+                        val lowestValueFormatted = String.format("%.3f", lowestValue)
+                        val totalValueFormatted = String.format("%.3f", totalValue)
+                        val averageValueFormatted = String.format("%.3f", averageValue)
 
-                        binding.tvHighValue.setText("$highestValue" + " " + "kWh")
-                        binding.tvLowValue.setText("$lowestValue" + " " + "kWh")
-                        binding.tvAverageValue.setText("$averageValue" + " " + "kWh")
-                        binding.tvTotalValue.setText("$totalValue" + " " + "kWh")
+                        binding.tvHighValue.setText(highestValueFormatted + " " + "kWh")
+                        binding.tvLowValue.setText(lowestValueFormatted + " " + "kWh")
+                        binding.tvAverageValue.setText(averageValueFormatted + " " + "kWh")
+                        binding.tvTotalValue.setText(totalValueFormatted + " " + "kWh")
 
 
                     } else {
@@ -249,11 +253,15 @@ class DetailFragment : Fragment() {
                             }
                         }
                         val averageValue = totalValue / entryCount
+                        val highestValueFormatted = String.format("%.3f", highestValue)
+                        val lowestValueFormatted = String.format("%.3f", lowestValue)
+                        val totalValueFormatted = String.format("%.3f", totalValue)
+                        val averageValueFormatted = String.format("%.3f", averageValue)
 
-                        binding.tvHighValue.setText("$highestValue" + " " + "kWh")
-                        binding.tvLowValue.setText("$lowestValue" + " " + "kWh")
-                        binding.tvAverageValue.setText("$averageValue" + " " + "kWh")
-                        binding.tvTotalValue.setText("$totalValue" + " " + "kWh")
+                        binding.tvHighValue.setText(highestValueFormatted + " " + "kWh")
+                        binding.tvLowValue.setText(lowestValueFormatted + " " + "kWh")
+                        binding.tvAverageValue.setText(averageValueFormatted + " " + "kWh")
+                        binding.tvTotalValue.setText(totalValueFormatted + " " + "kWh")
 
 
                     } else {
@@ -328,11 +336,15 @@ class DetailFragment : Fragment() {
                             }
                         }
                         val averageValue = totalValue / entryCount
+                        val highestValueFormatted = String.format("%.3f", highestValue)
+                        val lowestValueFormatted = String.format("%.3f", lowestValue)
+                        val totalValueFormatted = String.format("%.3f", totalValue)
+                        val averageValueFormatted = String.format("%.3f", averageValue)
 
-                        binding.tvHighValue.setText("$highestValue" + " " + "V (volt)")
-                        binding.tvLowValue.setText("$lowestValue" + " " + "V (volt)")
-                        binding.tvAverageValue.setText("$averageValue" + " " + "V (volt)")
-                        binding.tvTotalValue.setText("$totalValue" + " " + "V (volt)")
+                        binding.tvHighValue.setText(highestValueFormatted + " " + "V (volt)")
+                        binding.tvLowValue.setText(lowestValueFormatted + " " + "V (volt)")
+                        binding.tvAverageValue.setText(averageValueFormatted + " " + "V (volt)")
+                        binding.tvTotalValue.setText(totalValueFormatted + " " + "V (volt)")
 
 
                     } else {
@@ -407,11 +419,15 @@ class DetailFragment : Fragment() {
                             }
                         }
                         val averageValue = totalValue / entryCount
+                        val highestValueFormatted = String.format("%.3f", highestValue)
+                        val lowestValueFormatted = String.format("%.3f", lowestValue)
+                        val totalValueFormatted = String.format("%.3f", totalValue)
+                        val averageValueFormatted = String.format("%.3f", averageValue)
 
-                        binding.tvHighValue.setText("$highestValue" + " " + "A (ampere)")
-                        binding.tvLowValue.setText("$lowestValue" + " " + "A (ampere)")
-                        binding.tvAverageValue.setText("$averageValue" + " " + "A (ampere)")
-                        binding.tvTotalValue.setText("$totalValue" + " " + "A (ampere)")
+                        binding.tvHighValue.setText(highestValueFormatted + " " + "A (ampere)")
+                        binding.tvLowValue.setText(lowestValueFormatted + " " + "A (ampere)")
+                        binding.tvAverageValue.setText(averageValueFormatted + " " + "A (ampere)")
+                        binding.tvTotalValue.setText(totalValueFormatted + " " + "A (ampere)")
 
 
                     } else {
@@ -450,7 +466,7 @@ class DetailFragment : Fragment() {
 
                         // Invalidate and refresh the chart
                         pieChart.invalidate()
-                        binding.tvTitleDetail.text = "Peak Energy Konsumsi"
+                        binding.tvTitleDetail.text = "Sub-Meter Composition"
                         binding.mcBar.visibility = View.GONE
                         binding.mcChart.visibility = View.GONE
 
@@ -486,11 +502,15 @@ class DetailFragment : Fragment() {
                             }
                         }
                         val averageValue = totalValue / entryCount
+                        val highestValueFormatted = String.format("%.3f", highestValue)
+                        val lowestValueFormatted = String.format("%.3f", lowestValue)
+                        val totalValueFormatted = String.format("%.3f", totalValue)
+                        val averageValueFormatted = String.format("%.3f", averageValue)
 
-                        binding.tvHighValue.setText("$highestValue" + " " + "Watt")
-                        binding.tvLowValue.setText("$lowestValue" + " " + "Watt")
-                        binding.tvAverageValue.setText("$averageValue" + " " + "Watt")
-                        binding.tvTotalValue.setText("$totalValue" + " " + "Watt")
+                        binding.tvHighValue.setText(highestValueFormatted + " " + "Watt")
+                        binding.tvLowValue.setText(lowestValueFormatted + " " + "Watt")
+                        binding.tvAverageValue.setText(averageValueFormatted + " " + "Watt")
+                        binding.tvTotalValue.setText(totalValueFormatted + " " + "Watt")
 
 
                     } else {

@@ -264,7 +264,7 @@
                         >
 
                         <ImageView
-                            android:id="@+id/ivLightning"
+                            android:id="@+id/ivLightning3"
                             android:layout_width="@dimen/margin_25"
                             android:layout_height="@dimen/margin_25"
                             android:src="@drawable/lightning2"
@@ -272,11 +272,11 @@
                             app:layout_constraintTop_toTopOf="parent"
                             />
                         <TextView
-                            android:id="@+id/tvTxtEnergy"
+                            android:id="@+id/tvTxtEnergy3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Energy"
-                            app:layout_constraintStart_toEndOf="@+id/ivLightning"
+                            app:layout_constraintStart_toEndOf="@+id/ivLightning3"
                             app:layout_constraintTop_toTopOf="parent"
                             android:fontFamily="@font/poppins_medium"
                             android:textSize="12sp"
@@ -284,13 +284,13 @@
                             android:textColor="@color/earth_02"
                             />
                         <TextView
-                            android:id="@+id/tvTotalKwh"
+                            android:id="@+id/tvTotalKwh3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="245 kWh"
                             android:layout_marginStart="@dimen/margin_10"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/ivLightning"
+                            app:layout_constraintTop_toBottomOf="@+id/ivLightning3"
                             android:fontFamily="@font/poppins_semi_bold"
                             android:textSize="16sp"
                             android:layout_gravity="center"
@@ -316,7 +316,7 @@
                         >
 
                         <ImageView
-                            android:id="@+id/ivLightning"
+                            android:id="@+id/ivLightning1"
                             android:layout_width="@dimen/margin_25"
                             android:layout_height="@dimen/margin_25"
                             android:src="@drawable/lightning2"
@@ -324,11 +324,11 @@
                             app:layout_constraintTop_toTopOf="parent"
                             />
                         <TextView
-                            android:id="@+id/tvTxtEnergy"
+                            android:id="@+id/tvTxtEnergy1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Energy"
-                            app:layout_constraintStart_toEndOf="@+id/ivLightning"
+                            app:layout_constraintStart_toEndOf="@+id/ivLightning1"
                             app:layout_constraintTop_toTopOf="parent"
                             android:fontFamily="@font/poppins_medium"
                             android:textSize="12sp"
@@ -336,13 +336,13 @@
                             android:textColor="@color/earth_02"
                             />
                         <TextView
-                            android:id="@+id/tvTotalKwh"
+                            android:id="@+id/tvTotalKwh1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="245 kWh"
                             android:layout_marginStart="@dimen/margin_10"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/ivLightning"
+                            app:layout_constraintTop_toBottomOf="@+id/ivLightning1"
                             android:fontFamily="@font/poppins_semi_bold"
                             android:textSize="16sp"
                             android:layout_gravity="center"
@@ -378,7 +378,7 @@
                         >
 
                         <ImageView
-                            android:id="@+id/ivLightning"
+                            android:id="@+id/ivLightning2"
                             android:layout_width="@dimen/margin_25"
                             android:layout_height="@dimen/margin_25"
                             android:src="@drawable/lightning2"
@@ -386,11 +386,11 @@
                             app:layout_constraintTop_toTopOf="parent"
                             />
                         <TextView
-                            android:id="@+id/tvTxtEnergy"
+                            android:id="@+id/tvTxtEnergy2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Energy"
-                            app:layout_constraintStart_toEndOf="@+id/ivLightning"
+                            app:layout_constraintStart_toEndOf="@+id/ivLightning2"
                             app:layout_constraintTop_toTopOf="parent"
                             android:fontFamily="@font/poppins_medium"
                             android:textSize="12sp"
@@ -398,13 +398,13 @@
                             android:textColor="@color/earth_02"
                             />
                         <TextView
-                            android:id="@+id/tvTotalKwh"
+                            android:id="@+id/tvTotalKwh2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="245 kWh"
                             android:layout_marginStart="@dimen/margin_10"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/ivLightning"
+                            app:layout_constraintTop_toBottomOf="@+id/ivLightning2"
                             android:fontFamily="@font/poppins_semi_bold"
                             android:textSize="16sp"
                             android:layout_gravity="center"
