@@ -29,27 +29,26 @@ class NotificationFragment : Fragment() {
             when(item.itemId) {
                 R.id.home -> {
                     findNavController().navigate(R.id.action_notificationFragment_to_homeFragment)
-                    false
+                    true
                 }
 
-                R.id.recommendation -> {
-                    findNavController().navigate(R.id.action_notificationFragment_to_recomendationFragment)
-                    false
+                R.id.energy -> {
+                    findNavController().navigate(R.id.action_notificationFragment_to_consumptionTransactionFragment)
+                    true
                 }
 
                 R.id.report -> {
                     findNavController().navigate(R.id.action_notificationFragment_to_reportFragment)
-                    false
+                    true
                 }
 
                 R.id.account -> {
                     findNavController().navigate(R.id.action_notificationFragment_to_profileFragment)
-                    false
+                    true
                 }
 
                 else -> {
-                    binding.bottomNavigation.menu.findItem(R.id.notification).isChecked = true
-                    true
+                    false
                 }
             }
         }

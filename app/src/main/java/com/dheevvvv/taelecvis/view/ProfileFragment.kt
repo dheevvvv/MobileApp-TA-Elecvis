@@ -48,8 +48,8 @@ class ProfileFragment : Fragment() {
                 }
 
 
-                R.id.recommendation -> {
-                    findNavController().navigate(R.id.action_profileFragment_to_recomendationFragment)
+                R.id.energy -> {
+                    findNavController().navigate(R.id.action_profileFragment_to_consumptionTransactionFragment)
                     true
                 }
 
@@ -64,8 +64,7 @@ class ProfileFragment : Fragment() {
                 }
 
                 else -> {
-                    binding.bottomNavigation.menu.findItem(R.id.account).isChecked = true
-                    true
+                    false
                 }
             }
         }

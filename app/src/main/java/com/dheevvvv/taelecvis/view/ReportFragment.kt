@@ -32,8 +32,8 @@ class ReportFragment : Fragment() {
                     true
                 }
 
-                R.id.recommendation -> {
-                    findNavController().navigate(R.id.action_reportFragment_to_recomendationFragment)
+                R.id.energy -> {
+                    findNavController().navigate(R.id.action_reportFragment_to_consumptionTransactionFragment)
                     true
                 }
 
@@ -48,7 +48,6 @@ class ReportFragment : Fragment() {
                 }
 
                 else -> {
-                    binding.bottomNavigation.menu.findItem(R.id.report).isChecked = true
                     false
                 }
             }

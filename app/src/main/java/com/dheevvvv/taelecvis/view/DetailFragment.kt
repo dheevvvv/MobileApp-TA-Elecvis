@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.databinding.FragmentDetailBinding
 import com.dheevvvv.taelecvis.view.adapter.DetailPagerAdapter
 import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
@@ -53,39 +54,44 @@ class DetailFragment : Fragment() {
         val adapter = DetailPagerAdapter(childFragmentManager, lifecycle)
         viewPager2.adapter = adapter
 
-//        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-//            tab.text = when (position) {
-//                0 -> "Info"
-//                1 -> "Recommendation"
-//                else -> throw IllegalArgumentException("Invalid position")
+        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+            tab.text = when (position) {
+                0 -> "Info"
+                1 -> "Recommendation"
+                else -> throw IllegalArgumentException("Invalid position")
+            }
+        }.attach()
+
+//        tabLayout.addTab(tabLayout.newTab().setText("Info"))
+//        tabLayout.addTab(tabLayout.newTab().setText("Recommendation"))
+
+
+
+
+//        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener{
+//            override fun onTabSelected(tab: TabLayout.Tab?) {
+//                viewPager2.currentItem = tab!!.position
 //            }
-//        }.attach()
-
-        tabLayout.addTab(tabLayout.newTab().setText("Info"))
-        tabLayout.addTab(tabLayout.newTab().setText("Recommendation"))
-
-
-
-
-        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                viewPager2.currentItem = tab!!.position
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                //
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                //
-            }
-
-        })
+//
+//            override fun onTabUnselected(tab: TabLayout.Tab?) {
+//                //
+//            }
+//
+//            override fun onTabReselected(tab: TabLayout.Tab?) {
+//                //
+//            }
+//
+//        })
 
         viewPager2.registerOnPageChangeCallback(object : OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                tabLayout.selectTab(tabLayout.getTabAt(position))
+//                tabLayout.selectTab(tabLayout.getTabAt(position))
+                val navController = findNavController()
+                when (position) {
+                    0 -> navController.navigate(R.id.electricInfoFragment)
+                    1 -> navController.navigate(R.id.recomendationFragment)
+                }
             }
         })
 

@@ -6,10 +6,10 @@
         android:icon="@drawable/baseline_home_24"
         android:title="@string/home"/>
     <item
-        android:id="@+id/recommendation"
+        android:id="@+id/energy"
         android:enabled="true"
-        android:icon="@drawable/baseline_recommend_24"
-        android:title="@string/recommendation"/>
+        android:icon="@drawable/baseline_energy_savings_leaf_24"
+        android:title="@string/energy"/>
     <item
         android:id="@+id/report"
         android:enabled="true"
