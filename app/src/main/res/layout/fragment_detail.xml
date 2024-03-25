@@ -77,6 +77,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/mcPier"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    app:cardElevation="@dimen/margin_20"
+                    >
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </com.google.android.material.card.MaterialCardView>
 
             </FrameLayout>
 

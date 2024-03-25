@@ -197,7 +197,24 @@ class HomeFragment : Fragment() {
             bundle.putInt("dataChartId", idChartData)
             findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
         }
-
+        binding.btnPuncakKonsumsiEnergi.setOnClickListener {
+            val idChartData = 2
+            val bundle = Bundle()
+            bundle.putInt("dataChartId", idChartData)
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        }
+        binding.btnVoltage.setOnClickListener {
+            val idChartData = 3
+            val bundle = Bundle()
+            bundle.putInt("dataChartId", idChartData)
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        }
+        binding.btnPuncakIntensitas.setOnClickListener {
+            val idChartData = 4
+            val bundle = Bundle()
+            bundle.putInt("dataChartId", idChartData)
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        }
 
     }
 
@@ -330,6 +347,8 @@ class HomeFragment : Fragment() {
         val dataSet = BarDataSet(entries, "Peak Consumption (kW)")
         val barData = BarData(dataSet)
         barChart.data = barData
+        homeViewModel.updateChartDataPeakKonsumsi(barData)
+        homeViewModel.saveLabelsPeakKonsumsi(labels)
 
         // Set description for the chart
         val description = Description()
@@ -407,6 +426,8 @@ class HomeFragment : Fragment() {
         val description = Description()
         description.text = "Peak Global Intensity Trend"
         barChart.description = description
+        homeViewModel.updateChartDataIntensitas(barData)
+        homeViewModel.saveLabelsIntensitas(labels)
 
 
         // Customize X axis
@@ -492,6 +513,8 @@ class HomeFragment : Fragment() {
         // Create bar data and add datasets to it
         val barData = BarData(dataSet, disturbedDataSet)
         barChart.data = barData
+        homeViewModel.updateChartDataVoltage(barData)
+        homeViewModel.saveLabelsVoltage(labels)
 
         // Set description for the chart
         val description = Description()
@@ -562,6 +585,8 @@ class HomeFragment : Fragment() {
         // Create pie data and set dataset
         val pieData = PieData(dataSet)
         pieData.setValueFormatter(PercentFormatter(pieChart))
+        homeViewModel.updateChartDataSubmeter(pieData)
+        homeViewModel.saveLabelsSubmeter(labels)
 
         // Set description for the chart
         val description = Description()
