@@ -136,6 +136,7 @@ class DetailFragment : Fragment() {
                         lineChart.invalidate()
                         binding.tvTitleDetail.text = "Tren Konsumsi Harian"
                         binding.mcBar.visibility = View.GONE
+                        binding.mcPier.visibility = View.GONE
 
                         //overview
                         // Inisialisasi nilai tertinggi dan terendah
@@ -213,7 +214,8 @@ class DetailFragment : Fragment() {
 
                         barChart.invalidate()
                         binding.tvTitleDetail.text = "Peak Energy Konsumsi"
-                        binding.mcBar.visibility = View.GONE
+                        binding.mcPier.visibility = View.GONE
+                        binding.mcChart.visibility = View.GONE
 
                         //overview
                         // Inisialisasi nilai tertinggi dan terendah
@@ -291,7 +293,8 @@ class DetailFragment : Fragment() {
 
                         barChart.invalidate()
                         binding.tvTitleDetail.text = "Voltage"
-                        binding.mcBar.visibility = View.GONE
+                        binding.mcPier.visibility = View.GONE
+                        binding.mcChart.visibility = View.GONE
 
                         //overview
                         // Inisialisasi nilai tertinggi dan terendah
@@ -369,7 +372,8 @@ class DetailFragment : Fragment() {
 
                         barChart.invalidate()
                         binding.tvTitleDetail.text = "Global Intensity"
-                        binding.mcBar.visibility = View.GONE
+                        binding.mcPier.visibility = View.GONE
+                        binding.mcChart.visibility = View.GONE
 
                         //overview
                         // Inisialisasi nilai tertinggi dan terendah
@@ -448,6 +452,7 @@ class DetailFragment : Fragment() {
                         pieChart.invalidate()
                         binding.tvTitleDetail.text = "Peak Energy Konsumsi"
                         binding.mcBar.visibility = View.GONE
+                        binding.mcChart.visibility = View.GONE
 
                         //overview
                         // Inisialisasi nilai tertinggi dan terendah
