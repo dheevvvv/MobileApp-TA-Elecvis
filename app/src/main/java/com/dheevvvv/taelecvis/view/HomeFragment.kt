@@ -215,6 +215,12 @@ class HomeFragment : Fragment() {
             bundle.putInt("dataChartId", idChartData)
             findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
         }
+        binding.btnSubMetering.setOnClickListener {
+            val idChartData = 5
+            val bundle = Bundle()
+            bundle.putInt("dataChartId", idChartData)
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        }
 
     }
 

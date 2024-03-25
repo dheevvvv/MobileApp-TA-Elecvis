@@ -100,13 +100,12 @@ class DetailFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun displayChart(idChartData: Int?) {
         when (idChartData) {
-            1 -> {
-                TrenKonsumsiHarian()
-
-        } else -> {
-            Toast.makeText(requireActivity(), "ID chart null", Toast.LENGTH_SHORT).show()
+            1 -> TrenKonsumsiHarian()
+            2 -> PeakEnergyKonsumsi()
+            3 -> Voltage()
+            4 -> Intensitas()
+            5 -> Submeter()
         }
-    }
 }
 
     @SuppressLint("SetTextI18n")
