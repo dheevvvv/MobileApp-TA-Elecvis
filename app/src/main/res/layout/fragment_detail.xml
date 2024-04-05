@@ -227,9 +227,12 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="vertical"
+                >
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayoutDetail"
@@ -237,20 +240,19 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:elevation="6dp"
+                    android:minHeight="?attr/actionBarSize"
+                    />
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewPagerDetail"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1000dp"
                     app:layout_constraintTop_toBottomOf="@id/tabLayoutDetail"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

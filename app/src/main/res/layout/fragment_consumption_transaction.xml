@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:scrollbars="vertical"
+        android:layout_marginBottom="60dp"
         >
 
         <LinearLayout
@@ -117,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/margin_10"
-                android:layout_marginTop="@dimen/margin_20"
+                android:layout_marginTop="@dimen/margin_10"
                 android:layout_marginBottom="@dimen/margin_20"
                 android:orientation="horizontal"
                 >
@@ -254,7 +255,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="@dimen/margin_10"
                     android:layout_marginEnd="@dimen/margin_10"
-                    app:cardBackgroundColor="@color/white2"
+                    app:cardBackgroundColor="@color/purple_light"
                     app:cardCornerRadius="@dimen/margin_20">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -275,7 +276,7 @@
                             android:id="@+id/tvTxtEnergy3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Energy"
+                            android:text="@string/kitchen"
                             app:layout_constraintStart_toEndOf="@+id/ivLightning3"
                             app:layout_constraintTop_toTopOf="parent"
                             android:fontFamily="@font/poppins_medium"
@@ -296,6 +297,17 @@
                             android:layout_gravity="center"
                             android:textColor="@color/earth_02"
                             />
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_marginTop="@dimen/margin_20"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:src="@drawable/kitchen"
+                            android:alpha="0.2"
+                            />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -306,7 +318,7 @@
                     android:layout_height="200dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="@dimen/margin_10"
-                    app:cardBackgroundColor="@color/white2"
+                    app:cardBackgroundColor="@color/pink_light"
                     app:cardCornerRadius="@dimen/margin_20">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -327,7 +339,7 @@
                             android:id="@+id/tvTxtEnergy1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Energy"
+                            android:text="@string/laundry_room"
                             app:layout_constraintStart_toEndOf="@+id/ivLightning1"
                             app:layout_constraintTop_toTopOf="parent"
                             android:fontFamily="@font/poppins_medium"
@@ -348,6 +360,17 @@
                             android:layout_gravity="center"
                             android:textColor="@color/earth_02"
                             />
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_marginTop="@dimen/margin_20"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:src="@drawable/laundry"
+                            android:alpha="0.2"
+                            />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -359,6 +382,7 @@
                 android:layout_marginTop="@dimen/margin_10"
                 android:layout_marginEnd="@dimen/margin_10"
                 android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_40"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -368,7 +392,7 @@
                     android:layout_height="200dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="@dimen/margin_10"
-                    app:cardBackgroundColor="@color/white2"
+                    app:cardBackgroundColor="@color/_light"
                     app:cardCornerRadius="@dimen/margin_20">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -389,7 +413,7 @@
                             android:id="@+id/tvTxtEnergy2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Energy"
+                            android:text="@string/water_heater_and_an_air_conditioner"
                             app:layout_constraintStart_toEndOf="@+id/ivLightning2"
                             app:layout_constraintTop_toTopOf="parent"
                             android:fontFamily="@font/poppins_medium"
@@ -410,51 +434,23 @@
                             android:layout_gravity="center"
                             android:textColor="@color/earth_02"
                             />
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_marginTop="@dimen/margin_20"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:src="@drawable/heater"
+                            android:alpha="0.2"
+                            />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
-
-            <TableLayout
-                android:layout_marginTop="@dimen/margin_40"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!-- Baris pertama -->
-                <TableRow>
-                    <TextView
-                        android:text="Kolom 1"
-                        android:layout_weight="1"
-                        android:background="@drawable/cell_border"
-                        android:padding="10dp"
-                        android:layout_column="1" />
-
-                    <TextView
-                        android:text="Kolom 2"
-                        android:layout_weight="1"
-                        android:background="@drawable/cell_border"
-                        android:padding="10dp"
-                        android:layout_column="2" />
-
-                    <TextView
-                        android:text="Kolom 3"
-                        android:layout_weight="1"
-                        android:background="@drawable/cell_border"
-                        android:padding="10dp"
-                        android:layout_column="3" />
-
-                    <TextView
-                        android:text="Kolom 3"
-                        android:layout_weight="1"
-                        android:background="@drawable/cell_border"
-                        android:padding="10dp"
-                        android:layout_column="3" />
-                </TableRow>
-
-            </TableLayout>
-
 
         </LinearLayout>
 

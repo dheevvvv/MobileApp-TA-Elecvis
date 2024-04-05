@@ -83,13 +83,13 @@ class DetailFragment : Fragment() {
 //
 //        })
 
-        viewPager2.registerOnPageChangeCallback(object : OnPageChangeCallback(){
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-//                tabLayout.selectTab(tabLayout.getTabAt(position))
-
-            }
-        })
+//        viewPager2.registerOnPageChangeCallback(object : OnPageChangeCallback(){
+//            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
+////                tabLayout.selectTab(tabLayout.getTabAt(position))
+//
+//            }
+//        })
 
     }
 

@@ -51,4 +51,7 @@
     <string name="wasted">Wasted</string>
     <string name="eficiency">Eficiency</string>
     <string name="energy">Energy</string>
+    <string name="kitchen">Kitchen</string>
+    <string name="laundry_room">Laundry Room</string>
+    <string name="water_heater_and_an_air_conditioner">Water-heater and an Air-conditioner</string>
 </resources>

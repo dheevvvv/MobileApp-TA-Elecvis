@@ -25,4 +25,7 @@
     <color name="blue4">#DDF2FD</color>
     <color name="grey">#CDCDCD</color>
     <color name="white2">#F6F6F6</color>
+    <color name="purple_light">#90F0DAFA</color>
+    <color name="pink_light">#8AF8C4F6</color>
+    <color name="_light">#8AD0FBFA</color>
 </resources>
