@@ -54,4 +54,6 @@
     <string name="kitchen">Kitchen</string>
     <string name="laundry_room">Laundry Room</string>
     <string name="water_heater_and_an_air_conditioner">Water-heater and an Air-conditioner</string>
+    <string name="selisih">Selisih</string>
+    <string name="unduh_laporan_lengkap_pdf">Unduh Laporan Lengkap (pdf)</string>
 </resources>

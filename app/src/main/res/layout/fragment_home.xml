@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="Welcome Back, Depp!"
                 android:textColor="#EAEAEA"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:layout_marginStart="@dimen/margin_20"
                 android:fontFamily="@font/poppins_bold"
                 />
@@ -221,7 +221,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tren Konsumsi Harian"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@color/blue3"
                 android:fontFamily="@font/poppins_bold"
                 />
@@ -269,7 +269,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Puncak Konsumsi Energi"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@color/blue3"
                 android:fontFamily="@font/poppins_bold"
                 />
@@ -317,7 +317,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Voltase Tegangan"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@color/blue3"
                 android:fontFamily="@font/poppins_bold"
                 />
@@ -353,7 +353,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Puncak Intensitas Listrik"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@color/blue3"
                 android:fontFamily="@font/poppins_bold"
                 />
@@ -399,7 +399,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pemantauan Submetering"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@color/blue3"
                 android:fontFamily="@font/poppins_bold"
                 />
