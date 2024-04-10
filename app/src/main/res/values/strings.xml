@@ -15,7 +15,7 @@
     <string name="intro_sub_title_4">Kamu akan mendapat laporan setiap bulan tentang penggunaan listrik kamu secara lengkap</string>
     <string name="intro_sub_title_5">Kamu akan mendapat recommendasi agar konsumsi listrik kamu menjadi lebih efisien dan hemat</string>
     <string name="masuk">Masuk</string>
-    <string name="emai">Emai</string>
+    <string name="emai">Email</string>
     <string name="password">password</string>
     <string name="atau">atau</string>
     <string name="buat_akun_baru">Buat akun baru</string>
@@ -56,4 +56,12 @@
     <string name="water_heater_and_an_air_conditioner">Water-heater and an Air-conditioner</string>
     <string name="selisih">Selisih</string>
     <string name="unduh_laporan_lengkap_pdf">Unduh Laporan Lengkap (pdf)</string>
+    <string name="notification_alerts">Notification Alerts</string>
+    <string name="kwh">kWh</string>
+    <string name="m">M</string>
+    <string name="t">T</string>
+    <string name="w">W</string>
+    <string name="f">F</string>
+    <string name="s">S</string>
+    <string name="create_alert">Create Alert</string>
 </resources>
