@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/margin_10"
+    android:layout_marginBottom="@dimen/margin_10"
+    app:cardElevation="@dimen/margin_10"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/margin_10"
+        >
+
+        <ImageView
+            android:id="@+id/ivAlerts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/baseline_notifications_24"
+            />
+        <TextView
+            android:id="@+id/tvActiveDisabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/green"
+            android:text="@string/active"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivAlerts"
+            android:fontFamily="@font/poppins_bold"
+            />
+        <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/baseline_delete_24"
+            android:layout_marginEnd="@dimen/margin_10"
+            />
+        <ImageView
+            android:id="@+id/ivRenew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivDelete"
+            android:src="@drawable/baseline_autorenew_24"
+            android:layout_marginEnd="@dimen/margin_10"
+            />
+        <TextView
+            android:id="@+id/tvTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            app:layout_constraintTop_toBottomOf="@+id/tvActiveDisabled"
+            android:text="Alert me when energy consumption above"
+            android:fontFamily="@font/poppins_semi_bold"
+            />
+        <TextView
+            android:id="@+id/tvKwh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tvTxt"
+            android:text="20 kWh"
+            android:textColor="@color/green"
+            android:fontFamily="@font/poppins_semi_bold"
+            />
+        <TextView
+            android:id="@+id/tvTriggered"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tvKwh"
+            android:text="Last Triggered 15 minutes ago"
+            android:textColor="@color/grey"
+            android:fontFamily="@font/poppins_semi_bold"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
