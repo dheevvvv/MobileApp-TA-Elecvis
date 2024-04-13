@@ -14,6 +14,8 @@ import com.dheevvvv.taelecvis.databinding.FragmentConsumptionTransactionBinding
 import com.dheevvvv.taelecvis.model.power_usage.Data
 import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
 import com.dheevvvv.taelecvis.viewmodel.UserViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ConsumptionTransactionFragment : Fragment() {
@@ -62,17 +64,73 @@ class ConsumptionTransactionFragment : Fragment() {
             }
         }
 
-        userViewModel.userId.observe(viewLifecycleOwner, Observer { 
+        userViewModel.userId.observe(viewLifecycleOwner, Observer {
             val userId = it
             val startDate = "2007-12-20"
             val endDate = "2007-12-26"
             homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
             homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                 if (data!=null){
-                    calculateSubMetering(data, startDate, endDate)
+                    val option = "Per Hari"
+                    val filteredDates = filterDates(startDate, endDate, option)
+                    val filteredStartDate = filteredDates.first
+                    val filteredEndDate = filteredDates.second
+                    calculateSubMetering(data, filteredStartDate, filteredEndDate)
                 }
             })
         })
+
+        binding.cv1Day.setOnClickListener {
+            userViewModel.userId.observe(viewLifecycleOwner, Observer {
+                val userId = it
+                val startDate = "2007-12-20"
+                val endDate = "2007-12-26"
+                homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
+                homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
+                    if (data!=null){
+                        val option = "Per Hari"
+                        val filteredDates = filterDates(startDate, endDate, option)
+                        val filteredStartDate = filteredDates.first
+                        val filteredEndDate = filteredDates.second
+                        calculateSubMetering(data, filteredStartDate, filteredEndDate)
+                    }
+                })
+            })
+        }
+        binding.cv1Week.setOnClickListener {
+            userViewModel.userId.observe(viewLifecycleOwner, Observer {
+                val userId = it
+                val startDate = "2007-12-20"
+                val endDate = "2007-12-26"
+                homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
+                homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
+                    if (data!=null){
+                        val option = "Per Minggu"
+                        val filteredDates = filterDates(startDate, endDate, option)
+                        val filteredStartDate = filteredDates.first
+                        val filteredEndDate = filteredDates.second
+                        calculateSubMetering(data, filteredStartDate, filteredEndDate)
+                    }
+                })
+            })
+        }
+        binding.cv1Month.setOnClickListener {
+            userViewModel.userId.observe(viewLifecycleOwner, Observer {
+                val userId = it
+                val startDate = "2007-12-20"
+                val endDate = "2007-12-26"
+                homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
+                homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
+                    if (data!=null){
+                        val option = "Per Bulan"
+                        val filteredDates = filterDates(startDate, endDate, option)
+                        val filteredStartDate = filteredDates.first
+                        val filteredEndDate = filteredDates.second
+                        calculateSubMetering(data, filteredStartDate, filteredEndDate)
+                    }
+                })
+            })
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -108,6 +166,42 @@ class ConsumptionTransactionFragment : Fragment() {
         binding.tvTotalWhHeater.setText("$subMetering3Energy Wh")
 
     }
+
+    fun filterDates(startDate: String, endDate: String, option: String): Pair<String, String> {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val calendar = Calendar.getInstance()
+
+        val filteredStartDate: String
+        val filteredEndDate: String
+
+        calendar.time = sdf.parse(endDate)!!
+
+        when (option) {
+            "Per Hari" -> {
+                filteredStartDate = startDate
+                filteredEndDate = endDate
+            }
+            "Per Minggu" -> {
+                calendar.add(Calendar.WEEK_OF_YEAR, -1)
+                calendar.add(Calendar.DAY_OF_YEAR, 1)
+                filteredStartDate = sdf.format(calendar.time)
+                filteredEndDate = endDate
+            }
+            "Per Bulan" -> {
+                calendar.add(Calendar.MONTH, -1)
+                calendar.add(Calendar.DAY_OF_YEAR, 1)
+                filteredStartDate = sdf.format(calendar.time)
+                filteredEndDate = endDate
+            }
+            else -> {
+                filteredStartDate = startDate
+                filteredEndDate = endDate
+            }
+        }
+
+        return Pair(filteredStartDate, filteredEndDate)
+    }
+
 
 
 
