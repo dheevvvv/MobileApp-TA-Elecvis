@@ -74,6 +74,7 @@
                         android:fontFamily="@font/poppins_medium"
                         />
                     <TextView
+                        android:id="@+id/tvSelectedDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toBottomOf="@+id/tvTxtPeriode"
@@ -82,6 +83,7 @@
                         android:fontFamily="@font/poppins_bold"
                         />
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPilihTanggal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toTopOf="parent"
@@ -228,7 +230,7 @@
                         android:src="@drawable/baseline_arrow_upward_24"
                         />
                     <TextView
-                        android:id="@+id/tvPemasukanKwh"
+                        android:id="@+id/tvPengeluaranKwh"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="100 kWh"

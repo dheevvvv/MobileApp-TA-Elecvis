@@ -14,10 +14,11 @@ import com.dheevvvv.taelecvis.databinding.FragmentConsumptionTransactionBinding
 import com.dheevvvv.taelecvis.model.power_usage.Data
 import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
 import com.dheevvvv.taelecvis.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+@AndroidEntryPoint
 class ConsumptionTransactionFragment : Fragment() {
     private lateinit var binding: FragmentConsumptionTransactionBinding
     private val userViewModel: UserViewModel by activityViewModels()
