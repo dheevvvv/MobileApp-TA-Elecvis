@@ -44,7 +44,7 @@ private const val HIGH_VOLTAGE_THRESHOLD = 240 // batas tinggi tegangan
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-    private val userViewModel: UserViewModel by viewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
     private val homeViewModel: HomeViewModel by activityViewModels()
 
 

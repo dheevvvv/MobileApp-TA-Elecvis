@@ -285,10 +285,10 @@
                             android:textColor="@color/earth_02"
                             />
                         <TextView
-                            android:id="@+id/tvTotalKwh3"
+                            android:id="@+id/tvTotalKwhKitchen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="245 kWh"
+                            android:text="5 kWh"
                             android:layout_marginStart="@dimen/margin_10"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/ivLightning3"
@@ -297,10 +297,23 @@
                             android:layout_gravity="center"
                             android:textColor="@color/earth_02"
                             />
+                        <TextView
+                            android:id="@+id/tvTotalWhKitchen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="245 Wh"
+                            android:layout_marginStart="@dimen/margin_10"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvTotalKwhKitchen"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textSize="16sp"
+                            android:layout_gravity="center"
+                            android:textColor="@color/earth_02"
+                            />
                         <ImageView
                             android:layout_width="80dp"
                             android:layout_height="80dp"
-                            android:layout_marginTop="@dimen/margin_20"
+                            android:layout_marginTop="60dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -348,10 +361,10 @@
                             android:textColor="@color/earth_02"
                             />
                         <TextView
-                            android:id="@+id/tvTotalKwh1"
+                            android:id="@+id/tvTotalKwhLoundryRoom"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="245 kWh"
+                            android:text="2 kWh"
                             android:layout_marginStart="@dimen/margin_10"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/ivLightning1"
@@ -360,10 +373,23 @@
                             android:layout_gravity="center"
                             android:textColor="@color/earth_02"
                             />
+                        <TextView
+                            android:id="@+id/tvTotalWhLoundryRoom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="245 Wh"
+                            android:layout_marginStart="@dimen/margin_10"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvTotalKwhLoundryRoom"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textSize="16sp"
+                            android:layout_gravity="center"
+                            android:textColor="@color/earth_02"
+                            />
                         <ImageView
                             android:layout_width="80dp"
                             android:layout_height="80dp"
-                            android:layout_marginTop="@dimen/margin_20"
+                            android:layout_marginTop="60dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -422,14 +448,27 @@
                             android:textColor="@color/earth_02"
                             />
                         <TextView
-                            android:id="@+id/tvTotalKwh2"
+                            android:id="@+id/tvTotalKwhHeater"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="245 kWh"
+                            android:text="4 kWh"
                             android:layout_marginStart="@dimen/margin_10"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/ivLightning2"
                             android:fontFamily="@font/poppins_semi_bold"
+                            android:textSize="16sp"
+                            android:layout_gravity="center"
+                            android:textColor="@color/earth_02"
+                            />
+                        <TextView
+                            android:id="@+id/tvTotalWhHeater"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="245 Wh"
+                            android:layout_marginStart="@dimen/margin_10"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvTotalKwhHeater"
+                            android:fontFamily="@font/poppins_medium"
                             android:textSize="16sp"
                             android:layout_gravity="center"
                             android:textColor="@color/earth_02"

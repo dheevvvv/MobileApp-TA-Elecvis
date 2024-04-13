@@ -157,6 +157,7 @@
                 android:textColor="#CDCDCD"
                 />
             <TextView
+                android:id="@+id/tvSelisihKwh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-12 kWh"
@@ -167,6 +168,7 @@
                 android:textColor="@color/black"
                 />
             <TextView
+                android:id="@+id/tvSelisihRp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-Rp20.295"
@@ -196,7 +198,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Pemasukan"
+                        android:text="@string/pengeluaran"
                         android:textSize="14sp"
                         android:layout_marginStart="@dimen/margin_10"
                         app:layout_constraintTop_toTopOf="parent"
@@ -237,36 +239,16 @@
                         android:fontFamily="@font/poppins_bold"
                         android:textColor="@color/green"
                         />
-                    <TextView
-                        android:id="@+id/tvPemasukanRupiah"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rp600.000"
-                        android:layout_marginStart="@dimen/margin_10"
-                        app:layout_constraintTop_toBottomOf="@+id/tvPemasukanKwh"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:fontFamily="@font/poppins_bold"
-                        android:textColor="@color/green"
-                        />
-                    <TextView
-                        android:id="@+id/tvPengeluaranKwh"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="88 kWh"
-                        android:layout_marginTop="@dimen/margin_20"
-                        android:layout_marginEnd="@dimen/margin_10"
-                        app:layout_constraintTop_toBottomOf="@+id/ivArrowUp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:fontFamily="@font/poppins_bold"
-                        android:textColor="@color/red"
-                        />
+
+
                     <TextView
                         android:id="@+id/tvPengeluaranRupiah"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rp580.000"
+                        android:layout_marginTop="@dimen/margin_20"
                         android:layout_marginEnd="@dimen/margin_10"
-                        app:layout_constraintTop_toBottomOf="@+id/tvPengeluaranKwh"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTxtPengeluaran"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:fontFamily="@font/poppins_bold"
                         android:textColor="@color/red"
@@ -277,7 +259,7 @@
                         android:layout_width="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvPengeluaranKwh"
+                        app:layout_constraintTop_toBottomOf="@+id/tvPengeluaranRupiah"
                         android:layout_marginTop="@dimen/margin_40"
                         android:layout_height="wrap_content"
                         >

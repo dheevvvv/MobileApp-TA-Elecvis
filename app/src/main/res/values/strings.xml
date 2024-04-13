@@ -65,4 +65,5 @@
     <string name="s">S</string>
     <string name="create_alert">Create Alert</string>
     <string name="active">Active</string>
+    <string name="pengeluaran">Pengeluaran</string>
 </resources>
