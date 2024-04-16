@@ -27,6 +27,8 @@ class ReportFragment : Fragment() {
     private lateinit var binding: FragmentReportBinding
     private lateinit var selectedStartDate: String
     private lateinit var selectedEndDate: String
+    private var pengeluaranKwhBulanIni: Float = 0F
+    private var pengeluaranKwhBulanLalu: Float = 0F
     private val userViewModel: UserViewModel by activityViewModels()
     private val homeViewModel: HomeViewModel by activityViewModels()
     override fun onCreateView(
@@ -38,6 +40,7 @@ class ReportFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,8 +83,21 @@ class ReportFragment : Fragment() {
                 homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { data->
                     if (data!=null){
                         calculatePengeluaranConsumption(data, selectedStartDate, selectedEndDate)
+                        val pengeluaran = calculatePengeluaranConsumption(data, selectedStartDate, selectedEndDate)
+                        pengeluaranKwhBulanIni = pengeluaran
+                        val pengeluaranRupiahBulanIni = pengeluaranKwhBulanIni * 1500
+                        binding.tvPengeluaranKwh.setText("$pengeluaranKwhBulanIni kWh")
+                        binding.tvPengeluaranRupiah.setText("Rp. $pengeluaranRupiahBulanIni")
                     }
                 })
+            })
+        }
+
+        binding.cvBulanLalu.setOnClickListener {
+            userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                val userId = it
+                val startDate = selectedStartDate
+                
             })
         }
 
@@ -123,7 +139,7 @@ class ReportFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun calculatePengeluaranConsumption(dataList: List<Data>, startDate: String, endDate: String) {
+    private fun calculatePengeluaranConsumption(dataList: List<Data>, startDate: String, endDate: String): Float {
 
         val start = LocalDate.parse(startDate)
         val end = LocalDate.parse(endDate)
@@ -144,6 +160,8 @@ class ReportFragment : Fragment() {
         val consumptionPrice = consumptionTotal * 1500
         binding.tvPengeluaranKwh.setText("$consumptionTotal kWh")
         binding.tvPengeluaranRupiah.setText("Rp $consumptionPrice")
+
+        return consumptionTotal
     }
 
 }
