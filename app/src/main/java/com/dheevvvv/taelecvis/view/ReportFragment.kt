@@ -7,13 +7,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.red
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.databinding.FragmentReportBinding
 import com.dheevvvv.taelecvis.model.power_usage.Data
 import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
+import com.dheevvvv.taelecvis.viewmodel.ReportViewModel
 import com.dheevvvv.taelecvis.viewmodel.UserViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -25,12 +29,15 @@ import java.util.*
 @AndroidEntryPoint
 class ReportFragment : Fragment() {
     private lateinit var binding: FragmentReportBinding
-    private lateinit var selectedStartDate: String
-    private lateinit var selectedEndDate: String
+    private var selectedStartDate:String = ""
+    private var selectedEndDate:String = ""
     private var pengeluaranKwhBulanIni: Float = 0F
+    private var pengeluaranRpBulanIni: Float = 0F
     private var pengeluaranKwhBulanLalu: Float = 0F
+    private var pengeluaranRpBulanLalu: Float = 0F
     private val userViewModel: UserViewModel by activityViewModels()
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val reportViewModel: ReportViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,29 +83,31 @@ class ReportFragment : Fragment() {
         binding.btnPilihTanggal.setOnClickListener {
             showDateRangePicker()
         }
-        binding.cvBulanIni.setOnClickListener {
-            userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                val userId = it
-                homeViewModel.callApiGetPowerUsage(userId, selectedStartDate, selectedEndDate)
-                homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { data->
-                    if (data!=null){
-                        calculatePengeluaranConsumption(data, selectedStartDate, selectedEndDate)
-                        val pengeluaran = calculatePengeluaranConsumption(data, selectedStartDate, selectedEndDate)
-                        pengeluaranKwhBulanIni = pengeluaran
-                        val pengeluaranRupiahBulanIni = pengeluaranKwhBulanIni * 1500
-                        binding.tvPengeluaranKwh.setText("$pengeluaranKwhBulanIni kWh")
-                        binding.tvPengeluaranRupiah.setText("Rp. $pengeluaranRupiahBulanIni")
-                    }
+
+        reportViewModel.selectedStartDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer { startDate->
+            if (startDate!=null){
+                selectedStartDate  = startDate
+                reportViewModel.selectedEndDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer { endDate->
+                    selectedEndDate = endDate
+                    bulanIni()
+                    bulanlalu()
+                    selisih(pengeluaranKwhBulanIni, pengeluaranKwhBulanLalu, pengeluaranRpBulanIni, pengeluaranRpBulanLalu)
                 })
-            })
+            } else{
+                Toast.makeText(context, "Pilih Tanggal terlebih dahulu", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+
+
+        binding.cvBulanIni.setOnClickListener {
+            binding.tvPengeluaranKwh.setText("$pengeluaranKwhBulanIni kWh")
+            binding.tvPengeluaranRupiah.setText("Rp. $pengeluaranRpBulanIni")
         }
 
         binding.cvBulanLalu.setOnClickListener {
-            userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                val userId = it
-                val startDate = selectedStartDate
-                
-            })
+            binding.tvPengeluaranKwh.setText("$pengeluaranKwhBulanLalu kWh")
+            binding.tvPengeluaranRupiah.setText("Rp. $pengeluaranRpBulanLalu")
         }
 
     }
@@ -128,8 +137,8 @@ class ReportFragment : Fragment() {
 
 
             // Simpan startDate dan endDate terpilih
-            selectedStartDate = startDateString
-            selectedEndDate = endDateString
+            reportViewModel.saveSelectedStartDate(startDateString)
+            reportViewModel.saveSelectedEndDate(endDateString)
 
             binding.tvSelectedDate.setText("$startDateString - $endDateString")
         }
@@ -162,6 +171,93 @@ class ReportFragment : Fragment() {
         binding.tvPengeluaranRupiah.setText("Rp $consumptionPrice")
 
         return consumptionTotal
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun bulanIni(){
+        userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            val userId = it
+            homeViewModel.callApiGetPowerUsage(userId, selectedStartDate, selectedEndDate)
+            homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { data->
+                if (data!=null){
+                    calculatePengeluaranConsumption(data, selectedStartDate, selectedEndDate)
+                    val pengeluaran = calculatePengeluaranConsumption(data, selectedStartDate, selectedEndDate)
+                    pengeluaranKwhBulanIni = pengeluaran
+                    val pengeluaranRupiahBulanIni = pengeluaranKwhBulanIni * 1500
+                    pengeluaranRpBulanIni = pengeluaranRupiahBulanIni
+                }
+            })
+        })
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun bulanlalu(){
+        userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            val userId = it
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val calendar = Calendar.getInstance()
+
+            // Convert selectedStartDate to Date object
+            val startDate = dateFormat.parse(selectedStartDate)
+
+            // Set the calendar to the startDate
+            calendar.time = startDate!!
+
+            // Set the calendar to the start of the current month
+            calendar.set(Calendar.DAY_OF_MONTH, 1)
+
+            // Subtract 1 day to get the end of the previous month
+            calendar.add(Calendar.DAY_OF_MONTH, -1)
+
+            // Set the endDate for last month to the last day of the previous month
+            val endDateForLastMonth = dateFormat.format(calendar.time)
+
+            // Set the startDate for last month to 20 days before the end of last month
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH) - 30)
+            val startDateForLastMonth = dateFormat.format(calendar.time)
+
+            homeViewModel.callApiGetPowerUsage(userId, startDateForLastMonth, endDateForLastMonth)
+            homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {data->
+                if (data!=null){
+                    calculatePengeluaranConsumption(data, startDateForLastMonth, endDateForLastMonth)
+                    val pengeluaran = calculatePengeluaranConsumption(data, startDateForLastMonth, endDateForLastMonth)
+                    pengeluaranKwhBulanLalu = pengeluaran
+                    val pengeluaranRupiahBulanLalu = pengeluaranKwhBulanLalu * 1500
+                    pengeluaranRpBulanLalu = pengeluaranRupiahBulanLalu
+                }
+            })
+
+        })
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun selisih(pengeluaranKwhBulanIni:Float, pengeluaranKwhBulanLalu:Float, rpBulanIni:Float, rpBulanLalu:Float){
+        val selisihKwh = pengeluaranKwhBulanIni - pengeluaranKwhBulanLalu
+        val status = if (selisihKwh > 0 ) {
+            "boros"
+        } else if (selisihKwh < 0 ) {
+            "hemat"
+        } else {
+            "unknown"
+        }
+
+        val selisihRp = rpBulanIni - rpBulanLalu
+
+        val percentageSelisihKwh = (selisihKwh / pengeluaranKwhBulanLalu) * 100
+
+        binding.tvSelisihKwh.setText("$selisihKwh kWh")
+        binding.tvSelisihRp.setText("Rp. $selisihRp")
+
+        if (status=="boros"){
+            binding.tvHematBoros.setText("Boros")
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.red)
+        } else if (status=="hemat"){
+            binding.tvHematBoros.setText("Hemat")
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.green)
+        }
+
+        binding.progressText.setText("$percentageSelisihKwh")
+
     }
 
 }
