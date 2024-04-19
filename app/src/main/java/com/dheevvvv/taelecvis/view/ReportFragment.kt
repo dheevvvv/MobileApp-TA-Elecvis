@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.red
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.dheevvvv.taelecvis.Manifest
 import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.databinding.FragmentReportBinding
 import com.dheevvvv.taelecvis.model.power_usage.Data
@@ -38,6 +39,7 @@ class ReportFragment : Fragment() {
     private val userViewModel: UserViewModel by activityViewModels()
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val reportViewModel: ReportViewModel by activityViewModels()
+    private val REQUEST_CODE_PERMISSION = 101
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -109,6 +111,8 @@ class ReportFragment : Fragment() {
             binding.tvPengeluaranKwh.setText("$pengeluaranKwhBulanLalu kWh")
             binding.tvPengeluaranRupiah.setText("Rp. $pengeluaranRpBulanLalu")
         }
+
+
 
     }
 
@@ -256,7 +260,7 @@ class ReportFragment : Fragment() {
             binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.green)
         }
 
-        binding.progressText.setText("$percentageSelisihKwh")
+        binding.progressText.setText("$percentageSelisihKwh %")
 
     }
 
