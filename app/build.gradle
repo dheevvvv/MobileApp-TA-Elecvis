@@ -109,6 +109,9 @@ dependencies {
     //MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    //pdf
+    implementation 'com.itextpdf:itextpdf:5.5.13.2'
+
     //UnitTest
     testImplementation "io.mockk:mockk:1.13.1"
     testImplementation "org.mockito:mockito-core:5.3.1"

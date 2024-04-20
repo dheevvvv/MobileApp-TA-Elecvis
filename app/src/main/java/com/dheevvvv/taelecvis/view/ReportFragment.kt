@@ -1,6 +1,8 @@
 package com.dheevvvv.taelecvis.view
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,20 +11,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.red
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.dheevvvv.taelecvis.Manifest
 import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.databinding.FragmentReportBinding
 import com.dheevvvv.taelecvis.model.power_usage.Data
+import com.dheevvvv.taelecvis.model.power_usage.ReportData
 import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
 import com.dheevvvv.taelecvis.viewmodel.ReportViewModel
 import com.dheevvvv.taelecvis.viewmodel.UserViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.itextpdf.text.*
+import com.itextpdf.text.pdf.ColumnText
+import com.itextpdf.text.pdf.PdfPCell
+import com.itextpdf.text.pdf.PdfPTable
+import com.itextpdf.text.pdf.PdfWriter
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -40,6 +50,13 @@ class ReportFragment : Fragment() {
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val reportViewModel: ReportViewModel by activityViewModels()
     private val REQUEST_CODE_PERMISSION = 101
+    private var email:String = ""
+    private var username:String = ""
+    private var totalGlobalActivePowerPerDay:kotlin.collections.Map<String, Double> = emptyMap()
+    private var averageGlobalIntensityPerDay:kotlin.collections.Map<String, Double> = emptyMap()
+    private var averageVoltagePerDay:kotlin.collections.Map<String, Double> = emptyMap()
+    private var highestEnergyConsumptionPerDay:kotlin.collections.Map<String, Data?> = emptyMap()
+    private var totalRp:kotlin.collections.Map<String, Double> = emptyMap()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -112,7 +129,156 @@ class ReportFragment : Fragment() {
             binding.tvPengeluaranRupiah.setText("Rp. $pengeluaranRpBulanLalu")
         }
 
+        binding.btnUnduhPdf.setOnClickListener {
+            val readPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+            val writePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
+            if (writePermission != PackageManager.PERMISSION_GRANTED || readPermission != PackageManager.PERMISSION_GRANTED) {
+                @Suppress("DEPRECATION")
+                requestPermissions(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
+                    REQUEST_CODE_PERMISSION
+                )
+            } else {
+                generatePdf()
+            }
+        }
+
+
+
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun generatePdf() {
+        val fileName = "ElectricityUsageReport.pdf"
+        val filePath = File(fileName)
+        val document = Document()
+        val outputStream = FileOutputStream(filePath)
+        val writer = PdfWriter.getInstance(document, outputStream)
+        document.open()
+
+        //Logo
+        val logoPath = "logo.png"
+        val logoImage = Image.getInstance(logoPath)
+        logoImage.alignment = Image.ALIGN_LEFT
+        document.add(logoImage)
+
+        // Judul
+        val title = "Laporan Penggunaan Konsumsi Listrik"
+        val titleEnglish = "Electricity Usage Report"
+        val titlePhrase = Phrase(title)
+        val titleEnglishPhrase = Phrase(titleEnglish)
+        ColumnText.showTextAligned(writer.directContent, Element.ALIGN_CENTER, titlePhrase, PageSize.A4.width / 2, PageSize.A4.height - 36, 0f)
+        ColumnText.showTextAligned(writer.directContent, Element.ALIGN_CENTER, titleEnglishPhrase, PageSize.A4.width / 2, PageSize.A4.height - 56, 0f)
+
+        // Garis horizontal
+        val horizontalLine = PdfPTable(1)
+        horizontalLine.totalWidth = PageSize.A4.width - 72
+        horizontalLine.spacingBefore = 20f
+        horizontalLine.addCell(PdfPCell().apply { border = 0 })
+        document.add(horizontalLine)
+
+
+        // Informasi penerima dan tanggal laporan
+
+        userViewModel.getEmail()
+        userViewModel.getUsername()
+        userViewModel.email.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            email = it
+        })
+        userViewModel.username.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            username = it
+        })
+
+        val receiverInfoTable = PdfPTable(2)
+        receiverInfoTable.totalWidth = PageSize.A4.width - 72
+        receiverInfoTable.addCell(PdfPCell(Phrase("To")).apply { border = 0 })
+        receiverInfoTable.addCell(PdfPCell(Phrase("Period Consumption Date")).apply { border = 0 })
+        receiverInfoTable.addCell(PdfPCell(Phrase("Username :\n $username")).apply { border = 0 })
+        receiverInfoTable.addCell(PdfPCell(Phrase("$selectedStartDate - $selectedEndDate")).apply { border = 0 })
+        receiverInfoTable.addCell(PdfPCell(Phrase(email)).apply { border = 0 })
+//        receiverInfoTable.addCell(PdfPCell(Phrase(SimpleDateFormat("dd/MM/yyyy").format(Date()))).apply { border = 0 })
+        document.add(receiverInfoTable)
+
+        //Table data transaksi
+        val transactionDataTable = PdfPTable(6)
+        transactionDataTable.totalWidth = PageSize.A4.width - 72
+
+        val columnHeaders = listOf("Tanggal Transaksi", "Pengeluaran kWh", "Puncak Konsumsi Tertinggi", "Puncak Intensitas", "Rata-rata Voltase", "Pengeluaran Rupiah")
+        val englishColumnHeaders = listOf("Transaction Date", "Usage (kWh)", "Peak Consumption", "Peak Intensity", "Average Voltage", "Expenditure (Rp)")
+        for (i in columnHeaders.indices) {
+            transactionDataTable.addCell(PdfPCell(Phrase(columnHeaders[i])).apply { border = 0 })
+            transactionDataTable.addCell(PdfPCell(Phrase(englishColumnHeaders[i])).apply { border = 0 })
+        }
+
+        // transactionDataTable.addCell(...)
+        userViewModel.getUserId()
+        userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            val userId = it
+            homeViewModel.callApiGetPowerUsage(userId, selectedStartDate, selectedEndDate)
+            homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { data->
+
+                totalGlobalActivePowerPerDay = calculateTotalGlobalActivePowerPerDayInRange(data, selectedStartDate, selectedEndDate)
+
+                highestEnergyConsumptionPerDay = findHighestEnergyConsumptionPerDayInRange(data, selectedStartDate, selectedEndDate)
+
+                averageGlobalIntensityPerDay = calculateAverageGlobalIntensityPerDayInRange(data, selectedStartDate, selectedEndDate)
+
+                averageVoltagePerDay = calculateAverageVoltagePerDayInRange(data, selectedStartDate, selectedEndDate)
+
+                totalRp = calculatePengeluaranPowerPerDayInRange(data, selectedStartDate, selectedEndDate)
+
+
+                // 5. Gabungan hasil perhitungan untuk membentuk data transaksi
+                val transactionData = mutableListOf<ReportData>()
+                totalGlobalActivePowerPerDay.keys.forEach { date ->
+                    val usage = totalGlobalActivePowerPerDay[date] ?: 0.0
+                    val peakConsumption = highestEnergyConsumptionPerDay[date]?.globalActivePower ?: 0.0
+                    val averageIntensity = averageGlobalIntensityPerDay[date] ?: 0.0
+                    val averageVoltase = averageVoltagePerDay[date] ?: 0.0
+                    val expenditure = totalRp[date] ?: 0.0
+                    transactionData.add(ReportData(date, usage, peakConsumption, averageIntensity, averageVoltase, expenditure))
+                }
+                addTransactionDataToPdfTable(transactionDataTable, transactionData)
+            })
+        })
+
+        document.add(transactionDataTable)
+
+        // Table total pengeluaran
+        val totalGlobalActivePower = totalGlobalActivePowerPerDay.values.sum()
+        val expenditureTotal = totalRp.values.sum()
+
+        // 4. Hitung rata-rata atribut lainnya dari semua hari dalam rentang waktu tertentu
+        val averageGlobalIntensity = averageGlobalIntensityPerDay.values.average()
+        val averageVoltage = averageVoltagePerDay.values.average()
+
+
+        val totalExpenditureTable = PdfPTable(5)
+        totalExpenditureTable.totalWidth = PageSize.A4.width - 72
+        // menambahkan kolom dan judul bahasa Inggris
+        val totalColumnHeaders = listOf("Total Pengeluaran kWh", "Rata-rata Intensitas Listrik", "Rata-rata Voltase", "Total Pengeluaran Rupiah")
+        val totalEnglishColumnHeaders = listOf("Total Usage (kWh)", "Average Intensity", "Average Voltage", "Total Expenditure (Rp)")
+        for (i in totalColumnHeaders.indices) {
+            totalExpenditureTable.addCell(PdfPCell(Phrase(totalColumnHeaders[i])).apply { border = 0 })
+            totalExpenditureTable.addCell(PdfPCell(Phrase(totalEnglishColumnHeaders[i])).apply { border = 0 })
+        }
+        // totalExpenditureTable.addCell(...)
+        totalExpenditureTable.addCell(PdfPCell(Phrase("$totalGlobalActivePower")).apply { border = 1 })
+        totalExpenditureTable.addCell(PdfPCell(Phrase("$averageGlobalIntensity")).apply { border = 1 })
+        totalExpenditureTable.addCell(PdfPCell(Phrase("$averageVoltage")).apply { border = 1 })
+        totalExpenditureTable.addCell(PdfPCell(Phrase("$expenditureTotal")).apply { border = 1 })
+        document.add(totalExpenditureTable)
+
+        // Footer: Halaman dan timestamp
+        val pageAndTimestamp = "Halaman ${writer.pageNumber} | ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Date())}"
+        val pageAndTimestampPhrase = Phrase(pageAndTimestamp)
+        ColumnText.showTextAligned(writer.directContent, Element.ALIGN_CENTER, pageAndTimestampPhrase, PageSize.A4.width - 72,
+            36F, 0f)
+
+        document.close()
+        writer.close()
+        outputStream.close()
 
     }
 
@@ -179,6 +345,7 @@ class ReportFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun bulanIni(){
+        userViewModel.getUserId()
         userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             val userId = it
             homeViewModel.callApiGetPowerUsage(userId, selectedStartDate, selectedEndDate)
@@ -196,6 +363,7 @@ class ReportFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun bulanlalu(){
+        userViewModel.getUserId()
         userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             val userId = it
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -210,13 +378,10 @@ class ReportFragment : Fragment() {
             // Set the calendar to the start of the current month
             calendar.set(Calendar.DAY_OF_MONTH, 1)
 
-            // Subtract 1 day to get the end of the previous month
             calendar.add(Calendar.DAY_OF_MONTH, -1)
 
-            // Set the endDate for last month to the last day of the previous month
             val endDateForLastMonth = dateFormat.format(calendar.time)
 
-            // Set the startDate for last month to 20 days before the end of last month
             calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH) - 30)
             val startDateForLastMonth = dateFormat.format(calendar.time)
 
@@ -262,6 +427,50 @@ class ReportFragment : Fragment() {
 
         binding.progressText.setText("$percentageSelisihKwh %")
 
+    }
+
+    // Fungsi untuk menghitung per hari dalam rentang waktu tertentu
+    fun calculateTotalGlobalActivePowerPerDayInRange(data: List<Data>, startDate: String, endDate: String): Map<String, Double> {
+        return data.filter { it.date in startDate..endDate }
+            .groupBy { it.date }
+            .mapValues { (_, values) -> values.sumOf { it.globalActivePower } }
+    }
+
+    fun findHighestEnergyConsumptionPerDayInRange(data: List<Data>, startDate: String, endDate: String): Map<String, Data?> {
+        return data.filter { it.date in startDate..endDate }
+            .groupBy { it.date }
+            .mapValues { (_, values) -> values.maxByOrNull { it.globalActivePower } }
+    }
+
+    fun calculateAverageGlobalIntensityPerDayInRange(data: List<Data>, startDate: String, endDate: String): Map<String, Double> {
+        return data.filter { it.date in startDate..endDate }
+            .groupBy { it.date }
+            .mapValues { (_, values) -> values.map { it.globalIntensity }.average() }
+    }
+
+    fun calculateAverageVoltagePerDayInRange(data: List<Data>, startDate: String, endDate: String): Map<String, Double> {
+        return data.filter { it.date in startDate..endDate }
+            .groupBy { it.date }
+            .mapValues { (_, values) -> values.map { it.voltage }.average() }
+    }
+
+    fun calculatePengeluaranPowerPerDayInRange(data: List<Data>, startDate: String, endDate: String): Map<String, Double> {
+        return data.filter { it.date in startDate..endDate }
+            .groupBy { it.date }
+            .mapValues { (_, values) -> values.sumOf { it.globalActivePower * 1500} }
+    }
+
+
+    // Fungsi untuk menambahkan data transaksi ke dalam tabel PDF
+    fun addTransactionDataToPdfTable(table: PdfPTable, data: List<ReportData>) {
+        data.forEach { transaction ->
+            table.addCell(PdfPCell(Phrase(transaction.transactionDate)).apply { border = 0 }) // Tanggal transaksi
+            table.addCell(PdfPCell(Phrase(transaction.usage.toString())).apply { border = 0 }) // Pengeluaran kWh
+            table.addCell(PdfPCell(Phrase(transaction.peakConsumption.toString())).apply { border = 0 }) // Puncak konsumsi tertinggi
+            table.addCell(PdfPCell(Phrase(transaction.averageIntensity.toString())).apply { border = 0 }) // ratarata intensitas
+            table.addCell(PdfPCell(Phrase(transaction.averageVoltage.toString())).apply { border = 0 }) // Rata-rata voltase
+            table.addCell(PdfPCell(Phrase(transaction.expenditure.toString())).apply { border = 0 }) // Pengeluaran Rupiah
+        }
     }
 
 }

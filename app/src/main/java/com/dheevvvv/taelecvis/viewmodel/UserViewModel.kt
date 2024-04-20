@@ -47,6 +47,13 @@ class UserViewModel @Inject constructor(val userManager: UserManager, val apiSer
         }
     }
 
+    fun getEmail() {
+        viewModelScope.launch {
+            val email = userManager.getEmail()
+            _email.postValue(email)
+        }
+    }
+
     fun getUserId(){
         viewModelScope.launch {
             val userId = userManager.getUserId()
