@@ -1,6 +1,8 @@
 package com.dheevvvv.taelecvis.dagger_hilt
 
 import android.app.Application
+import com.dheevvvv.taelecvis.database_room.AlertsDAO
+import com.dheevvvv.taelecvis.database_room.MainDatabase
 import com.dheevvvv.taelecvis.datastore_preferences.UserManager
 import com.dheevvvv.taelecvis.networking.ApiKeyInterceptor
 import com.dheevvvv.taelecvis.networking.ApiService
@@ -51,4 +53,17 @@ object AppModule {
     @Provides
     fun provideApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
+
+
+    @Singleton
+    @Provides
+    fun providesMainDatabase(application: Application): MainDatabase{
+        return MainDatabase.getInstances(application)!!
+    }
+
+    @Singleton
+    @Provides
+    fun providesAlertsDao(alertsDao:MainDatabase): AlertsDAO{
+        return alertsDao.alertsDao()
+    }
 }
