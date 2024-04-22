@@ -12,7 +12,7 @@ data class AlertsData(
     @ColumnInfo(name = "kwh")
     var kwh : String,
     @ColumnInfo(name = "userId")
-    var userId : String,
+    var userId : Int,
     @ColumnInfo(name = "date")
     var date: String,
     @ColumnInfo(name = "statusActive")

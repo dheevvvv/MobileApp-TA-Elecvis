@@ -12,11 +12,11 @@ interface AlertsDAO {
     fun insert(alertsData: AlertsData)
 
     @Query("SELECT * FROM notification_alerts_table WHERE userId = :userId")
-    fun getAlertsByUser(userId: String): List<AlertsData>
+    fun getAlertsByUser(userId: Int): List<AlertsData>
 
     @Query("DELETE FROM notification_alerts_table WHERE alertsId = :alertsId AND userId = :userId")
-    fun deleteAlertsByIdAndUser(alertsId: Int, userId: String)
+    fun deleteAlertsByIdAndUser(alertsId: Int, userId: Int)
 
     @Query("SELECT statusActive FROM notification_alerts_table WHERE alertsId = :alertsId AND userId = :userId")
-    fun getStatusActive(alertsId: Int, userId: String) : Boolean
+    fun getStatusActive(alertsId: Int, userId: Int) : Boolean
 }
