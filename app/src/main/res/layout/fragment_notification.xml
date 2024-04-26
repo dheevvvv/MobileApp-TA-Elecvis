@@ -88,7 +88,7 @@
                         app:layout_constraintTop_toBottomOf="@id/tv_Login">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etKwhAlerts"
+                            android:id="@+id/etKwhLimitAlerts"
                             android:textColor="@color/earth_02"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -109,66 +109,10 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/baseline_calendar_month_24"
                         />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_marginTop="@dimen/margin_10"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/m"
-                            android:layout_marginEnd="@dimen/margin_25"
-                            android:fontFamily="@font/poppins_semi_bold"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/t"
-                            android:layout_marginEnd="@dimen/margin_25"
-                            android:fontFamily="@font/poppins_semi_bold"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/w"
-                            android:layout_marginEnd="@dimen/margin_25"
-                            android:fontFamily="@font/poppins_semi_bold"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/t"
-                            android:layout_marginEnd="@dimen/margin_25"
-                            android:fontFamily="@font/poppins_semi_bold"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/f"
-                            android:layout_marginEnd="@dimen/margin_25"
-                            android:fontFamily="@font/poppins_semi_bold"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/s"
-                            android:layout_marginEnd="@dimen/margin_25"
-                            android:fontFamily="@font/poppins_semi_bold"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/s"
-                            android:textColor="@color/red"
-                            android:layout_marginEnd="@dimen/margin_25"
-                            android:fontFamily="@font/poppins_semi_bold"
-                            />
-
-                    </LinearLayout>
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCreateAlert"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:cornerRadius="@dimen/margin_10"

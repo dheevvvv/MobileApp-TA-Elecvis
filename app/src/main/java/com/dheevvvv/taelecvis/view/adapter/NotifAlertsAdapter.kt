@@ -61,10 +61,10 @@ class NotifAlertsAdapter(private val alerts: List<AlertsData>) : RecyclerView.Ad
                     else -> "Last triggered $diffInDays days ago"
                 }
             } else {
-                "Never triggered"
+                "Not yet triggered"
             }
         } else {
-            "Never triggered"
+            "Not yet triggered"
         }
     }
 
