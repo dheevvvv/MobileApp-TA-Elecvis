@@ -23,6 +23,9 @@ class NotificationAlertsViewModel @Inject constructor(val alertsDAO: AlertsDAO):
 
     val statusActiveMap: MutableMap<Int, Boolean> = mutableMapOf()
 
+    private var _listActiveAlerts : MutableLiveData<List<AlertsData>> = MutableLiveData()
+    val listActiveAlerts : LiveData<List<AlertsData>> get() = _listActiveAlerts
+
 
     fun loadStatusActive(alertId: Int, userId: Int){
         viewModelScope.launch {
@@ -37,6 +40,12 @@ class NotificationAlertsViewModel @Inject constructor(val alertsDAO: AlertsDAO):
         }
     }
 
+    fun updateNotifAlerts(alertsData: AlertsData){
+        viewModelScope.async {
+            alertsDAO.update(alertsData)
+        }
+    }
+
     fun deleteNotifAlerts(alertsId: Int, userId: Int){
         viewModelScope.async {
             alertsDAO.deleteAlertsByIdAndUser(alertsId, userId)
@@ -47,6 +56,13 @@ class NotificationAlertsViewModel @Inject constructor(val alertsDAO: AlertsDAO):
         viewModelScope.launch {
             val listAlerts = alertsDAO.getAlertsByUser(userId)
             _notifAlerts.postValue(listAlerts)
+        }
+    }
+
+    fun getActiveAlerts(userId: Int){
+        viewModelScope.launch {
+            val listActiveAlerts = alertsDAO.getActiveAlerts(userId)
+            _listActiveAlerts.postValue(listActiveAlerts)
         }
     }
 }

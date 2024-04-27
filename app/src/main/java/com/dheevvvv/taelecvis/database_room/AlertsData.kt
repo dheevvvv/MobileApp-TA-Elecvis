@@ -16,5 +16,7 @@ data class AlertsData(
     @ColumnInfo(name = "date")
     var date: String,
     @ColumnInfo(name = "statusActive")
-    var statusActive:Boolean
+    var statusActive:Boolean,
+    @ColumnInfo(name = "lastTriggeredTime")
+    var lastTriggeredTime: String?
 )

@@ -1,16 +1,19 @@
 package com.dheevvvv.taelecvis.view.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.database_room.AlertsData
 import com.dheevvvv.taelecvis.databinding.ItemAlertsBinding
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class NotifAlertsAdapter(private val alerts: List<AlertsData>) : RecyclerView.Adapter<NotifAlertsAdapter.ViewHolder>() {
+class NotifAlertsAdapter(private val context: Context ,private val alerts: List<AlertsData>) : RecyclerView.Adapter<NotifAlertsAdapter.ViewHolder>() {
     var onClick: ((AlertsData)->Unit)? = null
 
     class ViewHolder(val binding: ItemAlertsBinding) : RecyclerView.ViewHolder(binding.root){
@@ -31,8 +34,15 @@ class NotifAlertsAdapter(private val alerts: List<AlertsData>) : RecyclerView.Ad
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val list = alerts[position]
         holder.binding.tvKwh.text = "${list.kwh} kWh"
-        holder.binding.tvActiveDisabled.text = if (list.statusActive) "Active" else "Disabled"
-        holder.binding.tvTriggered.text = getLastTriggeredText(list.date)
+        holder.binding.tvActiveDisabled.text = if (list.statusActive) {
+            holder.binding.tvActiveDisabled.setTextColor(ContextCompat.getColor(context, R.color.green))
+            "Active"
+        } else {
+            holder.binding.tvActiveDisabled.setTextColor(ContextCompat.getColor(context, R.color.red))
+            "Disabled"
+        }
+
+        holder.binding.tvTriggered.text = getLastTriggeredText(list.lastTriggeredTime)
         holder.binding.ivDelete.setOnClickListener {
             onClick?.invoke(list)
         }

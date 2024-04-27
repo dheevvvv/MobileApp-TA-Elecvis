@@ -16,6 +16,8 @@ import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.database_room.AlertsData
 import com.dheevvvv.taelecvis.databinding.FragmentNotificationBinding
 import com.dheevvvv.taelecvis.view.adapter.NotifAlertsAdapter
+import com.dheevvvv.taelecvis.view.helper.NotificationHelper
+import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
 import com.dheevvvv.taelecvis.viewmodel.NotificationAlertsViewModel
 import com.dheevvvv.taelecvis.viewmodel.UserViewModel
 import com.google.android.material.datepicker.CalendarConstraints
@@ -28,8 +30,10 @@ class NotificationFragment : Fragment() {
     private lateinit var binding: FragmentNotificationBinding
     private val notificationAlertsViewModel: NotificationAlertsViewModel by activityViewModels()
     private val userViewModel:UserViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
     private var selectedDate: String = ""
     private var userId: Int = 0
+    private var currentKwh: Double = 0.0
 
 
     override fun onCreateView(
@@ -88,7 +92,7 @@ class NotificationFragment : Fragment() {
                 if (kwhLimit.isEmpty() || selectedDate.isEmpty()){
                     Toast.makeText(context, "Mohon Masukan kWh dan Memilih Tanggal", Toast.LENGTH_SHORT).show()
                 } else {
-                    notificationAlertsViewModel.insertNotifAlerts(AlertsData(0, kwh = kwhLimit, userId = userId, date = date, statusActive = true))
+                    notificationAlertsViewModel.insertNotifAlerts(AlertsData(0, kwh = kwhLimit, userId = userId, date = date, statusActive = true, ""))
                 }
             }
         })
@@ -96,7 +100,7 @@ class NotificationFragment : Fragment() {
         notificationAlertsViewModel.getNotifAlerts(userId)
         notificationAlertsViewModel.notifAlerts.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if (it!=null){
-                val adapter = NotifAlertsAdapter(it)
+                val adapter = NotifAlertsAdapter(requireContext(),it)
                 binding.rvAlerts.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 binding.rvAlerts.adapter = adapter
                 adapter.onClick = {
@@ -107,10 +111,59 @@ class NotificationFragment : Fragment() {
             }
         })
 
+        homeViewModel.callApiGetPowerUsage(userId, selectedDate, selectedDate)
+        homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if (it!=null){
+                val last = it.last()
+//                var totalKwh = 0.0
+//
+//                for (entry in it) {
+//                    totalKwh += entry.globalActivePower
+//                }
+                currentKwh = last.globalActivePower
+            }
+        })
 
+        val notificationHelper = NotificationHelper(requireContext())
+
+        notificationAlertsViewModel.getActiveAlerts(userId)
+        notificationAlertsViewModel.listActiveAlerts.observe(viewLifecycleOwner, androidx.lifecycle.Observer {activeAlert->
+            if (activeAlert!= null){
+                for(i in activeAlert){
+                    if (currentKwh > i.kwh.toDouble() && i.date==selectedDate) {
+                        val title = "Peringatan KWH"
+                        val message = "Nilai KWH saat ini ($currentKwh) telah melebihi batas yang ditetapkan (${i.kwh}),"
+                        notificationHelper.createNotificationChannel()
+                        notificationHelper.showNotification(requireContext() ,title, message)
+                        // Simpan waktu terakhir terpicu saat notifikasi terpicu
+                        val currentTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+                        i.lastTriggeredTime = currentTime
+
+                        notificationAlertsViewModel.updateNotifAlerts(i)
+                    }
+                    if (isAlertExpired(i.date)) {
+                        i.statusActive = false
+                        notificationAlertsViewModel.updateNotifAlerts(i)
+                    }
+                }
+            }
+        })
 
     }
 
+    @SuppressLint("SimpleDateFormat")
+    fun isAlertExpired(dateString: String): Boolean {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val currentDate = Date()
+
+        try {
+            val date = dateFormat.parse(dateString)
+            return date!!.before(currentDate) // Mengembalikan true jika tanggal alert telah lewat
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false // Kembalikan false jika gagal mengonversi string ke tanggal
+        }
+    }
 
     private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()
