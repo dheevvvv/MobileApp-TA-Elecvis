@@ -7,10 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.databinding.FragmentProfileBinding
 import com.dheevvvv.taelecvis.datastore_preferences.UserManager
+import com.dheevvvv.taelecvis.viewmodel.UserViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -23,7 +26,10 @@ import kotlinx.coroutines.async
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var userManager: UserManager
+    private val userViewModel: UserViewModel by activityViewModels()
     private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private var username:String = ""
+    private var email:String = ""
 
     private val auth by lazy {
         FirebaseAuth.getInstance()
@@ -78,6 +84,19 @@ class ProfileFragment : Fragment() {
         binding.clLogout.setOnClickListener {
             showLogoutConfirmationDialog()
         }
+
+        userViewModel.getUsername()
+        userViewModel.getEmail()
+
+        userViewModel.username.observe(viewLifecycleOwner, Observer {
+            username = it
+        })
+        userViewModel.email.observe(viewLifecycleOwner, Observer {
+            email = it
+        })
+
+        binding.tvUsername.setText(username)
+        binding.tvEmail.setText(email)
 
     }
 

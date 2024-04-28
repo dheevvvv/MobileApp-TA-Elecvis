@@ -64,25 +64,25 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginVertical="10dp">
                         <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/ic_change_profile"
+                            android:id="@+id/ic_username"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:src="@drawable/baseline_edit_note_24"
+                            android:src="@drawable/baseline_person_24"
                             android:tint="@color/earth_02"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"/>
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_change_profile"
+                            android:id="@+id/tv_username"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="4dp"
-                            android:text="@string/change_profile"
+                            android:text="@string/username"
                             android:textColor="@color/federal_blue"
                             android:textSize="16sp"
                             android:fontFamily="@font/poppins_medium"
                             android:textStyle="bold"
-                            app:layout_constraintStart_toEndOf="@id/ic_change_profile"
+                            app:layout_constraintStart_toEndOf="@id/ic_username"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -110,25 +110,25 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginVertical="10dp">
                         <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/ic_settings_account"
+                            android:id="@+id/ic_email"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:src="@drawable/baseline_settings_24"
+                            android:src="@drawable/baseline_email_24"
                             android:tint="@color/earth_02"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"/>
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_settings_account"
+                            android:id="@+id/tv_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="4dp"
-                            android:text="@string/account_setting"
+                            android:text="@string/email"
                             android:textColor="@color/federal_blue"
                             android:textSize="16sp"
                             android:fontFamily="@font/poppins_medium"
                             android:textStyle="bold"
-                            app:layout_constraintStart_toEndOf="@id/ic_settings_account"
+                            app:layout_constraintStart_toEndOf="@id/ic_email"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
