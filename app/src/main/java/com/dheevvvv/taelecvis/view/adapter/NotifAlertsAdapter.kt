@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.database_room.AlertsData
 import com.dheevvvv.taelecvis.databinding.ItemAlertsBinding
+import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -43,6 +44,7 @@ class NotifAlertsAdapter(private val context: Context ,private val alerts: List<
         }
 
         holder.binding.tvTriggered.text = getLastTriggeredText(list.lastTriggeredTime)
+        holder.binding.tvDate.text = formatDate(list.date)
         holder.binding.ivDelete.setOnClickListener {
             onClick?.invoke(list)
         }
@@ -76,6 +78,24 @@ class NotifAlertsAdapter(private val context: Context ,private val alerts: List<
         } else {
             "Not yet triggered"
         }
+    }
+
+    fun formatDate(dateString: String): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = dateFormat.parse(dateString) ?: return "Invalid Date" // Parsing tanggal
+
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
+        // Mendapatkan hari, nama bulan, dan tahun dari tanggal
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val month = calendar.get(Calendar.MONTH)
+        val year = calendar.get(Calendar.YEAR)
+
+        val monthName = DateFormatSymbols().months[month]
+
+        // Menggabungkan komponen untuk membentuk format tanggal yang diinginkan
+        return String.format("%02d-%s-%04d", day, monthName, year)
     }
 
 }

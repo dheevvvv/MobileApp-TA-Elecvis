@@ -153,7 +153,7 @@ class NotificationFragment : Fragment() {
 
     @SuppressLint("SimpleDateFormat")
     fun isAlertExpired(dateString: String): Boolean {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd" , Locale.getDefault())
         val currentDate = Date()
 
         try {
@@ -174,7 +174,7 @@ class NotificationFragment : Fragment() {
         val datePickerDialog = DatePickerDialog(
             requireContext(),
             DatePickerDialog.OnDateSetListener { view: DatePicker, selectedYear: Int, monthOfYear: Int, dayOfMonth: Int ->
-                selectedDate = "$dayOfMonth/${monthOfYear + 1}/$selectedYear"
+                selectedDate = "$selectedYear-${monthOfYear + 1}-$dayOfMonth"
                 binding.tvDateAlert.setText(selectedDate)
             },
             year,
