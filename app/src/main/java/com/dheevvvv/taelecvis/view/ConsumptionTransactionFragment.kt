@@ -68,7 +68,7 @@ class ConsumptionTransactionFragment : Fragment() {
         userViewModel.userId.observe(viewLifecycleOwner, Observer {
             val userId = it
             val startDate = "2007-12-20"
-            val endDate = "2007-12-26"
+            val endDate = "2007-12-20"
             homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
             homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                 if (data!=null){
@@ -85,7 +85,7 @@ class ConsumptionTransactionFragment : Fragment() {
             userViewModel.userId.observe(viewLifecycleOwner, Observer {
                 val userId = it
                 val startDate = "2007-12-20"
-                val endDate = "2007-12-26"
+                val endDate = "2007-12-20"
                 homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
                 homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                     if (data!=null){
@@ -102,7 +102,7 @@ class ConsumptionTransactionFragment : Fragment() {
             userViewModel.userId.observe(viewLifecycleOwner, Observer {
                 val userId = it
                 val startDate = "2007-12-20"
-                val endDate = "2007-12-26"
+                val endDate = "2007-12-20"
                 homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
                 homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                     if (data!=null){
@@ -119,7 +119,7 @@ class ConsumptionTransactionFragment : Fragment() {
             userViewModel.userId.observe(viewLifecycleOwner, Observer {
                 val userId = it
                 val startDate = "2007-12-20"
-                val endDate = "2007-12-26"
+                val endDate = "2007-12-20"
                 homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
                 homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                     if (data!=null){
