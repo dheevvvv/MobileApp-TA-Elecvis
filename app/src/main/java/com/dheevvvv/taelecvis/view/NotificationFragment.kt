@@ -22,10 +22,12 @@ import com.dheevvvv.taelecvis.viewmodel.NotificationAlertsViewModel
 import com.dheevvvv.taelecvis.viewmodel.UserViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 
 
+@AndroidEntryPoint
 class NotificationFragment : Fragment() {
     private lateinit var binding: FragmentNotificationBinding
     private val notificationAlertsViewModel: NotificationAlertsViewModel by activityViewModels()
