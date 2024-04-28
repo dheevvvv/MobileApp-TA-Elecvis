@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dheevvvv.taelecvis.networking.ApiService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+
+@HiltViewModel
 class ReportViewModel @Inject constructor(val apiService: ApiService):ViewModel() {
 
     private val _selectedStartDate = MutableLiveData<String>()

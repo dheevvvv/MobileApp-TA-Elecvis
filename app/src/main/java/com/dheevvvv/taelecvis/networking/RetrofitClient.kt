@@ -13,7 +13,7 @@ import javax.inject.Singleton
 object RetrofitClient {
 
     object RetrofitClient {
-        private const val BASE_URL ="http://192.168.151.102:8080/api/"
+        private const val BASE_URL ="http://192.168.68.103:8080/api/"
         private const val API_KEY = "DHEVA"
 
         private val okHttpClient = OkHttpClient.Builder()

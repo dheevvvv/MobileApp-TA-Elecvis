@@ -85,20 +85,6 @@ class NotificationFragment : Fragment() {
             showDatePickerDialog()
         }
 
-        userViewModel.getUserId()
-        userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            userId = it
-            binding.btnCreateAlert.setOnClickListener {
-                val kwhLimit = binding.etKwhLimitAlerts.text.toString()
-                val date = selectedDate
-                if (kwhLimit.isEmpty() || selectedDate.isEmpty()){
-                    Toast.makeText(context, "Mohon Masukan kWh dan Memilih Tanggal", Toast.LENGTH_SHORT).show()
-                } else {
-                    notificationAlertsViewModel.insertNotifAlerts(AlertsData(0, kwh = kwhLimit, userId = userId, date = date, statusActive = true, ""))
-                }
-            }
-        })
-
         notificationAlertsViewModel.getNotifAlerts(userId)
         notificationAlertsViewModel.notifAlerts.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             if (it!=null){
@@ -113,18 +99,35 @@ class NotificationFragment : Fragment() {
             }
         })
 
-        homeViewModel.callApiGetPowerUsage(userId, selectedDate, selectedDate)
-        homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            if (it!=null){
-                val last = it.last()
-//                var totalKwh = 0.0
-//
-//                for (entry in it) {
-//                    totalKwh += entry.globalActivePower
-//                }
-                currentKwh = last.globalActivePower
+        userViewModel.getUserId()
+        userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            userId = it
+            binding.btnCreateAlert.setOnClickListener {
+                val kwhLimit = binding.etKwhLimitAlerts.text.toString()
+                val date = selectedDate
+                if (kwhLimit.isEmpty() || selectedDate.isEmpty()){
+                    Toast.makeText(context, "Mohon Masukan kWh dan Memilih Tanggal", Toast.LENGTH_SHORT).show()
+                } else {
+                    notificationAlertsViewModel.insertNotifAlerts(AlertsData(0, kwh = kwhLimit, userId = userId, date = date, statusActive = true, ""))
+                    notificationAlertsViewModel.getNotifAlerts(userId)
+                }
             }
         })
+
+        if (selectedDate.isNotEmpty()){
+            homeViewModel.callApiGetPowerUsage(userId, selectedDate, selectedDate)
+            homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                if (it!=null){
+//                val last = it.last()
+                    var totalKwh = 0.0
+
+                    for (entry in it) {
+                        totalKwh += entry.globalActivePower
+                    }
+                    currentKwh = totalKwh
+                }
+            })
+        }
 
         val notificationHelper = NotificationHelper(requireContext())
 
