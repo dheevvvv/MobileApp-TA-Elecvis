@@ -2,17 +2,25 @@ package com.dheevvvv.taelecvis.view
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.app.DownloadManager
+import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.graphics.red
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -31,6 +39,7 @@ import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -108,9 +117,9 @@ class ReportFragment : Fragment() {
                 selectedStartDate  = startDate
                 reportViewModel.selectedEndDate.observe(viewLifecycleOwner, androidx.lifecycle.Observer { endDate->
                     selectedEndDate = endDate
-                    bulanIni()
-                    bulanlalu()
-                    selisih(pengeluaranKwhBulanIni, pengeluaranKwhBulanLalu, pengeluaranRpBulanIni, pengeluaranRpBulanLalu)
+//                    bulanIni()
+//                    bulanlalu()
+//                    selisih(pengeluaranKwhBulanIni, pengeluaranKwhBulanLalu, pengeluaranRpBulanIni, pengeluaranRpBulanLalu)
                 })
             } else{
                 Toast.makeText(context, "Pilih Tanggal terlebih dahulu", Toast.LENGTH_SHORT).show()
@@ -129,29 +138,54 @@ class ReportFragment : Fragment() {
             binding.tvPengeluaranRupiah.setText("Rp. $pengeluaranRpBulanLalu")
         }
 
+        checkStoragePermissions()
+
         binding.btnUnduhPdf.setOnClickListener {
-            val readPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-            val writePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-            if (writePermission != PackageManager.PERMISSION_GRANTED || readPermission != PackageManager.PERMISSION_GRANTED) {
-                @Suppress("DEPRECATION")
-                requestPermissions(
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
-                    REQUEST_CODE_PERMISSION
-                )
-            } else {
-                generatePdf()
-            }
+            generatePdf()
         }
-
-
 
     }
 
-    @SuppressLint("SimpleDateFormat")
+    private fun checkStoragePermissions() {
+        val writePermission = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        if (writePermission != PackageManager.PERMISSION_GRANTED) {
+            // Izin belum diberikan, minta izin kepada pengguna
+            requestStoragePermission()
+        } else {
+            // Izin diberikan, lanjutkan dengan menampilkan notifikasi
+            Toast.makeText(requireContext(), "Izin storage telah diberikan", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun requestStoragePermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(), arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            REQUEST_CODE_PERMISSION
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(requireContext(), "Izin telah diberikan untuk menyimpan file di penyimpanan eksternal.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Izin diperlukan untuk menyimpan file di penyimpanan eksternal.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat", "DiscouragedApi")
     private fun generatePdf() {
         val fileName = "ElectricityUsageReport.pdf"
-        val filePath = File(fileName)
+        val filePath = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
         val document = Document()
         val outputStream = FileOutputStream(filePath)
         val writer = PdfWriter.getInstance(document, outputStream)
@@ -159,7 +193,14 @@ class ReportFragment : Fragment() {
 
         //Logo
         val logoPath = "logo.png"
-        val logoImage = Image.getInstance(logoPath)
+        val resourceId = resources.getIdentifier("logo", "drawable", requireContext().packageName)
+        val logoBitmap = BitmapFactory.decodeResource(resources, resourceId)
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        logoBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        val logoImage = Image.getInstance(byteArray)
+
+//        val logoImage = Image.getInstance(logoPath)
         logoImage.alignment = Image.ALIGN_LEFT
         document.add(logoImage)
 
@@ -280,41 +321,94 @@ class ReportFragment : Fragment() {
         writer.close()
         outputStream.close()
 
+        // Setelah menutup dokumen PDF, buat URI untuk file PDF
+        val uri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.provider", filePath)
+
+        // Buat Intent untuk membuka PDF
+        val openFileIntent = Intent(Intent.ACTION_VIEW)
+        openFileIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        openFileIntent.setDataAndType(uri, "application/pdf")
+
+        // Coba membuka PDF
+        try {
+            startActivity(openFileIntent)
+        } catch (e: ActivityNotFoundException) {
+            // Handle jika tidak ada aplikasi PDF viewer yang tersedia
+            Toast.makeText(requireContext(), "Tidak ada aplikasi PDF viewer yang tersedia", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     @SuppressLint("SetTextI18n")
     private fun showDateRangePicker() {
-        val builder = MaterialDatePicker.Builder.dateRangePicker()
-
-        val constraintsBuilder = CalendarConstraints.Builder()
         val calendar = Calendar.getInstance()
-        val minDate = calendar.timeInMillis
-        calendar.add(Calendar.YEAR, 24)
-        val maxDate = calendar.timeInMillis
-        constraintsBuilder.setStart(minDate)
-        constraintsBuilder.setEnd(maxDate)
-        builder.setCalendarConstraints(constraintsBuilder.build())
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
 
-        val picker = builder.build()
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT,
+            DatePickerDialog.OnDateSetListener { view: DatePicker, selectedYear: Int, monthOfYear: Int, dayOfMonth: Int ->
+                val startDateCalendar = Calendar.getInstance()
+                startDateCalendar.set(selectedYear, monthOfYear, 1) // Set tanggal awal ke 1
 
-        picker.addOnPositiveButtonClickListener { selection ->
-            val startDate = Date(selection.first ?: 0)
-            val endDate = Date(selection.second ?: 0)
+                val endDateCalendar = startDateCalendar.clone() as Calendar
+                endDateCalendar.add(Calendar.DAY_OF_WEEK, 7) // Tambah satu bulan untuk mendapatkan tanggal akhir
 
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val startDateString = dateFormat.format(startDate)
-            val endDateString = dateFormat.format(endDate)
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val startDate = dateFormat.format(startDateCalendar.time)
+                val endDate = dateFormat.format(endDateCalendar.time)
 
+                binding.tvSelectedDate.text = "$startDate - $endDate"
+                // Simpan tanggal terpilih ke ViewModel
+                reportViewModel.saveSelectedStartDate(startDate)
+                reportViewModel.saveSelectedEndDate(endDate)
+            },
+            year,
+            month,
+            1 // Tanggal selalu diatur ke 1
+        )
 
-            // Simpan startDate dan endDate terpilih
-            reportViewModel.saveSelectedStartDate(startDateString)
-            reportViewModel.saveSelectedEndDate(endDateString)
+        // Set mode ke tahun dan bulan
+        datePickerDialog.datePicker.init(year, month, 1, null)
 
-            binding.tvSelectedDate.setText("$startDateString - $endDateString")
-        }
-
-        picker.show(childFragmentManager, picker.toString())
+        datePickerDialog.show()
     }
+
+
+//    @SuppressLint("SetTextI18n")
+//    private fun showDateRangePicker() {
+//        val builder = MaterialDatePicker.Builder.dateRangePicker()
+//
+//        val constraintsBuilder = CalendarConstraints.Builder()
+//        val calendar = Calendar.getInstance()
+//        val minDate = calendar.timeInMillis
+//        calendar.add(Calendar.YEAR, -21)
+//        val maxDate = calendar.timeInMillis
+//        constraintsBuilder.setStart(minDate)
+//        constraintsBuilder.setEnd(maxDate)
+//        builder.setCalendarConstraints(constraintsBuilder.build())
+//
+//        val picker = builder.build()
+//
+//        picker.addOnPositiveButtonClickListener { selection ->
+//            val startDate = Date(selection.first ?: 0)
+//            val endDate = Date(selection.second ?: 0)
+//
+//            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+//            val startDateString = dateFormat.format(startDate)
+//            val endDateString = dateFormat.format(endDate)
+//
+//
+//            // Simpan startDate dan endDate terpilih
+//            reportViewModel.saveSelectedStartDate(startDateString)
+//            reportViewModel.saveSelectedEndDate(endDateString)
+//
+//            binding.tvSelectedDate.setText("$startDateString - $endDateString")
+//        }
+//
+//        picker.show(childFragmentManager, picker.toString())
+//    }
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -472,5 +566,6 @@ class ReportFragment : Fragment() {
             table.addCell(PdfPCell(Phrase(transaction.expenditure.toString())).apply { border = 0 }) // Pengeluaran Rupiah
         }
     }
+
 
 }

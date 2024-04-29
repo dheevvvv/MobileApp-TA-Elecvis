@@ -79,7 +79,7 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toBottomOf="@+id/tvTxtPeriode"
                         app:layout_constraintStart_toStartOf="parent"
-                        android:text="1 March 2024 - 30 March 2024"
+                        android:text="1 March 2024 - 1 April 2024"
                         android:fontFamily="@font/poppins_bold"
                         />
                     <com.google.android.material.button.MaterialButton
@@ -89,7 +89,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:backgroundTint="@color/_deep"
-                        android:text="Pilih Tanggal"
+                        android:text="Pilih Bulan"
                         android:textAllCaps="false"
                         android:textSize="11sp"
                         />
@@ -305,7 +305,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginTop="@dimen/margin_20"
                         android:backgroundTint="@color/blue3"
-                        android:text="@string/unduh_laporan_lengkap_pdf"
+                        android:text="@string/lihat_laporan_lengkap_pdf"
                         app:cornerRadius="@dimen/margin_10"
                         android:textAllCaps="false"
                         />

@@ -70,8 +70,8 @@ class ConsumptionTransactionFragment : Fragment() {
         show()
 
         binding.cv1Day.setOnClickListener {
-            val startDate = "2007-12-20"
-            val endDate = "2007-12-20"
+            val startDate = "2009-11-30"
+            val endDate = "2009-11-30"
             homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
             homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                 if (data!=null){
@@ -88,8 +88,8 @@ class ConsumptionTransactionFragment : Fragment() {
             })
         }
         binding.cv1Week.setOnClickListener {
-            val startDate = "2007-12-20"
-            val endDate = "2007-12-20"
+            val startDate = "2009-11-30"
+            val endDate = "2009-11-30"
             homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
             homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                 if (data!=null){
@@ -106,8 +106,8 @@ class ConsumptionTransactionFragment : Fragment() {
             })
         }
         binding.cv1Month.setOnClickListener {
-            val startDate = "2007-12-20"
-            val endDate = "2007-12-20"
+            val startDate = "2009-11-30"
+            val endDate = "2009-11-30"
             homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
             homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                 if (data!=null){
@@ -128,8 +128,8 @@ class ConsumptionTransactionFragment : Fragment() {
     private fun show() {
         userViewModel.userId.observe(viewLifecycleOwner, Observer {
             userId = it
-            val startDate = "2007-12-20"
-            val endDate = "2007-12-20"
+            val startDate = "2009-11-30"
+            val endDate = "2009-11-30"
             homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
             homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                 if (data!=null){
