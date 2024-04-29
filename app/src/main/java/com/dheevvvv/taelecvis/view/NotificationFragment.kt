@@ -2,6 +2,8 @@ package com.dheevvvv.taelecvis.view
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,6 +45,7 @@ class NotificationFragment : Fragment() {
     private val homeViewModel: HomeViewModel by activityViewModels()
     private var selectedDate: String = ""
     private var userId: Int = 0
+    private val NOTIFICATION_PERMISSION_REQUEST_CODE = 123
 
 
     override fun onCreateView(
@@ -51,6 +57,7 @@ class NotificationFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -89,6 +96,8 @@ class NotificationFragment : Fragment() {
             showDatePickerDialog()
         }
 
+        checkNotifPermission()
+
         userViewModel.getUserId()
         userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             userId = it
@@ -105,11 +114,56 @@ class NotificationFragment : Fragment() {
                 notificationAlertsViewModel.insertNotifAlerts(AlertsData(0, kwh = kwhLimit, userId = userId, date = date, statusActive = true, ""))
                 Toast.makeText(requireContext(), "Alert berhasil dibuat", Toast.LENGTH_SHORT).show()
                 showListNotifAlerts()
+                val title = "Alert Berhasil Dibuat"
+                val message = "Kamu akan diingatkan saat kWh mencapai batas $kwhLimit kWh pada $date"
+                val notificationHelper = NotificationHelper(requireContext())
+                notificationHelper.createNotificationChannel()
+                notificationHelper.showNotification(requireContext() ,title, message)
             }
         }
 
         notif()
 
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Izin diberikan, lanjutkan dengan menampilkan notifikasi
+                Toast.makeText(requireContext(), "Izin notifikasi diberikan", Toast.LENGTH_SHORT).show()
+            } else {
+                // Izin tidak diberikan, tampilkan pesan atau tindakan lain sesuai kebutuhan aplikasi Anda
+                Toast.makeText(requireContext(), "Izin diperlukan untuk menampilkan notifikasi", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestNotificationPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(), arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+            NOTIFICATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun checkNotifPermission(){
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            // Izin diberikan, lanjutkan dengan menampilkan notifikasi
+            Toast.makeText(requireContext(), "Izin notifikasi telah diberikan", Toast.LENGTH_SHORT).show()
+        } else {
+            // Izin belum diberikan, minta izin kepada pengguna
+            requestNotificationPermission()
+        }
     }
 
     private fun getKwh(dateString: String): Double {
