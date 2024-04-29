@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,7 @@ class ConsumptionTransactionFragment : Fragment() {
     private lateinit var binding: FragmentConsumptionTransactionBinding
     private val userViewModel: UserViewModel by activityViewModels()
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private var userId:Int = 0
 
 
     override fun onCreateView(
@@ -66,7 +68,7 @@ class ConsumptionTransactionFragment : Fragment() {
         }
 
         userViewModel.userId.observe(viewLifecycleOwner, Observer {
-            val userId = it
+            userId = it
             val startDate = "2007-12-20"
             val endDate = "2007-12-20"
             homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
@@ -82,54 +84,57 @@ class ConsumptionTransactionFragment : Fragment() {
         })
 
         binding.cv1Day.setOnClickListener {
-            userViewModel.userId.observe(viewLifecycleOwner, Observer {
-                val userId = it
-                val startDate = "2007-12-20"
-                val endDate = "2007-12-20"
-                homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
-                homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
-                    if (data!=null){
-                        val option = "Per Hari"
-                        val filteredDates = filterDates(startDate, endDate, option)
-                        val filteredStartDate = filteredDates.first
-                        val filteredEndDate = filteredDates.second
-                        calculateSubMetering(data, filteredStartDate, filteredEndDate)
-                    }
-                })
+            val startDate = "2007-12-20"
+            val endDate = "2007-12-20"
+            homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
+            homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
+                if (data!=null){
+                    val option = "Hari"
+                    val filteredDates = filterDates(startDate, endDate, option)
+                    val filteredStartDate = filteredDates.first
+                    val filteredEndDate = filteredDates.second
+                    calculateSubMetering(data, filteredStartDate, filteredEndDate)
+
+                    binding.cv1Month.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
+                    binding.cv1Week.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
+                    binding.cv1Day.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color._deep))
+                }
             })
         }
         binding.cv1Week.setOnClickListener {
-            userViewModel.userId.observe(viewLifecycleOwner, Observer {
-                val userId = it
-                val startDate = "2007-12-20"
-                val endDate = "2007-12-20"
-                homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
-                homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
-                    if (data!=null){
-                        val option = "Per Minggu"
-                        val filteredDates = filterDates(startDate, endDate, option)
-                        val filteredStartDate = filteredDates.first
-                        val filteredEndDate = filteredDates.second
-                        calculateSubMetering(data, filteredStartDate, filteredEndDate)
-                    }
-                })
+            val startDate = "2007-12-20"
+            val endDate = "2007-12-20"
+            homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
+            homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
+                if (data!=null){
+                    val option = "Minggu"
+                    val filteredDates = filterDates(startDate, endDate, option)
+                    val filteredStartDate = filteredDates.first
+                    val filteredEndDate = filteredDates.second
+                    calculateSubMetering(data, filteredStartDate, filteredEndDate)
+
+                    binding.cv1Month.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
+                    binding.cv1Week.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color._deep))
+                    binding.cv1Day.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
+                }
             })
         }
         binding.cv1Month.setOnClickListener {
-            userViewModel.userId.observe(viewLifecycleOwner, Observer {
-                val userId = it
-                val startDate = "2007-12-20"
-                val endDate = "2007-12-20"
-                homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
-                homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
-                    if (data!=null){
-                        val option = "Per Bulan"
-                        val filteredDates = filterDates(startDate, endDate, option)
-                        val filteredStartDate = filteredDates.first
-                        val filteredEndDate = filteredDates.second
-                        calculateSubMetering(data, filteredStartDate, filteredEndDate)
-                    }
-                })
+            val startDate = "2007-12-20"
+            val endDate = "2007-12-20"
+            homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
+            homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
+                if (data!=null){
+                    val option = "Bulan"
+                    val filteredDates = filterDates(startDate, endDate, option)
+                    val filteredStartDate = filteredDates.first
+                    val filteredEndDate = filteredDates.second
+                    calculateSubMetering(data, filteredStartDate, filteredEndDate)
+
+                    binding.cv1Month.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color._deep))
+                    binding.cv1Week.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
+                    binding.cv1Day.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
+                }
             })
         }
     }
@@ -175,22 +180,20 @@ class ConsumptionTransactionFragment : Fragment() {
         val filteredStartDate: String
         val filteredEndDate: String
 
-        calendar.time = sdf.parse(endDate)!!
+        calendar.time = sdf.parse(startDate)!!
 
         when (option) {
-            "Per Hari" -> {
+            "Hari" -> {
                 filteredStartDate = startDate
                 filteredEndDate = endDate
             }
-            "Per Minggu" -> {
+            "Minggu" -> {
                 calendar.add(Calendar.WEEK_OF_YEAR, -1)
-                calendar.add(Calendar.DAY_OF_YEAR, 1)
                 filteredStartDate = sdf.format(calendar.time)
                 filteredEndDate = endDate
             }
-            "Per Bulan" -> {
+            "Bulan" -> {
                 calendar.add(Calendar.MONTH, -1)
-                calendar.add(Calendar.DAY_OF_YEAR, 1)
                 filteredStartDate = sdf.format(calendar.time)
                 filteredEndDate = endDate
             }

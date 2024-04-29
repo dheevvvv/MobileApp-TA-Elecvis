@@ -115,7 +115,6 @@
                         android:id="@+id/btnCreateAlert"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cornerRadius="@dimen/margin_10"
                         android:backgroundTint="@color/_deep"
                         android:text="@string/create_alert"
                         android:layout_marginTop="@dimen/margin_20"

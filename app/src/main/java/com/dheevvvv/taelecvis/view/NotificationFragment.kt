@@ -24,6 +24,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 
 
@@ -35,7 +36,6 @@ class NotificationFragment : Fragment() {
     private val homeViewModel: HomeViewModel by activityViewModels()
     private var selectedDate: String = ""
     private var userId: Int = 0
-    private var currentKwh: Double = 0.0
 
 
     override fun onCreateView(
@@ -85,48 +85,22 @@ class NotificationFragment : Fragment() {
             showDatePickerDialog()
         }
 
-        notificationAlertsViewModel.getNotifAlerts(userId)
-        notificationAlertsViewModel.notifAlerts.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            if (it!=null){
-                val adapter = NotifAlertsAdapter(requireContext(),it)
-                binding.rvAlerts.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                binding.rvAlerts.adapter = adapter
-                adapter.onClick = {
-                    notificationAlertsViewModel.deleteNotifAlerts(alertsId = it.alertsId, userId = userId)
-                }
-            } else{
-                Toast.makeText(context, "alerts data null", Toast.LENGTH_SHORT).show()
-            }
-        })
+        showListNotifAlerts()
 
         userViewModel.getUserId()
         userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             userId = it
-            binding.btnCreateAlert.setOnClickListener {
-                val kwhLimit = binding.etKwhLimitAlerts.text.toString()
-                val date = selectedDate
-                if (kwhLimit.isEmpty() || selectedDate.isEmpty()){
-                    Toast.makeText(context, "Mohon Masukan kWh dan Memilih Tanggal", Toast.LENGTH_SHORT).show()
-                } else {
-                    notificationAlertsViewModel.insertNotifAlerts(AlertsData(0, kwh = kwhLimit, userId = userId, date = date, statusActive = true, ""))
-                    notificationAlertsViewModel.getNotifAlerts(userId)
-                }
-            }
         })
 
-        if (selectedDate.isNotEmpty()){
-            homeViewModel.callApiGetPowerUsage(userId, selectedDate, selectedDate)
-            homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-                if (it!=null){
-//                val last = it.last()
-                    var totalKwh = 0.0
-
-                    for (entry in it) {
-                        totalKwh += entry.globalActivePower
-                    }
-                    currentKwh = totalKwh
-                }
-            })
+        binding.btnCreateAlert.setOnClickListener {
+            val kwhLimit = binding.etKwhLimitAlerts.text.toString()
+            val date = selectedDate
+            if (kwhLimit.isEmpty() || selectedDate.isEmpty()){
+                Toast.makeText(context, "Mohon Masukan kWh dan Memilih Tanggal", Toast.LENGTH_SHORT).show()
+            } else {
+                notificationAlertsViewModel.insertNotifAlerts(AlertsData(0, kwh = kwhLimit, userId = userId, date = date, statusActive = true, ""))
+                notificationAlertsViewModel.getNotifAlerts(userId)
+            }
         }
 
         val notificationHelper = NotificationHelper(requireContext())
@@ -135,7 +109,12 @@ class NotificationFragment : Fragment() {
         notificationAlertsViewModel.listActiveAlerts.observe(viewLifecycleOwner, androidx.lifecycle.Observer {activeAlert->
             if (activeAlert!= null){
                 for(i in activeAlert){
-                    if (currentKwh > i.kwh.toDouble() && i.date==selectedDate) {
+                    
+                    val currentKwh = getKwh(i.date)
+                    val today: LocalDate = LocalDate.now()
+                    val alertDate: LocalDate = LocalDate.parse(i.date)
+
+                    if (currentKwh > i.kwh.toDouble() && alertDate==today) {
                         val title = "Peringatan KWH"
                         val message = "Nilai KWH saat ini ($currentKwh) telah melebihi batas yang ditetapkan (${i.kwh}),"
                         notificationHelper.createNotificationChannel()
@@ -154,6 +133,35 @@ class NotificationFragment : Fragment() {
             }
         })
 
+    }
+
+    private fun getKwh(dateString: String): Double {
+
+        var totalKwh = 0.0
+        homeViewModel.callApiGetPowerUsage(userId, dateString, dateString)
+        homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            totalKwh = it.sumOf { it.globalActivePower}
+        })
+
+        return totalKwh
+
+    }
+
+
+    fun showListNotifAlerts(){
+        notificationAlertsViewModel.getNotifAlerts(userId)
+        notificationAlertsViewModel.notifAlerts.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if (it!=null){
+                val adapter = NotifAlertsAdapter(requireContext(),it)
+                binding.rvAlerts.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                binding.rvAlerts.adapter = adapter
+                adapter.onClick = {
+                    notificationAlertsViewModel.deleteNotifAlerts(alertsId = it.alertsId, userId = userId)
+                }
+            } else{
+                Toast.makeText(context, "alerts data null", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     @SuppressLint("SimpleDateFormat")

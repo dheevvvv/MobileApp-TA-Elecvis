@@ -289,7 +289,7 @@ class ReportFragment : Fragment() {
         val constraintsBuilder = CalendarConstraints.Builder()
         val calendar = Calendar.getInstance()
         val minDate = calendar.timeInMillis
-        calendar.add(Calendar.YEAR, 1)
+        calendar.add(Calendar.YEAR, 24)
         val maxDate = calendar.timeInMillis
         constraintsBuilder.setStart(minDate)
         constraintsBuilder.setEnd(maxDate)

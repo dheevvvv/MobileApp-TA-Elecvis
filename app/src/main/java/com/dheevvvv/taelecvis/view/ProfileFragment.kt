@@ -90,13 +90,13 @@ class ProfileFragment : Fragment() {
 
         userViewModel.username.observe(viewLifecycleOwner, Observer {
             username = it
+            binding.tvUsername.setText(username)
+
         })
         userViewModel.email.observe(viewLifecycleOwner, Observer {
             email = it
+            binding.tvEmail.setText(email)
         })
-
-        binding.tvUsername.setText(username)
-        binding.tvEmail.setText(email)
 
     }
 

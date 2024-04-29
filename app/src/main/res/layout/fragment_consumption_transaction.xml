@@ -256,7 +256,7 @@
                     android:layout_marginStart="@dimen/margin_10"
                     android:layout_marginEnd="@dimen/margin_10"
                     app:cardBackgroundColor="@color/purple_light"
-                    app:cardCornerRadius="@dimen/margin_20">
+                    >
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -331,7 +331,7 @@
                     android:layout_weight="1"
                     android:layout_marginEnd="@dimen/margin_10"
                     app:cardBackgroundColor="@color/pink_light"
-                    app:cardCornerRadius="@dimen/margin_20">
+                    >
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -417,7 +417,7 @@
                     android:layout_weight="1"
                     android:layout_marginEnd="@dimen/margin_10"
                     app:cardBackgroundColor="@color/_light"
-                    app:cardCornerRadius="@dimen/margin_20">
+                    >
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"

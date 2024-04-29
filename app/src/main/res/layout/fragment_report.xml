@@ -89,7 +89,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:backgroundTint="@color/_deep"
-                        app:cornerRadius="@dimen/margin_10"
                         android:text="Pilih Tanggal"
                         android:textAllCaps="false"
                         android:textSize="11sp"
