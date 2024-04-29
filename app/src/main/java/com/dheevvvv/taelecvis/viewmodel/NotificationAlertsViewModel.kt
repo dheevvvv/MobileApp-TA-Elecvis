@@ -35,32 +35,32 @@ class NotificationAlertsViewModel @Inject constructor(val alertsDAO: AlertsDAO):
     }
 
     fun insertNotifAlerts(alertsData: AlertsData){
-        viewModelScope.async {
+        GlobalScope.async {
             alertsDAO.insert(alertsData)
         }
     }
 
     fun updateNotifAlerts(alertsData: AlertsData){
-        viewModelScope.async {
+        GlobalScope.async {
             alertsDAO.update(alertsData)
         }
     }
 
     fun deleteNotifAlerts(alertsId: Int, userId: Int){
-        viewModelScope.async {
+        GlobalScope.async {
             alertsDAO.deleteAlertsByIdAndUser(alertsId, userId)
         }
     }
 
     fun getNotifAlerts(userId: Int){
-        viewModelScope.launch {
+        GlobalScope.launch {
             val listAlerts = alertsDAO.getAlertsByUser(userId)
             _notifAlerts.postValue(listAlerts)
         }
     }
 
     fun getActiveAlerts(userId: Int){
-        viewModelScope.launch {
+        GlobalScope.launch {
             val listActiveAlerts = alertsDAO.getActiveAlerts(userId)
             _listActiveAlerts.postValue(listActiveAlerts)
         }

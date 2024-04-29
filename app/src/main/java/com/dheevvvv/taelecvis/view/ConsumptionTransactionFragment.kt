@@ -67,21 +67,7 @@ class ConsumptionTransactionFragment : Fragment() {
             }
         }
 
-        userViewModel.userId.observe(viewLifecycleOwner, Observer {
-            userId = it
-            val startDate = "2007-12-20"
-            val endDate = "2007-12-20"
-            homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
-            homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
-                if (data!=null){
-                    val option = "Per Hari"
-                    val filteredDates = filterDates(startDate, endDate, option)
-                    val filteredStartDate = filteredDates.first
-                    val filteredEndDate = filteredDates.second
-                    calculateSubMetering(data, filteredStartDate, filteredEndDate)
-                }
-            })
-        })
+        show()
 
         binding.cv1Day.setOnClickListener {
             val startDate = "2007-12-20"
@@ -137,6 +123,24 @@ class ConsumptionTransactionFragment : Fragment() {
                 }
             })
         }
+    }
+
+    private fun show() {
+        userViewModel.userId.observe(viewLifecycleOwner, Observer {
+            userId = it
+            val startDate = "2007-12-20"
+            val endDate = "2007-12-20"
+            homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
+            homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
+                if (data!=null){
+                    val option = "Per Hari"
+                    val filteredDates = filterDates(startDate, endDate, option)
+                    val filteredStartDate = filteredDates.first
+                    val filteredEndDate = filteredDates.second
+                    calculateSubMetering(data, filteredStartDate, filteredEndDate)
+                }
+            })
+        })
     }
 
     @SuppressLint("SetTextI18n")

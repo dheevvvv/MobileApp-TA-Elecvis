@@ -35,7 +35,8 @@ class NotifAlertsAdapter(private val context: Context ,private val alerts: List<
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val list = alerts[position]
         holder.binding.tvKwh.text = "${list.kwh} kWh"
-        holder.binding.tvActiveDisabled.text = if (list.statusActive) {
+        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(list.date)
+        holder.binding.tvActiveDisabled.text = if (list.statusActive && !isDatePassed(date!!)) {
             holder.binding.tvActiveDisabled.setTextColor(ContextCompat.getColor(context, R.color.green))
             "Active"
         } else {
@@ -96,6 +97,11 @@ class NotifAlertsAdapter(private val context: Context ,private val alerts: List<
 
         // Menggabungkan komponen untuk membentuk format tanggal yang diinginkan
         return String.format("%02d-%s-%04d", day, monthName, year)
+    }
+
+    private fun isDatePassed(date: Date): Boolean {
+        val currentDate = Calendar.getInstance().time
+        return date.before(currentDate)
     }
 
 }
