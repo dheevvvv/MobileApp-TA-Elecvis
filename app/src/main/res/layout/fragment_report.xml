@@ -116,7 +116,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bulan Ini"
+                        android:text="Minggu Ini"
                         android:textSize="16sp"
                         android:textColor="@color/white"
                         android:layout_marginEnd="@dimen/margin_10"
@@ -136,7 +136,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bulan Lalu"
+                        android:text="Minggu Lalu"
                         android:textSize="16sp"
                         android:textColor="@color/earth_02"
                         android:layout_marginEnd="@dimen/margin_10"

@@ -40,6 +40,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -49,33 +51,31 @@ class ReportFragment : Fragment() {
     private lateinit var binding: FragmentReportBinding
     private var selectedStartDate:String = ""
     private var selectedEndDate:String = ""
-    private var pengeluaranKwhBulanIni: Float = 0F
-    private var pengeluaranRpBulanIni: Float = 0F
-    private var pengeluaranKwhBulanLalu: Float = 0F
-    private var pengeluaranRpBulanLalu: Float = 0F
+
     private val userViewModel: UserViewModel by activityViewModels()
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val reportViewModel: ReportViewModel by activityViewModels()
     private val REQUEST_CODE_PERMISSION = 101
     private var email:String = ""
     private var username:String = ""
-    private var totalGlobalActivePowerPerDay:kotlin.collections.Map<String, Double> = emptyMap()
-    private var averageGlobalIntensityPerDay:kotlin.collections.Map<String, Double> = emptyMap()
-    private var averageVoltagePerDay:kotlin.collections.Map<String, Double> = emptyMap()
-    private var highestEnergyConsumptionPerDay:kotlin.collections.Map<String, Data?> = emptyMap()
-    private var totalRp:kotlin.collections.Map<String, Double> = emptyMap()
+    private var userId:Int = 0
 
-    private var totalAllKwh:Float = 0F
-    private var totalAllPeakConsump:Float = 0F
-    private var totalAllAverageIntensity:Float = 0F
-    private var totalAllAverageVoltage:Float = 0F
-    private var totalaLLRupiah:Float = 0F
+    private var totalAllKwh:Float = 0f
+    private var totalAllPeakConsump:Float = 0f
+    private var totalAllAverageIntensity:Float = 0f
+    private var totalAllAverageVoltage:Float = 0f
+    private var totalaLLRupiah:Float = 0f
 
-    private var averageAllTotalKwh:Float = 0F
-    private var averageAllTotalPeakEnergy:Float = 0F
-    private var averageAllTotalAverageIntensity:Float = 0F
-    private var averageAllTotalAverageVoltage:Float = 0F
-    private var averageAllTotalRupiah:Float = 0F
+    private var averageAllTotalKwh:Float = 0f
+    private var averageAllTotalPeakEnergy:Float = 0f
+    private var averageAllTotalAverageIntensity:Float = 0f
+    private var averageAllTotalAverageVoltage:Float = 0f
+    private var averageAllTotalRupiah:Float = 0f
+
+    private var totalPengeluaranKwhLastWeek:Float = 0f
+    private var totalPengeluaranRupiahLastWeek:Float = 0f
+    private var selectedStartDateLastWeek:String = ""
+    private var dataLastWeek:List<Data> = emptyList()
 
     private var datas:List<Data> = emptyList()
 
@@ -132,14 +132,14 @@ class ReportFragment : Fragment() {
                     selectedEndDate = endDate
                     userViewModel.getUserId()
                     userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {id->
-                        val userId = id
-                        homeViewModel.callApiGetPowerUsage(userId, selectedStartDate, selectedEndDate)
+                        val user = id
+                        userId = id
+                        homeViewModel.callApiGetPowerUsage(user, selectedStartDate, selectedEndDate)
                         homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { data->
                             datas = data
+                            bulanIni()
                         })
                     })
-//                    bulanIni()
-//                    bulanlalu()
 //                    selisih(pengeluaranKwhBulanIni, pengeluaranKwhBulanLalu, pengeluaranRpBulanIni, pengeluaranRpBulanLalu)
                 })
             } else{
@@ -148,15 +148,17 @@ class ReportFragment : Fragment() {
         })
 
 
-
         binding.cvBulanIni.setOnClickListener {
-            binding.tvPengeluaranKwh.setText("$pengeluaranKwhBulanIni kWh")
-            binding.tvPengeluaranRupiah.setText("Rp. $pengeluaranRpBulanIni")
+            bulanIni()
+            binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
+            binding.cvBulanLalu.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
         }
 
         binding.cvBulanLalu.setOnClickListener {
-            binding.tvPengeluaranKwh.setText("$pengeluaranKwhBulanLalu kWh")
-            binding.tvPengeluaranRupiah.setText("Rp. $pengeluaranRpBulanLalu")
+            callDataLastWeek()
+            selisih(totalAllKwh, totalPengeluaranKwhLastWeek, totalaLLRupiah, totalPengeluaranRupiahLastWeek)
+            binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
+            binding.cvBulanLalu.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
         }
 
         checkStoragePermissions()
@@ -213,7 +215,7 @@ class ReportFragment : Fragment() {
         val outputStream = FileOutputStream(filePath)
         val writer = PdfWriter.getInstance(document, outputStream)
         // Set document margins
-        document.setMargins(50f, 50f, 50f, 50f)
+        document.setMargins(20f, 20f, 50f, 50f)
         document.open()
 
         //Logo
@@ -227,7 +229,7 @@ class ReportFragment : Fragment() {
 //        val logoImage = Image.getInstance(logoPath)
         logoImage.alignment = Image.ALIGN_LEFT
         val scaledWidth = 100f
-        val scaledHeight = 120f
+        val scaledHeight = 100f
         logoImage.scaleAbsolute(scaledWidth, scaledHeight)
         document.add(logoImage)
 
@@ -257,10 +259,11 @@ class ReportFragment : Fragment() {
         // Add recipient information
         val recipientInfo = Paragraph("To: $username\nDate: ${Date().toString()}")
         recipientInfo.alignment = Paragraph.ALIGN_RIGHT
+        recipientInfo.spacingAfter = 20f
         document.add(recipientInfo)
 
         //periode
-        val periodeDate = Paragraph("Periode Tanggal Konsumsi: $selectedStartDate - $selectedEndDate")
+        val periodeDate = Paragraph("Periode Konsumsi: $selectedStartDate - $selectedEndDate")
         periodeDate.alignment = Paragraph.ALIGN_LEFT
         periodeDate.spacingAfter = 20f
         document.add(periodeDate)
@@ -269,8 +272,8 @@ class ReportFragment : Fragment() {
 
         // Add transaction details table
         val table = PdfPTable(6)
-        table.totalWidth = 100f
-        table.setWidths(floatArrayOf(2f, 1f, 1f, 1f, 1f, 1f))
+        table.totalWidth = 400f
+        table.setWidths(floatArrayOf(3f, 3f, 3f, 3f, 3f, 4f))
 
         // Table headers
         table.addCell(PdfPCell(Paragraph("Tanggal Transaksi")))
@@ -298,8 +301,8 @@ class ReportFragment : Fragment() {
 
             totalAllKwh += totalKwh.toFloat()
             totalAllPeakConsump += peakEnergy.toFloat()
-            totalAllAverageIntensity += totalIntensity.toFloat()
-            totalAllAverageVoltage += totalAverageVoltage.toFloat()
+            totalAllAverageIntensity += averageIntensity.toFloat()
+            totalAllAverageVoltage += averageAverageVoltage.toFloat()
             totalaLLRupiah += totalAmount.toFloat()
 
             averageAllTotalKwh = totalAllKwh / jumlahHari
@@ -309,12 +312,18 @@ class ReportFragment : Fragment() {
             averageAllTotalRupiah = totalaLLRupiah / jumlahHari
 
 
+            val totalKwhFormatted = formatDecimal(totalKwh.toFloat())
+            val peakEnergyFormatted = formatDecimal(peakEnergy.toFloat())
+            val averageIntensityFormatted = formatDecimal(averageIntensity.toFloat())
+            val averageAverageVoltageFormatted = formatDecimal(averageAverageVoltage.toFloat())
+            val totalAmountFormatted = formatToIDR(totalAmount.toFloat())
+
             table.addCell(tanggal)
-            table.addCell(totalKwh.toString())
-            table.addCell(peakEnergy.toString())
-            table.addCell(averageIntensity.toString())
-            table.addCell(averageAverageVoltage.toString())
-            table.addCell(totalAmount.toString())
+            table.addCell(totalKwhFormatted)
+            table.addCell(peakEnergyFormatted)
+            table.addCell(averageIntensityFormatted)
+            table.addCell(averageAverageVoltageFormatted)
+            table.addCell(totalAmountFormatted)
 
         }
 
@@ -323,29 +332,29 @@ class ReportFragment : Fragment() {
         document.add(line)
 
         val tableTotal = PdfPTable(6)
-        tableTotal.totalWidth = 100f
-        tableTotal.setWidths(floatArrayOf(2f, 1f, 1f, 1f, 1f, 1f))
+        tableTotal.totalWidth = 400f
+        tableTotal.setWidths(floatArrayOf(3f, 3f, 3f, 3f, 3f, 4f))
 
         // Table headers
         tableTotal.addCell(PdfPCell(Paragraph("Total")))
-        tableTotal.addCell(PdfPCell(Paragraph("$totalAllKwh")))
-        tableTotal.addCell(PdfPCell(Paragraph("$totalAllPeakConsump")))
-        tableTotal.addCell(PdfPCell(Paragraph("$totalAllAverageIntensity")))
-        tableTotal.addCell(PdfPCell(Paragraph("$totalAllAverageVoltage")))
-        tableTotal.addCell(PdfPCell(Paragraph("$totalaLLRupiah")))
+        tableTotal.addCell(PdfPCell(Paragraph("${formatDecimal(totalAllKwh)} kWh")))
+        tableTotal.addCell(PdfPCell(Paragraph("${formatDecimal(totalAllPeakConsump)} kWh")))
+        tableTotal.addCell(PdfPCell(Paragraph("${formatDecimal(totalAllAverageIntensity)} A")))
+        tableTotal.addCell(PdfPCell(Paragraph("${formatDecimal(totalAllAverageVoltage)} V")))
+        tableTotal.addCell(PdfPCell(Paragraph(formatToIDR(totalaLLRupiah))))
         document.add(tableTotal)
 
         val tableAverage = PdfPTable(6)
-        tableAverage.totalWidth = 100f
-        tableAverage.setWidths(floatArrayOf(2f, 1f, 1f, 1f, 1f, 1f))
+        tableAverage.totalWidth = 400f
+        tableAverage.setWidths(floatArrayOf(3f, 3f, 3f, 3f, 3f, 4f))
 
         // Table headers
         tableAverage.addCell(PdfPCell(Paragraph("Rata-rata")))
-        tableAverage.addCell(PdfPCell(Paragraph("$averageAllTotalKwh")))
-        tableAverage.addCell(PdfPCell(Paragraph("$averageAllTotalPeakEnergy")))
-        tableAverage.addCell(PdfPCell(Paragraph("$averageAllTotalAverageIntensity")))
-        tableAverage.addCell(PdfPCell(Paragraph("$averageAllTotalAverageVoltage")))
-        tableAverage.addCell(PdfPCell(Paragraph("$averageAllTotalRupiah")))
+        tableAverage.addCell(PdfPCell(Paragraph("${formatDecimal(averageAllTotalKwh)} kWh")))
+        tableAverage.addCell(PdfPCell(Paragraph("${formatDecimal(averageAllTotalPeakEnergy)} kWh")))
+        tableAverage.addCell(PdfPCell(Paragraph("${formatDecimal(averageAllTotalAverageIntensity)} A")))
+        tableAverage.addCell(PdfPCell(Paragraph("${formatDecimal(averageAllTotalAverageVoltage)} V")))
+        tableAverage.addCell(PdfPCell(Paragraph(formatToIDR(averageAllTotalRupiah))))
         document.add(tableAverage)
 
 
@@ -377,25 +386,45 @@ class ReportFragment : Fragment() {
 
     }
 
+    fun formatDecimal(value: Float): String {
+        val df = DecimalFormat("#.##")
+        df.roundingMode = java.math.RoundingMode.DOWN
+        return df.format(value)
+    }
+
+    // Fungsi untuk mengubah nilai ke format mata uang Rupiah (IDR)
+    fun formatToIDR(value: Float): String {
+        val currencyFormat = DecimalFormat.getCurrencyInstance() as DecimalFormat
+        val formatSymbols = DecimalFormatSymbols()
+        formatSymbols.currencySymbol = "Rp "
+        currencyFormat.decimalFormatSymbols = formatSymbols
+        return currencyFormat.format(value)
+    }
+
     @SuppressLint("SetTextI18n")
     private fun showDateRangePicker() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val datePickerDialog = DatePickerDialog(
             requireContext(),
             DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT,
             DatePickerDialog.OnDateSetListener { view: DatePicker, selectedYear: Int, monthOfYear: Int, dayOfMonth: Int ->
                 val startDateCalendar = Calendar.getInstance()
-                startDateCalendar.set(selectedYear, monthOfYear, 1) // Set tanggal awal ke 1
+                startDateCalendar.set(selectedYear, monthOfYear, dayOfMonth)
 
                 val endDateCalendar = startDateCalendar.clone() as Calendar
-                endDateCalendar.add(Calendar.DAY_OF_WEEK, 7) // Tambah satu bulan untuk mendapatkan tanggal akhir
+                endDateCalendar.add(Calendar.DAY_OF_MONTH, 7)
 
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val startDate = dateFormat.format(startDateCalendar.time)
                 val endDate = dateFormat.format(endDateCalendar.time)
+
+                val startDateLastWeekCalendar = startDateCalendar.clone() as Calendar
+                startDateLastWeekCalendar.add(Calendar.DAY_OF_MONTH, -7)
+                selectedStartDateLastWeek = dateFormat.format(startDateLastWeekCalendar.time)
 
                 binding.tvSelectedDate.text = "$startDate - $endDate"
                 // Simpan tanggal terpilih ke ViewModel
@@ -404,7 +433,7 @@ class ReportFragment : Fragment() {
             },
             year,
             month,
-            1 // Tanggal selalu diatur ke 1
+            day
         )
 
         // Set mode ke tahun dan bulan
@@ -450,159 +479,69 @@ class ReportFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun calculatePengeluaranConsumption(dataList: List<Data>, startDate: String, endDate: String): Float {
-
-        val start = LocalDate.parse(startDate)
-        val end = LocalDate.parse(endDate)
-
-        var consumptionTotal = 0f
-
-        // Iterasi setiap hari dalam rentang tanggal
-        var currentDate = start
-        while (!currentDate.isAfter(end)) {
-            // Iterasi setiap data dan akumulasikan konsumsi harian
-            for (data in dataList) {
-                val dataDate = LocalDate.parse(data.date)
-                if (dataDate == currentDate) {
-                    consumptionTotal += data.globalActivePower.toFloat()
-                }
-            }
-        }
-        val consumptionPrice = consumptionTotal * 1500
-        binding.tvPengeluaranKwh.setText("$consumptionTotal kWh")
-        binding.tvPengeluaranRupiah.setText("Rp $consumptionPrice")
-
-        return consumptionTotal
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun bulanIni(){
-        userViewModel.getUserId()
-        userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            val userId = it
-            homeViewModel.callApiGetPowerUsage(userId, selectedStartDate, selectedEndDate)
-            homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { data->
-                if (data!=null){
-                    calculatePengeluaranConsumption(data, selectedStartDate, selectedEndDate)
-                    val pengeluaran = calculatePengeluaranConsumption(data, selectedStartDate, selectedEndDate)
-                    pengeluaranKwhBulanIni = pengeluaran
-                    val pengeluaranRupiahBulanIni = pengeluaranKwhBulanIni * 1500
-                    pengeluaranRpBulanIni = pengeluaranRupiahBulanIni
-                }
-            })
-        })
+        binding.tvPengeluaranKwh.setText("$totalAllKwh kWh")
+        binding.tvPengeluaranRupiah.setText(formatToIDR(totalaLLRupiah))
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun bulanlalu(){
-        userViewModel.getUserId()
-        userViewModel.userId.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            val userId = it
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val calendar = Calendar.getInstance()
-
-            // Convert selectedStartDate to Date object
-            val startDate = dateFormat.parse(selectedStartDate)
-
-            // Set the calendar to the startDate
-            calendar.time = startDate!!
-
-            // Set the calendar to the start of the current month
-            calendar.set(Calendar.DAY_OF_MONTH, 1)
-
-            calendar.add(Calendar.DAY_OF_MONTH, -1)
-
-            val endDateForLastMonth = dateFormat.format(calendar.time)
-
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH) - 30)
-            val startDateForLastMonth = dateFormat.format(calendar.time)
-
-            homeViewModel.callApiGetPowerUsage(userId, startDateForLastMonth, endDateForLastMonth)
-            homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {data->
-                if (data!=null){
-                    calculatePengeluaranConsumption(data, startDateForLastMonth, endDateForLastMonth)
-                    val pengeluaran = calculatePengeluaranConsumption(data, startDateForLastMonth, endDateForLastMonth)
-                    pengeluaranKwhBulanLalu = pengeluaran
-                    val pengeluaranRupiahBulanLalu = pengeluaranKwhBulanLalu * 1500
-                    pengeluaranRpBulanLalu = pengeluaranRupiahBulanLalu
-                }
-            })
-
+    private fun callDataLastWeek(){
+        homeViewModel.callApiGetPowerUsage(userId, selectedStartDateLastWeek, selectedStartDate)
+        homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            dataLastWeek = it
+            bulanlalu()
         })
     }
 
     @SuppressLint("SetTextI18n")
-    private fun selisih(pengeluaranKwhBulanIni:Float, pengeluaranKwhBulanLalu:Float, rpBulanIni:Float, rpBulanLalu:Float){
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun bulanlalu(){
+        val groupedByDate = dataLastWeek.groupBy { it.date }
+        for ((_, dataList) in groupedByDate) {
+            val totalKwh = dataList.sumByDouble { it.globalActivePower }
+            val totalAmount = dataList.sumByDouble { it.globalActivePower * 1500 }
+
+            totalPengeluaranKwhLastWeek += totalKwh.toFloat()
+            totalPengeluaranRupiahLastWeek += totalAmount.toFloat()
+
+            binding.tvPengeluaranKwh.setText("$totalPengeluaranKwhLastWeek kWh")
+            binding.tvPengeluaranRupiah.setText(formatToIDR(totalPengeluaranRupiahLastWeek))
+
+        }
+    }
+
+    private fun selisih(pengeluaranKwhBulanIni: Float, pengeluaranKwhBulanLalu: Float, rpBulanIni: Float, rpBulanLalu: Float) {
+        // Menghitung selisih KWh antara bulan ini dan bulan lalu
         val selisihKwh = pengeluaranKwhBulanIni - pengeluaranKwhBulanLalu
-        val status = if (selisihKwh > 0 ) {
-            "boros"
-        } else if (selisihKwh < 0 ) {
-            "hemat"
-        } else {
-            "unknown"
+
+        // Menentukan status (boros / hemat) berdasarkan selisih KWh
+        val status = when {
+            selisihKwh > 0 -> "hemat"
+            selisihKwh < 0 -> "boros"
+            else -> "tidak berubah"
         }
 
+        // Menghitung selisih Rp antara bulan ini dan bulan lalu
         val selisihRp = rpBulanIni - rpBulanLalu
 
-        val percentageSelisihKwh = (selisihKwh / pengeluaranKwhBulanLalu) * 100
-
-        binding.tvSelisihKwh.setText("$selisihKwh kWh")
-        binding.tvSelisihRp.setText("Rp. $selisihRp")
-
-        if (status=="boros"){
-            binding.tvHematBoros.setText("Boros")
-            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.red)
-        } else if (status=="hemat"){
-            binding.tvHematBoros.setText("Hemat")
-            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.green)
+        // Menghitung persentase selisih KWh
+        val percentageSelisihKwh = if (pengeluaranKwhBulanLalu != 0f) {
+            (selisihKwh / pengeluaranKwhBulanLalu) * 100
+        } else {
+            0f
         }
 
-        binding.progressText.setText("$percentageSelisihKwh %")
+        // Menetapkan nilai pada elemen UI dengan menggunakan binding, pastikan binding telah diinisialisasi sebelumnya
+        binding.tvSelisihKwh.text = formatDecimal(selisihKwh)
+        binding.tvSelisihRp.text = formatToIDR(selisihRp)
 
-    }
+        // Menetapkan teks dan warna track ProgressBar berdasarkan status
+        binding.tvHematBoros.text = status.capitalize() // Mengubah status menjadi huruf kapital
+        binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), if (status == "boros") R.color.red else R.color.green)
 
-    // Fungsi untuk menghitung per hari dalam rentang waktu tertentu
-    fun calculateTotalGlobalActivePowerPerDayInRange(data: List<Data>, startDate: String, endDate: String): Map<String, Double> {
-        return data.filter { it.date in startDate..endDate }
-            .groupBy { it.date }
-            .mapValues { (_, values) -> values.sumOf { it.globalActivePower } }
-    }
-
-    fun findHighestEnergyConsumptionPerDayInRange(data: List<Data>, startDate: String, endDate: String): Map<String, Data?> {
-        return data.filter { it.date in startDate..endDate }
-            .groupBy { it.date }
-            .mapValues { (_, values) -> values.maxByOrNull { it.globalActivePower } }
-    }
-
-    fun calculateAverageGlobalIntensityPerDayInRange(data: List<Data>, startDate: String, endDate: String): Map<String, Double> {
-        return data.filter { it.date in startDate..endDate }
-            .groupBy { it.date }
-            .mapValues { (_, values) -> values.map { it.globalIntensity }.average() }
-    }
-
-    fun calculateAverageVoltagePerDayInRange(data: List<Data>, startDate: String, endDate: String): Map<String, Double> {
-        return data.filter { it.date in startDate..endDate }
-            .groupBy { it.date }
-            .mapValues { (_, values) -> values.map { it.voltage }.average() }
-    }
-
-    fun calculatePengeluaranPowerPerDayInRange(data: List<Data>, startDate: String, endDate: String): Map<String, Double> {
-        return data.filter { it.date in startDate..endDate }
-            .groupBy { it.date }
-            .mapValues { (_, values) -> values.sumOf { it.globalActivePower * 1500} }
-    }
-
-
-    // Fungsi untuk menambahkan data transaksi ke dalam tabel PDF
-    fun addTransactionDataToPdfTable(table: PdfPTable, data: List<ReportData>) {
-        data.forEach { transaction ->
-            table.addCell(PdfPCell(Phrase(transaction.transactionDate)).apply { border = 0 }) // Tanggal transaksi
-            table.addCell(PdfPCell(Phrase(transaction.usage.toString())).apply { border = 0 }) // Pengeluaran kWh
-            table.addCell(PdfPCell(Phrase(transaction.peakConsumption.toString())).apply { border = 0 }) // Puncak konsumsi tertinggi
-            table.addCell(PdfPCell(Phrase(transaction.averageIntensity.toString())).apply { border = 0 }) // ratarata intensitas
-            table.addCell(PdfPCell(Phrase(transaction.averageVoltage.toString())).apply { border = 0 }) // Rata-rata voltase
-            table.addCell(PdfPCell(Phrase(transaction.expenditure.toString())).apply { border = 0 }) // Pengeluaran Rupiah
-        }
+        // Menetapkan teks persentase selisih KWh
+        binding.progressText.text = String.format("%.2f %%", percentageSelisihKwh)
+        binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), if (status == "boros") R.color.red else R.color.green))
     }
 
 

@@ -83,7 +83,7 @@ class ConsumptionTransactionFragment : Fragment() {
 
                     binding.cv1Month.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
                     binding.cv1Week.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
-                    binding.cv1Day.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color._deep))
+                    binding.cv1Day.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
                 }
             })
         }
@@ -100,7 +100,7 @@ class ConsumptionTransactionFragment : Fragment() {
                     calculateSubMetering(data, filteredStartDate, filteredEndDate)
 
                     binding.cv1Month.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
-                    binding.cv1Week.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color._deep))
+                    binding.cv1Week.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
                     binding.cv1Day.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
                 }
             })
@@ -117,7 +117,7 @@ class ConsumptionTransactionFragment : Fragment() {
                     val filteredEndDate = filteredDates.second
                     calculateSubMetering(data, filteredStartDate, filteredEndDate)
 
-                    binding.cv1Month.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color._deep))
+                    binding.cv1Month.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
                     binding.cv1Week.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
                     binding.cv1Day.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
                 }
