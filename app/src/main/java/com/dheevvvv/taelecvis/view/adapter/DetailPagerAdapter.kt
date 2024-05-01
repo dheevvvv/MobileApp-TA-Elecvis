@@ -9,7 +9,7 @@ import com.bumptech.glide.manager.Lifecycle
 import com.dheevvvv.taelecvis.view.ElectricInfoFragment
 import com.dheevvvv.taelecvis.view.RecomendationFragment
 
-class DetailPagerAdapter(fragment: FragmentManager, lifecycle: androidx.lifecycle.Lifecycle) :
+class DetailPagerAdapter(fragment: FragmentManager, lifecycle: androidx.lifecycle.Lifecycle, private val dataId:Int) :
     FragmentStateAdapter(fragment, lifecycle) {
 
     override fun getItemCount(): Int {
@@ -18,8 +18,8 @@ class DetailPagerAdapter(fragment: FragmentManager, lifecycle: androidx.lifecycl
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> ElectricInfoFragment()
-            1 -> RecomendationFragment()
+            0 -> ElectricInfoFragment.newInstance(dataId)
+            1 -> RecomendationFragment.newInstance(dataId)
             else -> throw IllegalArgumentException("Invalid position")
         }
     }

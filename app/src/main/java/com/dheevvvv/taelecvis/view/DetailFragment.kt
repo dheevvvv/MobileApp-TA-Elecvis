@@ -51,7 +51,7 @@ class DetailFragment : Fragment() {
 
         val tabLayout = binding.tabLayoutDetail
         val viewPager2 = binding.viewPagerDetail
-        val adapter = DetailPagerAdapter(childFragmentManager, lifecycle)
+        val adapter = DetailPagerAdapter(childFragmentManager, lifecycle, idChartData!!)
         viewPager2.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
@@ -189,7 +189,7 @@ class DetailFragment : Fragment() {
                         yAxis.axisMinimum = 0f
 
                         barChart.invalidate()
-                        binding.tvTitleDetail.text = "Peak Energy Konsumsi"
+                        binding.tvTitleDetail.text = "Puncak Konsumsi Listrik"
                         binding.mcPier.visibility = View.GONE
                         binding.mcChart.visibility = View.GONE
 
@@ -272,7 +272,7 @@ class DetailFragment : Fragment() {
                         yAxis.axisMinimum = 0f
 
                         barChart.invalidate()
-                        binding.tvTitleDetail.text = "Voltage"
+                        binding.tvTitleDetail.text = "Voltase Tegangan"
                         binding.mcPier.visibility = View.GONE
                         binding.mcChart.visibility = View.GONE
 
@@ -355,7 +355,7 @@ class DetailFragment : Fragment() {
                         yAxis.axisMinimum = 0f
 
                         barChart.invalidate()
-                        binding.tvTitleDetail.text = "Global Intensity"
+                        binding.tvTitleDetail.text = "Intensitas Listrik"
                         binding.mcPier.visibility = View.GONE
                         binding.mcChart.visibility = View.GONE
 
@@ -438,7 +438,7 @@ class DetailFragment : Fragment() {
 
                         // Invalidate and refresh the chart
                         pieChart.invalidate()
-                        binding.tvTitleDetail.text = "Sub-Meter Composition"
+                        binding.tvTitleDetail.text = "Komposisi Sub-meter"
                         binding.mcBar.visibility = View.GONE
                         binding.mcChart.visibility = View.GONE
 

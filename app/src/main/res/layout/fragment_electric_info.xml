@@ -38,7 +38,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/tvRecommendation"
+                    android:id="@+id/tvDesc"
                     android:layout_width="wrap_content"
                     android:layout_marginStart="@dimen/margin_10"
                     android:layout_marginEnd="@dimen/margin_10"

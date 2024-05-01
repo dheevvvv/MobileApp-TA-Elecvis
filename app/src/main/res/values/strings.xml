@@ -66,4 +66,20 @@
     <string name="create_alert">Create Alert</string>
     <string name="active">Active</string>
     <string name="pengeluaran">Pengeluaran</string>
+    <string name="desc_trenkosnsumsi">
+        Tren Konsumsi Listrik merujuk pada pola atau kecenderungan dalam penggunaan energi listrik dalam suatu periode waktu tertentu. Dengan Mengetahui Tren ini, kamu dapat merencanakan strategi energi yang berkelanjutan dan efisien.
+    </string>
+    <string name="desc_puncaklistrik">
+        Puncak Konsumsi Listrik merujuk pada titik tertinggi dalam konsumsi listrik dalam satu periode waktu tertentu, yang terjadi saat permintaan listrik mencapai level tertinggi. Dengan mengetahui Puncak Listrik, Kamu dapat mengetahui pada jam-jam berapa puncak listrik terjadi dalam sehari.
+    </string>
+    <string name="desc_Intensitas">
+        Intensitas listrik adalah ukuran dari kekuatan arus listrik yang mengalir dalam suatu sistem. Ini merupakan parameter penting dalam mengevaluasi efisiensi energi dan keandalan sistem kelistrikan. Dengan mengetahui Intensitas listrik, kamu dapat mengidentifikasi potensi kelebihan beban atau gangguan pada sistem.
+    </string>
+    <string name="desc_voltase">
+        Voltase adalah perbedaan potensial elektrik antara dua titik dalam suatu sistem listrik. Ini adalah ukuran dari tekanan listrik yang mendorong arus listrik melalui konduktor. Penelitian menunjukkan bahwa voltase yang tidak stabil atau di luar kisaran yang diinginkan dapat menyebabkan masalah pada peralatan listrik dan mengurangi efisiensi sistem kelistrikan.
+    </string>
+    <string name="desc_submeter">
+        Submetering adalah praktik memasang meter listrik tambahan di dalam bangunan atau unit individual untuk memantau konsumsi energi secara terpisah. Ini memungkinkan pemilik atau pengelola gedung untuk memahami dan mengelola penggunaan energi secara lebih efisien. Penelitian menunjukkan bahwa submetering dapat membantu mengidentifikasi pola konsumsi energi yang tidak efisien dan memotivasi pengguna untuk mengadopsi perilaku yang lebih berkelanjutan. Dalam hal ini. terdapat 3 sub-meter yaitu Kitchen, Laundry Room, dan Water heater, Air Conditioner.
+    </string>
+    <string name="desc_null">Kosong</string>
 </resources>

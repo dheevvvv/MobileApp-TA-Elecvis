@@ -9,11 +9,11 @@ import androidx.fragment.app.activityViewModels
 import com.dheevvvv.taelecvis.R
 import com.dheevvvv.taelecvis.databinding.FragmentElectricInfoBinding
 import com.dheevvvv.taelecvis.viewmodel.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 class ElectricInfoFragment : Fragment() {
     private lateinit var binding : FragmentElectricInfoBinding
-    private val homeViewModel: HomeViewModel by activityViewModels()
     private var dataId:Int = 0
 
     override fun onCreateView(
@@ -28,7 +28,17 @@ class ElectricInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dataId = arguments?.getInt("idChartData")!!
+        dataId = arguments?.getInt("dataChartId")!!
+
+        val description = when (dataId) {
+            1 -> R.string.desc_trenkosnsumsi
+            2 -> R.string.desc_puncaklistrik
+            3 -> R.string.desc_voltase
+            4 -> R.string.desc_Intensitas
+            5 -> R.string.desc_submeter
+            else -> R.string.desc_null
+        }
+        binding.tvDesc.text = getString(description)
 
     }
 
@@ -36,7 +46,7 @@ class ElectricInfoFragment : Fragment() {
         fun newInstance(dataId:Int): ElectricInfoFragment {
             val fragment = ElectricInfoFragment()
             val args = Bundle()
-            args.putInt("idChartData", dataId)
+            args.putInt("dataChartId", dataId)
             fragment.arguments = args
             return fragment
         }
