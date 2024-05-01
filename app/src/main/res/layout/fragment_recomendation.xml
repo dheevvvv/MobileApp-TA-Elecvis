@@ -223,7 +223,7 @@
                 android:layout_marginEnd="@dimen/margin_10"
                 android:layout_marginTop="@dimen/margin_10"
                 android:layout_height="wrap_content"
-                android:text="Indikator ini Bersadasarkan perhitungan indikator teknikal dari konsumsi harian energi"
+                android:text="isi rekomendasi"
                 android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/grey"
                 android:textSize="14sp" />

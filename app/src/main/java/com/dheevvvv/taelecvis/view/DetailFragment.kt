@@ -62,34 +62,6 @@ class DetailFragment : Fragment() {
             }
         }.attach()
 
-//        tabLayout.addTab(tabLayout.newTab().setText("Info"))
-//        tabLayout.addTab(tabLayout.newTab().setText("Recommendation"))
-
-
-
-
-//        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener{
-//            override fun onTabSelected(tab: TabLayout.Tab?) {
-//                viewPager2.currentItem = tab!!.position
-//            }
-//
-//            override fun onTabUnselected(tab: TabLayout.Tab?) {
-//                //
-//            }
-//
-//            override fun onTabReselected(tab: TabLayout.Tab?) {
-//                //
-//            }
-//
-//        })
-
-//        viewPager2.registerOnPageChangeCallback(object : OnPageChangeCallback(){
-//            override fun onPageSelected(position: Int) {
-//                super.onPageSelected(position)
-////                tabLayout.selectTab(tabLayout.getTabAt(position))
-//
-//            }
-//        })
 
     }
 
