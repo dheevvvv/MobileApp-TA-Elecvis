@@ -26,7 +26,7 @@ object AppModule {
         return UserManager.getInstance(application)
     }
 
-    private const val BASE_URL ="http://192.168.68.103:8080/api/"
+    private const val BASE_URL ="http://192.168.33.102:8080/api/"
     private const val API_KEY = "DHEVA"
 
     private val okHttpClient = OkHttpClient.Builder()
