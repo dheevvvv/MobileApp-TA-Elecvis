@@ -40,7 +40,7 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.ivBack.setOnClickListener {
-            findNavController().navigateUp()
+            requireActivity().onBackPressed()
         }
 
         val idChartData = arguments?.getInt("dataChartId")
@@ -500,5 +500,7 @@ class DetailFragment : Fragment() {
         })
 
     }
+
+
 
 }

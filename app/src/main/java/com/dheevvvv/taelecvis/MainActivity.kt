@@ -9,6 +9,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.postDelayed
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.dheevvvv.taelecvis.datastore_preferences.UserManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -28,10 +30,18 @@ class MainActivity : AppCompatActivity() {
 
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
+        // Cek apakah halaman saat ini adalah halaman detail atau halaman lain yang tidak memiliki bottom menu
+        if (isDetailPage()) {
+            // Navigasikan kembali ke halaman sebelumnya
             super.onBackPressed()
         } else {
-            showExitConfirmationDialog()
+            // Halaman saat ini adalah halaman home atau halaman dengan bottom menu
+            if (doubleBackToExitPressedOnce) {
+                finishAffinity()
+                super.onBackPressed()
+            } else {
+                showExitConfirmationDialog()
+            }
         }
     }
 
@@ -48,5 +58,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         doubleBackToExitPressedOnce = true
+    }
+
+    private fun isDetailPage(): Boolean {
+        val navController = findNavController(R.id.fragmentContainerView)
+        return navController.currentDestination?.id == R.id.detailFragment
     }
 }
