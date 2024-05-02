@@ -73,11 +73,6 @@ class ReportFragment : Fragment() {
     private var averageAllTotalAverageVoltage:Float = 0f
     private var averageAllTotalRupiah:Float = 0f
 
-    private var totalPengeluaranKwhLastWeek:Float = 0f
-    private var totalPengeluaranRupiahLastWeek:Float = 0f
-    private var selectedStartDateLastWeek:String = ""
-    private var dataLastWeek:List<Data> = emptyList()
-
     private var datas:List<Data> = emptyList()
 
     override fun onCreateView(
@@ -138,10 +133,8 @@ class ReportFragment : Fragment() {
                         homeViewModel.callApiGetPowerUsage(user, selectedStartDate, selectedEndDate)
                         homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { data->
                             datas = data
-                            bulanIni()
                         })
                     })
-//                    selisih(pengeluaranKwhBulanIni, pengeluaranKwhBulanLalu, pengeluaranRpBulanIni, pengeluaranRpBulanLalu)
                 })
             } else{
                 Toast.makeText(context, "Pilih Tanggal terlebih dahulu", Toast.LENGTH_SHORT).show()
@@ -150,16 +143,57 @@ class ReportFragment : Fragment() {
 
 
         binding.cvBulanIni.setOnClickListener {
-            bulanIni()
-            binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
+            val option = "MingguIni"
+            val filteredDates = filterDates(selectedStartDate, selectedEndDate, option)
+            val filteredStartDate = filteredDates.first
+            val filteredEndDate = filteredDates.second
+            val (totalEnergy, estimatedPrice) = calculateSubMetering(datas, filteredStartDate, filteredEndDate)
+            binding.tvPengeluaranKwh.text = formatDecimal(totalEnergy)
+            binding.tvPengeluaranRupiah.text = formatToIDR(estimatedPrice)
             binding.cvBulanLalu.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
+            binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
+
         }
 
         binding.cvBulanLalu.setOnClickListener {
-            callDataLastWeek()
-            selisih(totalAllKwh, totalPengeluaranKwhLastWeek, totalaLLRupiah, totalPengeluaranRupiahLastWeek)
-            binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
+            val option2 = "MingguLalu"
+            val filteredDates2 = filterDates(selectedStartDate, selectedEndDate, option2)
+            val filteredStartDate2 = filteredDates2.first
+            val filteredEndDate2 = filteredDates2.second
+            val option = "MingguIni"
+            val filteredDates = filterDates(selectedStartDate, selectedEndDate, option)
+            val filteredStartDate = filteredDates.first
+            val filteredEndDate = filteredDates.second
+            val (totalEnergy, estimatedPrice) = calculateSubMetering(datas, filteredStartDate2, filteredEndDate2)
+            val (energyDifference, priceDifference, pricePercentageDiff) = calculateWeeklyEnergyAndPriceDifference(datas, filteredStartDate, filteredEndDate, filteredStartDate2, filteredEndDate2,
+                1500F
+            )
+            binding.tvPengeluaranRupiah.text = formatToIDR(estimatedPrice)
+            binding.tvPengeluaranKwh.text = formatDecimal(totalEnergy)
+
+            binding.tvSelisihKwh.text = formatDecimal(energyDifference)
+            binding.tvSelisihRp.text = formatToIDR(priceDifference)
+            if (priceDifference < 0) {
+                binding.tvHematBoros.text = "Boros"
+                binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.red))
+                binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.white2)
+                val absoluteValue = Math.abs(pricePercentageDiff)
+                binding.circularProgressBar.progress = absoluteValue.toInt()
+            } else{
+                binding.tvHematBoros.text = "Hemat"
+                binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+                binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+                binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.green))
+                binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.white2)
+                val absoluteValue = Math.abs(pricePercentageDiff)
+                binding.circularProgressBar.progress = absoluteValue.toInt()
+            }
+
+            binding.progressText.text = String.format("%.2f %%", pricePercentageDiff)
             binding.cvBulanLalu.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
+            binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
         }
 
         checkStoragePermissions()
@@ -415,15 +449,11 @@ class ReportFragment : Fragment() {
                 startDateCalendar.set(selectedYear, monthOfYear, dayOfMonth)
 
                 val endDateCalendar = startDateCalendar.clone() as Calendar
-                endDateCalendar.add(Calendar.DAY_OF_MONTH, 7)
+                endDateCalendar.add(Calendar.DAY_OF_MONTH, 14)
 
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val startDate = dateFormat.format(startDateCalendar.time)
                 val endDate = dateFormat.format(endDateCalendar.time)
-
-                val startDateLastWeekCalendar = startDateCalendar.clone() as Calendar
-                startDateLastWeekCalendar.add(Calendar.DAY_OF_MONTH, -7)
-                selectedStartDateLastWeek = dateFormat.format(startDateLastWeekCalendar.time)
 
                 binding.tvSelectedDate.text = "$startDate - $endDate"
                 // Simpan tanggal terpilih ke ViewModel
@@ -476,72 +506,85 @@ class ReportFragment : Fragment() {
 //        picker.show(childFragmentManager, picker.toString())
 //    }
 
-    @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun bulanIni(){
-        binding.tvPengeluaranKwh.setText("$totalAllKwh kWh")
-        binding.tvPengeluaranRupiah.setText(formatToIDR(totalaLLRupiah))
-    }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun callDataLastWeek(){
-        homeViewModel.callApiGetPowerUsage(userId, selectedStartDateLastWeek, selectedStartDate)
-        homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            dataLastWeek = it
-            bulanlalu()
-        })
-    }
+    fun filterDates(startDate: String, endDate: String, option: String): Pair<String, String> {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val calendar = Calendar.getInstance()
 
-    @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun bulanlalu(){
-        val groupedByDate = dataLastWeek.groupBy { it.date }
-        for ((_, dataList) in groupedByDate) {
-            val totalKwh = dataList.sumByDouble { it.globalActivePower }
-            val totalAmount = dataList.sumByDouble { it.globalActivePower * 1500 }
+        val filteredStartDate: String
+        val filteredEndDate: String
 
-            totalPengeluaranKwhLastWeek += totalKwh.toFloat()
-            totalPengeluaranRupiahLastWeek += totalAmount.toFloat()
+        calendar.time = sdf.parse(startDate)!!
 
-            binding.tvPengeluaranKwh.setText("$totalPengeluaranKwhLastWeek kWh")
-            binding.tvPengeluaranRupiah.setText(formatToIDR(totalPengeluaranRupiahLastWeek))
-
-        }
-    }
-
-    private fun selisih(pengeluaranKwhBulanIni: Float, pengeluaranKwhBulanLalu: Float, rpBulanIni: Float, rpBulanLalu: Float) {
-        // Menghitung selisih KWh antara bulan ini dan bulan lalu
-        val selisihKwh = pengeluaranKwhBulanIni - pengeluaranKwhBulanLalu
-
-        // Menentukan status (boros / hemat) berdasarkan selisih KWh
-        val status = when {
-            selisihKwh > 0 -> "hemat"
-            selisihKwh < 0 -> "boros"
-            else -> "tidak berubah"
+        when (option) {
+            "MingguLalu" -> {
+                filteredStartDate = startDate
+                calendar.add(Calendar.DAY_OF_MONTH, 7)
+                filteredEndDate = sdf.format(calendar.time)
+            }
+            "MingguIni" -> {
+                filteredEndDate = endDate
+                calendar.time = sdf.parse(endDate)!!
+                calendar.add(Calendar.DAY_OF_MONTH, -7)
+                filteredStartDate = sdf.format(calendar.time)
+            }
+            else -> {
+                filteredStartDate = startDate
+                filteredEndDate = endDate
+            }
         }
 
-        // Menghitung selisih Rp antara bulan ini dan bulan lalu
-        val selisihRp = rpBulanIni - rpBulanLalu
-
-        // Menghitung persentase selisih KWh
-        val percentageSelisihKwh = if (pengeluaranKwhBulanLalu != 0f) {
-            (selisihKwh / pengeluaranKwhBulanLalu) * 100
-        } else {
-            0f
-        }
-
-        // Menetapkan nilai pada elemen UI dengan menggunakan binding, pastikan binding telah diinisialisasi sebelumnya
-        binding.tvSelisihKwh.text = formatDecimal(selisihKwh)
-        binding.tvSelisihRp.text = formatToIDR(selisihRp)
-
-        // Menetapkan teks dan warna track ProgressBar berdasarkan status
-        binding.tvHematBoros.text = status.capitalize() // Mengubah status menjadi huruf kapital
-        binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), if (status == "boros") R.color.red else R.color.green)
-
-        // Menetapkan teks persentase selisih KWh
-        binding.progressText.text = String.format("%.2f %%", percentageSelisihKwh)
-        binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), if (status == "boros") R.color.red else R.color.green))
+        return Pair(filteredStartDate, filteredEndDate)
     }
+
+    private fun calculateSubMetering(dataList: List<Data>, startDate: String, endDate: String): Pair<Float, Float> {
+        // Filter data for the specified date range
+        val filteredData = dataList.filter { it.date in startDate..endDate }
+
+        // Calculate total energy consumption for the specified date range
+        val totalEnergy = filteredData.sumOf { it.globalActivePower }
+            .toFloat()
+
+        val estimatedPrice = totalEnergy * 1500
+
+        return Pair(totalEnergy, estimatedPrice)
+    }
+
+
+    fun calculateWeeklyEnergyAndPriceDifference(dataList: List<Data>, currentWeekStart: String, currentWeekEnd: String, lastWeekStart: String, lastWeekEnd: String, pricePerKwh: Float): Triple<Float, Float, Float> {
+        // Filter data for the specified date range of the current week
+        val currentWeekData = dataList.filter { it.date in currentWeekStart..currentWeekEnd }
+
+        // Filter data for the specified date range of the last week
+        val lastWeekData = dataList.filter { it.date in lastWeekStart..lastWeekEnd }
+
+        // Calculate total energy consumption for the current week
+        val totalEnergyCurrentWeek = currentWeekData.sumOf { it.globalActivePower }.toFloat()
+
+        // Calculate total energy consumption for the last week
+        val totalEnergyLastWeek = lastWeekData.sumOf { it.globalActivePower }.toFloat()
+
+        // Calculate the difference in total energy consumption between the current week and the last week
+        val energyDifference = totalEnergyCurrentWeek - totalEnergyLastWeek
+
+        // Calculate estimated price for the current week
+        val estimatedPriceCurrentWeek = totalEnergyCurrentWeek * pricePerKwh
+
+        // Calculate estimated price for the last week
+        val estimatedPriceLastWeek = totalEnergyLastWeek * pricePerKwh
+
+        // Calculate the difference in estimated price between the current week and the last week
+        val priceDifference = estimatedPriceCurrentWeek - estimatedPriceLastWeek
+
+        // Calculate percentage difference
+        val pricePercentageDifference = (priceDifference / estimatedPriceLastWeek) * 100
+
+        // Determine if this week is more expensive or cheaper than last week
+        val status = if (totalEnergyCurrentWeek > totalEnergyLastWeek) "Boros" else "Hemat"
+
+        return Triple(energyDifference, priceDifference, pricePercentageDifference)
+    }
+
 
 
 }

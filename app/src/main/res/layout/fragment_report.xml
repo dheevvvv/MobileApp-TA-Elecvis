@@ -89,7 +89,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:backgroundTint="@color/_deep"
-                        android:text="Pilih Bulan"
+                        android:text="Pilih Minggu"
                         android:textAllCaps="false"
                         android:textSize="11sp"
                         />
