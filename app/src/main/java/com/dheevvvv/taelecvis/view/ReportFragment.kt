@@ -42,6 +42,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -394,11 +395,9 @@ class ReportFragment : Fragment() {
 
     // Fungsi untuk mengubah nilai ke format mata uang Rupiah (IDR)
     fun formatToIDR(value: Float): String {
-        val currencyFormat = DecimalFormat.getCurrencyInstance() as DecimalFormat
-        val formatSymbols = DecimalFormatSymbols()
-        formatSymbols.currencySymbol = "Rp "
-        currencyFormat.decimalFormatSymbols = formatSymbols
-        return currencyFormat.format(value)
+        val formatter = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+        val amountInt = value.toInt() // Konversi nilai Float ke Int
+        return formatter.format(amountInt)
     }
 
     @SuppressLint("SetTextI18n")

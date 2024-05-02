@@ -90,13 +90,13 @@ class ConsumptionTransactionFragment : Fragment() {
         binding.cv1Week.setOnClickListener {
             val startDate = "2009-11-30"
             val endDate = "2009-11-30"
-            homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
+            val option = "Minggu"
+            val filteredDates = filterDates(startDate, endDate, option)
+            val filteredStartDate = filteredDates.first
+            val filteredEndDate = filteredDates.second
+            homeViewModel.callApiGetPowerUsage(userId, filteredStartDate, filteredEndDate)
             homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                 if (data!=null){
-                    val option = "Minggu"
-                    val filteredDates = filterDates(startDate, endDate, option)
-                    val filteredStartDate = filteredDates.first
-                    val filteredEndDate = filteredDates.second
                     calculateSubMetering(data, filteredStartDate, filteredEndDate)
 
                     binding.cv1Month.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
@@ -108,13 +108,13 @@ class ConsumptionTransactionFragment : Fragment() {
         binding.cv1Month.setOnClickListener {
             val startDate = "2009-11-30"
             val endDate = "2009-11-30"
-            homeViewModel.callApiGetPowerUsage(userId, startDate, endDate)
+            val option = "2Minggu"
+            val filteredDates = filterDates(startDate, endDate, option)
+            val filteredStartDate = filteredDates.first
+            val filteredEndDate = filteredDates.second
+            homeViewModel.callApiGetPowerUsage(userId, filteredStartDate, filteredEndDate)
             homeViewModel.powerUsageData.observe(viewLifecycleOwner, Observer { data->
                 if (data!=null){
-                    val option = "Bulan"
-                    val filteredDates = filterDates(startDate, endDate, option)
-                    val filteredStartDate = filteredDates.first
-                    val filteredEndDate = filteredDates.second
                     calculateSubMetering(data, filteredStartDate, filteredEndDate)
 
                     binding.cv1Month.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
@@ -167,7 +167,7 @@ class ConsumptionTransactionFragment : Fragment() {
         val subMetering3EnergykWh = filteredData.sumOf { it.subMetering3.toDouble() / 1000 }.toFloat()
 
         binding.tvTotalKwh.setText("$totalEnergyKwh kWh")
-        binding.tvTotalPrice.setText("Rp $estimatedPrice")
+        binding.tvTotalPrice.setText(formatToRupiah(estimatedPrice.toInt()))
         binding.tvTotalKwhKitchen.setText("$subMetering1EnergykWh kWh")
         binding.tvTotalKwhLoundryRoom.setText("$subMetering2EnergykWh kWh")
         binding.tvTotalKwhHeater.setText("$subMetering3EnergykWh kWh")
@@ -175,6 +175,11 @@ class ConsumptionTransactionFragment : Fragment() {
         binding.tvTotalWhLoundryRoom.setText("$subMetering2Energy Wh")
         binding.tvTotalWhHeater.setText("$subMetering3Energy Wh")
 
+    }
+
+    fun formatToRupiah(amount: Int): String {
+        val formatter = java.text.NumberFormat.getCurrencyInstance(java.util.Locale("id", "ID"))
+        return formatter.format(amount)
     }
 
     fun filterDates(startDate: String, endDate: String, option: String): Pair<String, String> {
@@ -196,8 +201,8 @@ class ConsumptionTransactionFragment : Fragment() {
                 filteredStartDate = sdf.format(calendar.time)
                 filteredEndDate = endDate
             }
-            "Bulan" -> {
-                calendar.add(Calendar.MONTH, -1)
+            "2Minggu" -> {
+                calendar.add(Calendar.DAY_OF_MONTH, -14)
                 filteredStartDate = sdf.format(calendar.time)
                 filteredEndDate = endDate
             }
