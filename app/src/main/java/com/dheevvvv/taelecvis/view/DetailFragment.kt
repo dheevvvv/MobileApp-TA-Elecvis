@@ -142,6 +142,7 @@ class DetailFragment : Fragment() {
                             }
                         }
                         val averageValue = totalValue / entryCount
+                        homeViewModel.saveAverageTren(averageValue)
                         val highestValueFormatted = String.format("%.3f", highestValue)
                         val lowestValueFormatted = String.format("%.3f", lowestValue)
                         val totalValueFormatted = String.format("%.3f", totalValue)
@@ -225,6 +226,8 @@ class DetailFragment : Fragment() {
                             }
                         }
                         val averageValue = totalValue / entryCount
+                        homeViewModel.saveMaxPuncak(highestValue)
+                        homeViewModel.saveAveragePuncak(averageValue)
                         val highestValueFormatted = String.format("%.3f", highestValue)
                         val lowestValueFormatted = String.format("%.3f", lowestValue)
                         val totalValueFormatted = String.format("%.3f", totalValue)
@@ -308,6 +311,7 @@ class DetailFragment : Fragment() {
                             }
                         }
                         val averageValue = totalValue / entryCount
+                        homeViewModel.saveAverageVoltase(averageValue)
                         val highestValueFormatted = String.format("%.3f", highestValue)
                         val lowestValueFormatted = String.format("%.3f", lowestValue)
                         val totalValueFormatted = String.format("%.3f", totalValue)
@@ -391,6 +395,7 @@ class DetailFragment : Fragment() {
                             }
                         }
                         val averageValue = totalValue / entryCount
+                        homeViewModel.saveAverageIntensitas(averageValue)
                         val highestValueFormatted = String.format("%.3f", highestValue)
                         val lowestValueFormatted = String.format("%.3f", lowestValue)
                         val totalValueFormatted = String.format("%.3f", totalValue)

@@ -48,6 +48,27 @@ class HomeViewModel @Inject constructor(val userManager: UserManager, val apiSer
     private val _labelsSubmeter = MutableLiveData<ArrayList<String>>()
     val labelsSubmeter:LiveData<ArrayList<String>> get() = _labelsSubmeter
 
+    private val _totalConsumptionEnergyTren = MutableLiveData<Float>()
+    val totalConsumptionEnergyTren: LiveData<Float> get() = _totalConsumptionEnergyTren
+
+    private val _averageValueTren = MutableLiveData<Float>()
+    val averageValueTren:LiveData<Float> get() = _averageValueTren
+
+    private val _maxValuePuncak = MutableLiveData<Float>()
+    val maxValuePuncak:LiveData<Float> get() = _maxValuePuncak
+
+    private val _averageValuePuncak = MutableLiveData<Float>()
+    val averageValuePuncak:LiveData<Float> get() = _averageValuePuncak
+
+    private val _averageValueIntensitas = MutableLiveData<Float>()
+    val averageValueIntensitas:LiveData<Float> get() = _averageValueIntensitas
+
+    private val _averageValueVoltage = MutableLiveData<Float>()
+    val averageValueVoltage:LiveData<Float> get() = _averageValueVoltage
+
+    private val _totalValueSubmeter = MutableLiveData<Float>()
+    val totalValueSubmeter:LiveData<Float> get() = _totalValueSubmeter
+
 
     fun callApiGetPowerUsage(userId: Int, startDate: String, endDate: String){
         apiService.getPowerUsage(userId, startDate, endDate).enqueue(object : Callback<GetPowerUsageResponse>{
@@ -104,6 +125,32 @@ class HomeViewModel @Inject constructor(val userManager: UserManager, val apiSer
         _labelsSubmeter.postValue(labels)
     }
 
+    fun saveTotalConsumptionEnergyTren(total:Float){
+        _totalConsumptionEnergyTren.postValue(total)
+    }
 
+    fun saveAverageTren(value:Float){
+        _averageValueTren.postValue(value)
+    }
+
+    fun saveAveragePuncak(value:Float){
+        _averageValuePuncak.postValue(value)
+    }
+
+    fun saveMaxPuncak(value:Float){
+        _maxValuePuncak.postValue(value)
+    }
+
+    fun saveAverageIntensitas(value:Float){
+        _averageValueIntensitas.postValue(value)
+    }
+
+    fun saveAverageVoltase(value:Float){
+        _averageValueVoltage.postValue(value)
+    }
+
+    fun saveTotalSubmeter(value:Float){
+        _totalValueSubmeter.postValue(value)
+    }
 
 }

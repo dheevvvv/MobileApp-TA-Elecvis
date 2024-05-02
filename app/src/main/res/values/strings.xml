@@ -82,4 +82,34 @@
         Submetering adalah praktik memasang meter listrik tambahan di dalam bangunan atau unit individual untuk memantau konsumsi energi secara terpisah. Ini memungkinkan pemilik atau pengelola gedung untuk memahami dan mengelola penggunaan energi secara lebih efisien. Penelitian menunjukkan bahwa submetering dapat membantu mengidentifikasi pola konsumsi energi yang tidak efisien dan memotivasi pengguna untuk mengadopsi perilaku yang lebih berkelanjutan. Dalam hal ini. terdapat 3 sub-meter yaitu Kitchen, Laundry Room, dan Water heater, Air Conditioner.
     </string>
     <string name="desc_null">Kosong</string>
+    <string name="rekom_tren_warning">
+        Konsumsi melampaui batas, pertimbangkan untuk mengevaluasi dan mengidentifikasi area-area di mana konsumsi energi dapat dikurangi atau dioptimalkan.
+    </string>
+    <string name="rekom_tren_aman">
+        Meskipun tren konsumsi listrik berada di bawah ambang batas, tetaplah melakukan pemantauan dan evaluasi secara berkala terhadap penggunaan energi untuk memastikan efisiensi dan keberlanjutan jangka panjang.
+    </string>
+    <string name="rekom_puncak_warning">
+        Untuk menghindari gangguan atau pemadaman listrik, pertimbangkan untuk mengurangi penggunaan listrik saat sistem mencapai puncaknya dengan mengurangi penggunaan peralatan non-kebutuhan atau menerapkan kebijakan pengelolaan beban
+    </string>
+    <string name="rekom_puncak_aman">
+        Dengan tetap berada di bawah ambang batas puncak listrik, pastikan untuk terus memantau permintaan listrik dan mempersiapkan langkah-langkah pengelolaan beban yang diperlukan jika permintaan meningkat secara signifikan
+    </string>
+    <string name="rekom_voltase_warning">
+        Segera identifikasi dan perbaiki masalah pada instalasi listrik jika voltase terus melebihi ambang batas yang ditetapkan untuk memastikan keselamatan dan kinerja peralatan
+    </string>
+    <string name="rekom_voltase_aman">
+        Dengan tetap berada di bawah ambang batas voltase, pastikan untuk menjaga peralatan listrik agar tetap berfungsi dengan baik dan memeriksa secara berkala untuk mencegah potensi masalah tegangan rendah
+    </string>
+    <string name="rekom_intensitas_warning">
+        Untuk mencegah kerusakan pada kabel dan peralatan, pertimbangkan untuk mengurangi beban listrik atau mengganti peralatan yang lebih efisien jika intensitas listrik terus melebihi ambang batas yang ditetapkan
+    </string>
+    <string name="rekom_intensitas_aman">
+        Meskipun intensitas listrik berada di bawah ambang batas, tetaplah memperhatikan kondisi kabel dan peralatan untuk mencegah potensi kelebihan beban atau kebakaran listrik
+    </string>
+    <string name="rekom_submeter_warning">
+        Pertimbangkan untuk mengurangi penggunaan energi jika konsumsi energi Anda terus melebihi ambang batas yang ditetapkan untuk menjaga efisiensi energi dan mengurangi biaya pengeluaran
+    </string>
+    <string name="rekom_submeter_aman">
+        Meskipun konsumsi energi berada di bawah ambang batas, tetaplah memantau penggunaan energi dan mencari cara untuk mengoptimalkan penggunaan energi agar tetap berada dalam batas yang diinginkan
+    </string>
 </resources>

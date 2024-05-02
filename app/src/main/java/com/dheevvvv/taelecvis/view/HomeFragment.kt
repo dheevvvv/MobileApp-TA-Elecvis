@@ -229,6 +229,8 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showDailyConsumptionTrend(lineChart: LineChart, dataList: List<Data>, startDate: String, endDate: String) {
         val dailyAverages = calculateDailyAverages(dataList, startDate, endDate)
+        val totalConsumption = calculateTotalConsumption(dataList, startDate, endDate)
+        homeViewModel.saveTotalConsumptionEnergyTren(totalConsumption)
         val entries = ArrayList<Entry>()
         val labels = ArrayList<String>()
 
@@ -263,6 +265,26 @@ class HomeFragment : Fragment() {
 
         lineChart.invalidate()
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calculateTotalConsumption(dataList: List<Data>, startDate: String, endDate: String): Float {
+        var totalConsumption = 0f
+
+        // Inisialisasi tanggal pertama dan terakhir
+        val start = LocalDate.parse(startDate)
+        val end = LocalDate.parse(endDate)
+
+        // Iterasi setiap data dalam rentang tanggal dan akumulasikan total konsumsi
+        for (data in dataList) {
+            val dataDate = LocalDate.parse(data.date)
+            if (!dataDate.isBefore(start) && !dataDate.isAfter(end)) {
+                totalConsumption += data.globalActivePower.toFloat()
+            }
+        }
+
+        return totalConsumption
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateDailyAverages(dataList: List<Data>, startDate: String, endDate: String): List<Float> {
@@ -551,6 +573,8 @@ class HomeFragment : Fragment() {
         // Calculate total energy consumption for the specified date range
         val totalEnergy = filteredData.sumOf { it.subMetering1.toDouble() + it.subMetering2.toDouble() + it.subMetering3.toDouble() }
             .toFloat()
+        val totalKwh = totalEnergy / 1000
+        homeViewModel.saveTotalSubmeter(totalKwh)
 
         // Calculate composition of sub-metering
         val subMetering1Energy = filteredData.sumOf { it.subMetering1.toDouble() }.toFloat()

@@ -53,19 +53,30 @@
                         android:layout_height="100dp"
                         android:layout_centerInParent="true"
                         app:indicatorColor="@color/medium_siate_blue"
+                        app:indicatorSize="100dp"
                         app:trackColor="#37C81D"
-                        app:trackThickness="15dp"
-                        app:indicatorSize="100dp" />
+                        app:trackThickness="15dp" />
 
                     <TextView
                         android:id="@+id/progressText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="80%"
                         android:fontFamily="@font/poppins_extra_bold"
+                        android:text="80%"
                         android:textColor="#37C81D"
                         android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/tvHematBoros"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/progressText"
+                        android:layout_centerHorizontal="true"
+                        android:text="Hemat"
+                        android:layout_marginTop="15dp"
+                        android:fontFamily="@font/poppins_semi_bold"
+                        android:textColor="#37C81D"/>
                 </RelativeLayout>
 
                 <TextView
@@ -136,18 +147,7 @@
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
-                    <TextView
-                        android:id="@+id/tv20"
-                        app:layout_constraintTop_toBottomOf="@+id/tv40"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:layout_width="wrap_content"
-                        android:layout_marginTop="@dimen/margin_10"
-                        android:layout_height="wrap_content"
-                        android:text="@string/_20"
-                        android:fontFamily="@font/poppins_medium"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+
 
                     <TextView
                         android:id="@+id/tvAksi"
@@ -187,19 +187,7 @@
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
-                    <TextView
-                        android:id="@+id/tvSaving"
-                        app:layout_constraintTop_toBottomOf="@+id/tv40"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginEnd="@dimen/margin_20"
-                        android:layout_width="wrap_content"
-                        android:layout_marginTop="@dimen/margin_10"
-                        android:layout_height="wrap_content"
-                        android:text="Saving"
-                        android:fontFamily="@font/poppins_medium"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
