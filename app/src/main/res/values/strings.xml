@@ -112,4 +112,5 @@
     <string name="rekom_submeter_aman">
         Meskipun konsumsi energi berada di bawah ambang batas, tetaplah memantau penggunaan energi dan mencari cara untuk mengoptimalkan penggunaan energi agar tetap berada dalam batas yang diinginkan
     </string>
+    <string name="txt_indikator">Indikator ini merupakan perhitungan teknikal berdasarkan indikator acuan</string>
 </resources>

@@ -65,7 +65,7 @@
                         android:fontFamily="@font/poppins_extra_bold"
                         android:text="80%"
                         android:textColor="#37C81D"
-                        android:textSize="24sp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/tvHematBoros"
@@ -74,7 +74,7 @@
                         android:layout_below="@+id/progressText"
                         android:layout_centerHorizontal="true"
                         android:text="Hemat"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="@dimen/margin_20"
                         android:fontFamily="@font/poppins_semi_bold"
                         android:textColor="#37C81D"/>
                 </RelativeLayout>
@@ -83,7 +83,7 @@
                     android:id="@+id/tvRecommendationIndikator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Indikator ini Bersadasarkan perhitungan indikator teknikal dari konsumsi harian energi"
+                    android:text="@string/txt_indikator"
                     android:fontFamily="@font/poppins_medium"
                     android:textAlignment="center"
                     android:textColor="@color/grey"

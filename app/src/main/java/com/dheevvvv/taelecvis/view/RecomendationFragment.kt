@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -41,193 +42,223 @@ class RecomendationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         dataId = arguments?.getInt("dataChartId")!!
-        getData()
 
         calculateRecommendation()
 
     }
 
     @SuppressLint("SetTextI18n")
+    private fun TrenConsumn(data:Float){
+        val actualValue = averageConsumpTren
+        val threshold = THRESHOLD_VALUE_TREN_KONSUMSI_HARIAN * totalConsumTren
+        binding.tv80.setText("> 15% dari Total Konsumsi Listrik")
+        binding.tv40.setText("< 15% dari Total Konsumsi Listrik")
+        binding.tvNetral.setText("Hemat")
+        binding.tvOver.setText("Boros")
+        if (actualValue > threshold) {
+            // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
+            binding.tvRecommendation.text = getString(R.string.rekom_tren_warning)
+            val selisih = actualValue - threshold
+            val persentase = selisih / threshold * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.progressText.setText("${persentase.toInt()} %")
+            binding.tvHematBoros.setText("Boros")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.red))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.circularProgressBar.progress = persentase.toInt()
+        } else {
+            // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
+            binding.tvRecommendation.text = getString(R.string.rekom_tren_aman)
+            val selisih = threshold - actualValue
+            val persentase = selisih / threshold * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.progressText.setText("${persentase.toInt()} %")
+            binding.tvHematBoros.setText("Hemat")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.green))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.circularProgressBar.progress = persentase.toInt()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun Puncak(max: Float, average:Float){
+        binding.tv80.setText("> 90% dari Rata-rata")
+        binding.tv40.setText("< 90% dari Rata-rata")
+        binding.tvNetral.setText("Aman")
+        binding.tvOver.setText("Warning")
+        val actualValue = maxPuncak
+        val threshold = THRESHOLD_VALUE_PUNCAK_LISTRIK * averagePuncak
+        if (actualValue > threshold) {
+            // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
+            binding.tvRecommendation.text = getString(R.string.rekom_puncak_warning)
+            val selisih = actualValue - threshold
+            val persentase = selisih / threshold * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.progressText.setText("${persentase.toInt()} %")
+            binding.tvHematBoros.setText("Warning")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.red))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.circularProgressBar.progress = persentase.toInt()
+        } else {
+            // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
+            binding.tvRecommendation.text = getString(R.string.rekom_puncak_aman)
+            val selisih = threshold - actualValue
+            val persentase = selisih / threshold * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.progressText.setText("${persentase.toInt()} %")
+            binding.tvHematBoros.setText("Aman")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.green))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.circularProgressBar.progress = persentase.toInt()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun AverageVoltage(avg:Float){
+        binding.tv80.setText("> 220 volt")
+        binding.tv40.setText("< 220 volt")
+        binding.tvNetral.setText("Stabil")
+        binding.tvOver.setText("Warning")
+        val actualValue = averageVoltage
+        if (actualValue > THRESHOLD_VALUE_VOLTASE_TEGANGAN) {
+            // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
+            binding.tvRecommendation.text = getString(R.string.rekom_voltase_warning)
+            val selisih = actualValue - THRESHOLD_VALUE_VOLTASE_TEGANGAN
+            val persentase = selisih / THRESHOLD_VALUE_VOLTASE_TEGANGAN * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.progressText.setText("${persentase.toInt()} %")
+            binding.tvHematBoros.setText("Warning")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.red))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.circularProgressBar.progress = persentase.toInt()
+        } else {
+            // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
+            binding.tvRecommendation.text = getString(R.string.rekom_voltase_aman)
+            val selisih = THRESHOLD_VALUE_VOLTASE_TEGANGAN - actualValue
+            val persentase = selisih / THRESHOLD_VALUE_VOLTASE_TEGANGAN * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.progressText.setText("${persentase.toInt()} %")
+            binding.tvHematBoros.setText("Stabil")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.green))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.circularProgressBar.progress = persentase.toInt()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun Intensitas(avg:Float){
+        binding.tv80.setText("> 15 ampere")
+        binding.tv40.setText("< 15 ampere")
+        binding.tvNetral.setText("Aman")
+        binding.tvOver.setText("Warning")
+        val actualValue = averageIntensitas
+        if (actualValue > THRESHOLD_VALUE_INTENSITAS_LISTRIK) {
+            // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
+            binding.tvRecommendation.text = getString(R.string.rekom_intensitas_warning)
+            val selisih = actualValue - THRESHOLD_VALUE_INTENSITAS_LISTRIK
+            val persentase = selisih / THRESHOLD_VALUE_INTENSITAS_LISTRIK * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.progressText.setText("${persentase.toInt()} %")
+            binding.tvHematBoros.setText("Warning")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.red))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.circularProgressBar.progress = persentase.toInt()
+        } else {
+            // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
+            binding.tvRecommendation.text = getString(R.string.rekom_intensitas_aman)
+            val selisih = THRESHOLD_VALUE_INTENSITAS_LISTRIK - actualValue
+            val persentase = selisih / THRESHOLD_VALUE_INTENSITAS_LISTRIK * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.progressText.setText("${persentase.toInt()} %")
+            binding.tvHematBoros.setText("Aman")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.green))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.circularProgressBar.progress = persentase.toInt()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun Submeter(total:Float){
+        binding.tv80.setText("> 400kWh perBulan atau \n 13.33kWh perHari")
+        binding.tv40.setText("< 400kWh perBulan atau \n 13.33kWh perHari")
+        binding.tvNetral.setText("Normal")
+        binding.tvOver.setText("Boros")
+        val actualValue = totalSubmeter
+        val threshold = THRESHOLD_VALUE_SUBMETER / 30
+        if (actualValue > threshold) {
+            // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
+            binding.tvRecommendation.text = getString(R.string.rekom_submeter_warning)
+            val selisih = actualValue - threshold
+            val persentase = selisih / threshold * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.progressText.setText("${persentase.toInt()} %")
+            binding.tvHematBoros.setText("Boros")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.red))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.circularProgressBar.progress = persentase.toInt()
+        } else {
+            // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
+            binding.tvRecommendation.text = getString(R.string.rekom_submeter_aman)
+            val selisih = threshold - actualValue
+            val persentase = selisih / threshold * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.progressText.setText("${persentase.toInt()} %")
+            binding.tvHematBoros.setText("Normal")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.green))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.circularProgressBar.progress = persentase.toInt()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
     private fun calculateRecommendation() {
         when (dataId) {
             1 -> {
-                val actualValue = averageConsumpTren
-                val threshold = THRESHOLD_VALUE_TREN_KONSUMSI_HARIAN * totalConsumTren
-                binding.tv80.setText("> 15% dari Total Konsumsi Listrik")
-                binding.tv40.setText("< 15% dari Total Konsumsi Listrik")
-                binding.tvNetral.setText("Hemat")
-                binding.tvOver.setText("Boros")
-                if (actualValue > threshold) {
-                    // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
-                    binding.tvRecommendation.text = getString(R.string.rekom_tren_warning)
-                    val selisih = actualValue - threshold
-                    val persentase = selisih / threshold * 100
-                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.progressText.setText("$persentase %")
-                    binding.tvHematBoros.setText("Boros")
-                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.red)
-                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.circularProgressBar.progress = persentase.toInt()
-                } else {
-                    // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
-                    binding.tvRecommendation.text = getString(R.string.rekom_tren_aman)
-                    val selisih = actualValue - threshold
-                    val persentase = selisih / threshold * 100
-                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    binding.progressText.setText("$persentase %")
-                    binding.tvHematBoros.setText("Hemat")
-                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.green)
-                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    binding.circularProgressBar.progress = persentase.toInt()
-                }
+                homeViewModel.totalConsumptionEnergyTren.observe(viewLifecycleOwner, Observer {totalConsumn->
+                    totalConsumTren = totalConsumn
+                    TrenConsumn(totalConsumTren)
+                })
             }
             2 -> {
-                binding.tv80.setText("> 90% dari Rata-rata")
-                binding.tv40.setText("< 90% dari Rata-rata")
-                binding.tvNetral.setText("Aman")
-                binding.tvOver.setText("Warning")
-                val actualValue = maxPuncak
-                val threshold = THRESHOLD_VALUE_PUNCAK_LISTRIK * averagePuncak
-                if (actualValue > THRESHOLD_VALUE_PUNCAK_LISTRIK) {
-                    // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
-                    binding.tvRecommendation.text = getString(R.string.rekom_puncak_warning)
-                    val selisih = actualValue - threshold
-                    val persentase = selisih / threshold * 100
-                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.progressText.setText("$persentase %")
-                    binding.tvHematBoros.setText("Warning")
-                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.red)
-                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.circularProgressBar.progress = persentase.toInt()
-                } else {
-                    // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
-                    binding.tvRecommendation.text = getString(R.string.rekom_puncak_aman)
-                    val selisih = actualValue - threshold
-                    val persentase = selisih / threshold * 100
-                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    binding.progressText.setText("$persentase %")
-                    binding.tvHematBoros.setText("Aman")
-                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.green)
-                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    binding.circularProgressBar.progress = persentase.toInt()
-                }
+                homeViewModel.averageValuePuncak.observe(viewLifecycleOwner, Observer {avgPuncak->
+                    averagePuncak = avgPuncak
+                    homeViewModel.maxValuePuncak.observe(viewLifecycleOwner, Observer {maxP->
+                        maxPuncak = maxP
+                        Puncak(maxPuncak, averagePuncak)
+                    })
+                })
             }
             3 -> {
-                binding.tv80.setText("> 220 volt")
-                binding.tv40.setText("< 220 volt")
-                binding.tvNetral.setText("Stabil")
-                binding.tvOver.setText("Warning")
-                val actualValue = averageVoltage
-                if (actualValue > THRESHOLD_VALUE_VOLTASE_TEGANGAN) {
-                    // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
-                    binding.tvRecommendation.text = getString(R.string.rekom_voltase_warning)
-                    val selisih = actualValue - THRESHOLD_VALUE_VOLTASE_TEGANGAN
-                    val persentase = selisih / THRESHOLD_VALUE_VOLTASE_TEGANGAN * 100
-                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.progressText.setText("$persentase %")
-                    binding.tvHematBoros.setText("Warning")
-                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.red)
-                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.circularProgressBar.progress = persentase.toInt()
-                } else {
-                    // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
-                    binding.tvRecommendation.text = getString(R.string.rekom_voltase_aman)
-                    val selisih = actualValue - THRESHOLD_VALUE_VOLTASE_TEGANGAN
-                    val persentase = selisih / THRESHOLD_VALUE_VOLTASE_TEGANGAN * 100
-                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    binding.progressText.setText("$persentase %")
-                    binding.tvHematBoros.setText("Stabil")
-                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.green)
-                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    binding.circularProgressBar.progress = persentase.toInt()
-                }
+                homeViewModel.averageValueVoltage.observe(viewLifecycleOwner, Observer {avgVoltage->
+                    averageVoltage = avgVoltage
+                    AverageVoltage(averageVoltage)
+                })
             }
             4 -> {
-                binding.tv80.setText("> 15 ampere")
-                binding.tv40.setText("< 15 ampere")
-                binding.tvNetral.setText("Aman")
-                binding.tvOver.setText("Warning")
-                val actualValue = averageIntensitas
-                if (actualValue > THRESHOLD_VALUE_INTENSITAS_LISTRIK) {
-                    // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
-                    binding.tvRecommendation.text = getString(R.string.rekom_intensitas_warning)
-                    val selisih = actualValue - THRESHOLD_VALUE_INTENSITAS_LISTRIK
-                    val persentase = selisih / THRESHOLD_VALUE_INTENSITAS_LISTRIK * 100
-                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.progressText.setText("$persentase %")
-                    binding.tvHematBoros.setText("Warning")
-                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.red)
-                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.circularProgressBar.progress = persentase.toInt()
-                } else {
-                    // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
-                    binding.tvRecommendation.text = getString(R.string.rekom_intensitas_aman)
-                    val selisih = actualValue - THRESHOLD_VALUE_INTENSITAS_LISTRIK
-                    val persentase = selisih / THRESHOLD_VALUE_INTENSITAS_LISTRIK * 100
-                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    binding.progressText.setText("$persentase %")
-                    binding.tvHematBoros.setText("Aman")
-                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.green)
-                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    binding.circularProgressBar.progress = persentase.toInt()
-                }
+                homeViewModel.averageValueIntensitas.observe(viewLifecycleOwner, Observer {avgIntensitas->
+                    averageIntensitas = avgIntensitas
+                    Intensitas(averageIntensitas)
+                })
             }
             5 -> {
-                binding.tv80.setText("> 400kWh perBulan atau 13.33kWh perHari")
-                binding.tv40.setText("< 400kWh perBulan atau 13.33kWh perHari")
-                binding.tvNetral.setText("Normal")
-                binding.tvOver.setText("Boros")
-                val actualValue = totalSubmeter
-                if (actualValue > THRESHOLD_VALUE_SUBMETER) {
-                    // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
-                    binding.tvRecommendation.text = getString(R.string.rekom_submeter_warning)
-                    val selisih = actualValue - THRESHOLD_VALUE_SUBMETER
-                    val persentase = selisih / THRESHOLD_VALUE_SUBMETER * 100
-                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.progressText.setText("$persentase %")
-                    binding.tvHematBoros.setText("Boros")
-                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.red)
-                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                    binding.circularProgressBar.progress = persentase.toInt()
-                } else {
-                    // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
-                    binding.tvRecommendation.text = getString(R.string.rekom_submeter_aman)
-                    val selisih = actualValue - THRESHOLD_VALUE_SUBMETER
-                    val persentase = selisih / THRESHOLD_VALUE_SUBMETER * 100
-                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    binding.progressText.setText("$persentase %")
-                    binding.tvHematBoros.setText("Normal")
-                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.green)
-                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                    binding.circularProgressBar.progress = persentase.toInt()
-                }
+                homeViewModel.totalValueSubmeter.observe(viewLifecycleOwner, Observer {totalSubm->
+                    totalSubmeter = totalSubm
+                    Submeter(totalSubmeter)
+                })
             } else -> binding.tvRecommendation.text = getString(R.string.desc_null)
         }
     }
 
-    private fun getData(){
-        homeViewModel.totalConsumptionEnergyTren.observe(viewLifecycleOwner, Observer {
-            totalConsumTren = it
-        })
-        homeViewModel.averageValueTren.observe(viewLifecycleOwner, Observer {
-            averageConsumpTren = it
-        })
-        homeViewModel.averageValuePuncak.observe(viewLifecycleOwner, Observer {
-            averagePuncak = it
-        })
-        homeViewModel.averageValueIntensitas.observe(viewLifecycleOwner, Observer {
-            averageIntensitas = it
-        })
-        homeViewModel.averageValueVoltage.observe(viewLifecycleOwner, Observer {
-            averageVoltage = it
-        })
-        homeViewModel.maxValuePuncak.observe(viewLifecycleOwner, Observer {
-            maxPuncak = it
-        })
-        homeViewModel.totalValueSubmeter.observe(viewLifecycleOwner, Observer {
-            totalSubmeter = it
-        })
-    }
 
     companion object {
         private const val THRESHOLD_VALUE_TREN_KONSUMSI_HARIAN = 0.15
