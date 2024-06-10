@@ -234,10 +234,6 @@ class HomeFragment : Fragment() {
         val entries = ArrayList<Entry>()
         val labels = ArrayList<String>()
 
-//        for (i in dailyAverages.indices) {
-//            entries.add(Entry(i.toFloat(), dailyAverages[i]))
-//            labels.add("Day ${i + 1}") // Menambah label hari
-//        }
         for ((index, dailyAverage) in dailyAverages.withIndex()) {
             entries.add(Entry(index.toFloat(), dailyAverage))
             labels.add("Day ${index}") // Add a label for each data point

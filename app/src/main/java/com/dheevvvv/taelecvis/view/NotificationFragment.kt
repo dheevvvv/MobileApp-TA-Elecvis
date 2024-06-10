@@ -178,6 +178,7 @@ class NotificationFragment : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun notif(){
         val notificationHelper = NotificationHelper(requireContext())
         notificationAlertsViewModel.getActiveAlerts(userId)

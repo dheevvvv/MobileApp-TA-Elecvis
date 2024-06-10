@@ -21,8 +21,6 @@ class NotifAlertsAdapter(private val context: Context ,private val alerts: List<
 
     }
 
-
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
