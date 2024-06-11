@@ -227,7 +227,7 @@ class HomeFragment : Fragment() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun showDailyConsumptionTrend(lineChart: LineChart, dataList: List<Data>, startDate: String, endDate: String) {
+    fun showDailyConsumptionTrend(lineChart: LineChart, dataList: List<Data>, startDate: String, endDate: String) {
         val dailyAverages = calculateDailyAverages(dataList, startDate, endDate)
         val totalConsumption = calculateTotalConsumption(dataList, startDate, endDate)
         homeViewModel.saveTotalConsumptionEnergyTren(totalConsumption)
@@ -263,7 +263,7 @@ class HomeFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun calculateTotalConsumption(dataList: List<Data>, startDate: String, endDate: String): Float {
+    fun calculateTotalConsumption(dataList: List<Data>, startDate: String, endDate: String): Float {
         var totalConsumption = 0f
 
         // Inisialisasi tanggal pertama dan terakhir
@@ -283,7 +283,7 @@ class HomeFragment : Fragment() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun calculateDailyAverages(dataList: List<Data>, startDate: String, endDate: String): List<Float> {
+    fun calculateDailyAverages(dataList: List<Data>, startDate: String, endDate: String): List<Float> {
         val dailyAverages = mutableListOf<Float>()
 
         // Inisialisasi tanggal pertama dan terakhir
@@ -323,7 +323,7 @@ class HomeFragment : Fragment() {
         return dailyAverages
     }
 
-    private fun calculatePeakConsumption(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
+    fun calculatePeakConsumption(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
         val peakConsumptions = mutableMapOf<Int, Float>()
         val hourDataCount = mutableMapOf<Int, Int>()
 
@@ -397,7 +397,7 @@ class HomeFragment : Fragment() {
 
     // Function to calculate maximum global intensity for each hour
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun calculateMaxGlobalIntensity(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
+    fun calculateMaxGlobalIntensity(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
         val maxGlobalIntensity = mutableMapOf<Int, Float>()
         val hourDataCount = mutableMapOf<Int, Int>()
 
@@ -469,7 +469,7 @@ class HomeFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun calculateAverageVoltage(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
+    fun calculateAverageVoltage(dataList: List<Data>, startDate: String, endDate: String): Map<Int, Float> {
         val averageVoltages = mutableMapOf<Int, Float>()
         val hourDataCount = mutableMapOf<Int, Int>()
 
@@ -560,7 +560,7 @@ class HomeFragment : Fragment() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun calculateSubMeteringComposition(dataList: List<Data>, startDate: String, endDate: String): Map<String, Float> {
+    fun calculateSubMeteringComposition(dataList: List<Data>, startDate: String, endDate: String): Map<String, Float> {
         val subMeteringComposition = mutableMapOf<String, Float>()
 
         // Filter data for the specified date range
