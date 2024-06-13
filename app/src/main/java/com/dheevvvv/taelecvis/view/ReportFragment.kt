@@ -56,7 +56,7 @@ class ReportFragment : Fragment() {
     private val userViewModel: UserViewModel by activityViewModels()
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val reportViewModel: ReportViewModel by activityViewModels()
-    private val REQUEST_CODE_PERMISSION = 101
+    private val STORAGE_REQUEST_CODE_PERMISSION = 456
     private var email:String = ""
     private var username:String = ""
     private var userId:Int = 0
@@ -88,6 +88,8 @@ class ReportFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        checkStoragePermissions()
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item->
             when(item.itemId) {
@@ -171,7 +173,7 @@ class ReportFragment : Fragment() {
             binding.tvPengeluaranRupiah.text = formatToIDR(estimatedPrice)
             binding.tvPengeluaranKwh.text = formatDecimal(totalEnergy)
 
-            binding.tvSelisihKwh.text = formatDecimal(energyDifference)
+            binding.tvSelisihKwh.text = formatDecimal(energyDifference) + "kWh"
             binding.tvSelisihRp.text = formatToIDR(priceDifference)
             if (priceDifference < 0) {
                 binding.tvHematBoros.text = "Boros"
@@ -196,9 +198,6 @@ class ReportFragment : Fragment() {
             binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
         }
 
-        checkStoragePermissions()
-
-
         binding.btnUnduhPdf.setOnClickListener {
             generatePdf()
         }
@@ -206,23 +205,37 @@ class ReportFragment : Fragment() {
     }
 
     private fun checkStoragePermissions() {
-        val writePermission = ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (writePermission != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             // Izin belum diberikan, minta izin kepada pengguna
             requestStoragePermission()
         } else {
-            // Izin diberikan, lanjutkan dengan menampilkan notifikasi
-            Toast.makeText(requireContext(), "Izin storage telah diberikan", Toast.LENGTH_SHORT).show()
+            // Izin sudah diberikan
+            Toast.makeText(requireContext(), "Izin untuk menyimpan file di penyimpanan eksternal telah diberikan", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun requestStoragePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        ) {
+            // Tampilkan penjelasan kepada pengguna mengapa izin ini diperlukan
+            Toast.makeText(
+                requireContext(),
+                "Aplikasi ini memerlukan izin untuk menyimpan file di penyimpanan eksternal.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        // Meminta izin WRITE_EXTERNAL_STORAGE
         ActivityCompat.requestPermissions(
-            requireActivity(), arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            REQUEST_CODE_PERMISSION
+            requireActivity(),
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            STORAGE_REQUEST_CODE_PERMISSION
         )
     }
 
@@ -232,20 +245,31 @@ class ReportFragment : Fragment() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_PERMISSION) {
+        if (requestCode == STORAGE_REQUEST_CODE_PERMISSION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(requireContext(), "Izin telah diberikan untuk menyimpan file di penyimpanan eksternal.", Toast.LENGTH_SHORT).show()
+                // Izin diberikan
+                Toast.makeText(
+                    requireContext(),
+                    "Izin telah diberikan untuk menyimpan file di penyimpanan eksternal.",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
-                Toast.makeText(requireContext(), "Izin diperlukan untuk menyimpan file di penyimpanan eksternal.", Toast.LENGTH_SHORT).show()
+                // Izin tidak diberikan
+                Toast.makeText(
+                    requireContext(),
+                    "Izin diperlukan untuk menyimpan file di penyimpanan eksternal.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
+
 
     @SuppressLint("SimpleDateFormat", "DiscouragedApi")
     private fun generatePdf() {
 
         val fileName = "ElectricityUsageReport.pdf"
-        val filePath = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
+        val filePath = File(requireContext().filesDir, "ElectricityUsageReport.pdf")
         val document = Document(PageSize.A4)
         val outputStream = FileOutputStream(filePath)
         val writer = PdfWriter.getInstance(document, outputStream)
@@ -403,22 +427,65 @@ class ReportFragment : Fragment() {
         writer.close()
         outputStream.close()
 
-        // Setelah menutup dokumen PDF, buat URI untuk file PDF
-        val uri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.provider", filePath)
 
-        // Buat Intent untuk membuka PDF
-        val openFileIntent = Intent(Intent.ACTION_VIEW)
-        openFileIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        openFileIntent.setDataAndType(uri, "application/pdf")
+        openPdfFile()
 
-        // Coba membuka PDF
-        try {
-            startActivity(openFileIntent)
-        } catch (e: ActivityNotFoundException) {
-            // Handle jika tidak ada aplikasi PDF viewer yang tersedia
-            Toast.makeText(requireContext(), "Tidak ada aplikasi PDF viewer yang tersedia", Toast.LENGTH_SHORT).show()
+//        // Setelah menutup dokumen PDF, buat URI untuk file PDF
+//        val uri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.provider", filePath)
+//
+//        // Buat Intent untuk membuka PDF
+//        val openFileIntent = Intent(Intent.ACTION_VIEW)
+//        openFileIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+//        openFileIntent.setDataAndType(uri, "application/pdf")
+//
+//        // Coba membuka PDF
+//        try {
+//            startActivity(openFileIntent)
+//        } catch (e: ActivityNotFoundException) {
+//            // Handle jika tidak ada aplikasi PDF viewer yang tersedia
+//            Toast.makeText(requireContext(), "Tidak ada aplikasi PDF viewer yang tersedia", Toast.LENGTH_SHORT).show()
+//        }
+
+    }
+
+    private fun openPdfFile() {
+
+        val pdfFile = File(requireContext().filesDir, "ElectricityUsageReport.pdf")
+
+
+        if (pdfFile.exists()) {
+            // Membuat URI untuk file PDF dengan FileProvider
+            val uri = FileProvider.getUriForFile(
+                requireContext(),
+                "com.dheevvvv.taelecvis.provider",
+                pdfFile
+            )
+
+            // Intent untuk membuka file PDF
+            val openFileIntent = Intent(Intent.ACTION_VIEW).apply {
+                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                setDataAndType(uri, "application/pdf")
+            }
+
+            // Memulai aktivitas untuk membuka file PDF
+            try {
+                startActivity(openFileIntent)
+            } catch (e: ActivityNotFoundException) {
+                // Handle jika tidak ada aplikasi PDF viewer yang tersedia
+                Toast.makeText(
+                    requireContext(),
+                    "Tidak ada aplikasi PDF viewer yang tersedia",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            // Handle jika file PDF tidak ditemukan
+            Toast.makeText(
+                requireContext(),
+                "File PDF tidak ditemukan",
+                Toast.LENGTH_SHORT
+            ).show()
         }
-
     }
 
     fun formatDecimal(value: Float): String {
