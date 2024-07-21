@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -60,7 +61,7 @@ class NotificationFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        showListNotifAlerts()
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item->
             when(item.itemId) {
                 R.id.home -> {
@@ -111,9 +112,11 @@ class NotificationFragment : Fragment() {
             if (kwhLimit.isEmpty() || selectedDate.isEmpty()){
                 Toast.makeText(context, "Mohon Masukan kWh dan Memilih Tanggal", Toast.LENGTH_SHORT).show()
             } else {
-                notificationAlertsViewModel.insertNotifAlerts(AlertsData(0, kwh = kwhLimit, userId = userId, date = date, statusActive = true, ""))
+                val alert = AlertsData(0, kwh = kwhLimit, userId = userId, date = date, statusActive = true, "")
+                notificationAlertsViewModel.insertNotifAlerts(alert)
                 Toast.makeText(requireContext(), "Alert berhasil dibuat", Toast.LENGTH_SHORT).show()
                 showListNotifAlerts()
+                Log.d("NOTIF_DEBUG", "Adding alert: $alert")
                 val title = "Alert Berhasil Dibuat"
                 val message = "Kamu akan diingatkan saat kWh mencapai batas $kwhLimit kWh pada $date"
                 val notificationHelper = NotificationHelper(requireContext())
@@ -121,8 +124,7 @@ class NotificationFragment : Fragment() {
                 notificationHelper.showNotification(requireContext() ,title, message)
             }
         }
-
-        notif()
+        
 
     }
 
@@ -166,53 +168,26 @@ class NotificationFragment : Fragment() {
         }
     }
 
-    private fun getKwh(dateString: String): Double {
-
-        var totalKwh = 0.0
+    private fun getKwh(dateString: String, callback: (Double) -> Unit) {
         homeViewModel.callApiGetPowerUsage(userId, dateString, dateString)
         homeViewModel.powerUsageData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            totalKwh = it.sumOf { it.globalActivePower}
+            val totalKwh = it.sumOf { it.globalActivePower }
+            Log.d("NOTIF_DEBUG", "Current KWH from callback: $totalKwh")
+            callback(totalKwh)
         })
-
-        return totalKwh
-
     }
+
+//    private fun getKwh(dateString: String, callback: (Double) -> Unit) {
+//        val totalKwh = 150.0 // Contoh nilai KWH manual
+//        Log.d("NOTIF_DEBUG", "Current KWH from callback: $totalKwh")
+//        callback(totalKwh)
+//    }
+
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun notif(){
-        val notificationHelper = NotificationHelper(requireContext())
-        notificationAlertsViewModel.getActiveAlerts(userId)
-        notificationAlertsViewModel.listActiveAlerts.observe(viewLifecycleOwner, androidx.lifecycle.Observer {activeAlert->
-            if (activeAlert!= null){
-                for(i in activeAlert){
-
-                    val currentKwh = getKwh(i.date)
-                    val today: LocalDate = LocalDate.now()
-                    val alertsDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(i.date)
-                    val alertsLocalDate = alertsDate!!.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-                    val currentDate = Calendar.getInstance().time
-
-                    if (currentKwh >= i.kwh.toDouble() && alertsDate==currentDate) {
-                        val title = "Peringatan KWH"
-                        val message = "Nilai KWH saat ini ($currentKwh) telah mencapai batas yang ditetapkan (${i.kwh}),"
-                        notificationHelper.createNotificationChannel()
-                        notificationHelper.showNotification(requireContext() ,title, message)
-                        // Simpan waktu terakhir terpicu saat notifikasi terpicu
-                        val currentTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-                        i.lastTriggeredTime = currentTime
-
-                        notificationAlertsViewModel.updateNotifAlerts(i)
-                    }
-                    if (isAlertExpired(i.date)) {
-                        i.statusActive = false
-                        notificationAlertsViewModel.updateNotifAlerts(i)
-                    }
-                }
-            }
-        })
-    }
-
-
+    @SuppressLint("NotifyDataSetChanged")
     fun showListNotifAlerts(){
         notificationAlertsViewModel.getNotifAlerts(userId)
         notificationAlertsViewModel.notifAlerts.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -220,6 +195,7 @@ class NotificationFragment : Fragment() {
                 val adapter = NotifAlertsAdapter(requireContext(),it)
                 binding.rvAlerts.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 binding.rvAlerts.adapter = adapter
+
                 adapter.onClick = {
                     val alertDialogBuilder = AlertDialog.Builder(requireContext())
                     alertDialogBuilder.setTitle("Konfirmasi Delete")
@@ -227,6 +203,7 @@ class NotificationFragment : Fragment() {
                     alertDialogBuilder.setPositiveButton("Ya") { _, _ ->
                         notificationAlertsViewModel.deleteNotifAlerts(it.alertsId, it.userId)
                         Toast.makeText(requireContext(), "Alert berhasil dihapus", Toast.LENGTH_SHORT).show()
+                        showListNotifAlerts()
                     }
                     alertDialogBuilder.setNegativeButton("Tidak") { dialog, _ ->
                         dialog.dismiss()
@@ -234,25 +211,58 @@ class NotificationFragment : Fragment() {
                     val alertDialog = alertDialogBuilder.create()
                     alertDialog.show()
                 }
-            } else{
-                Toast.makeText(context, "alerts data null", Toast.LENGTH_SHORT).show()
+
+                // Periksa dan tampilkan notifikasi berdasarkan alert
+                val today: Date = Calendar.getInstance().time
+                for (alert in it) {
+                    val alertDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(alert.date)
+                    if (alertDate != null && isSameDay(alertDate, today)) {
+                        getKwh(alert.date) { currentKwh ->
+                            if (currentKwh >= alert.kwh.toDouble() && !isAlertExpired(alertDate)) {
+                                Log.d("NOTIF_DEBUG", "Triggering alert with limit: ${alert.kwh} KWH")
+                                val title = "Peringatan KWH"
+                                val message = "Nilai KWH saat ini ($currentKwh) telah mencapai batas yang ditetapkan (${alert.kwh})."
+                                val notificationHelper = NotificationHelper(requireContext())
+                                notificationHelper.createNotificationChannel()
+                                notificationHelper.showNotification(requireContext(), title, message)
+
+                                // Simpan waktu terakhir terpicu saat notifikasi terpicu
+                                val currentTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+                                alert.lastTriggeredTime = currentTime
+                                notificationAlertsViewModel.updateNotifAlerts(alert)
+                            }
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(context, "Alerts data null", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SimpleDateFormat")
-    fun isAlertExpired(dateString: String): Boolean {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val currentDate = Date()
-
-        try {
-            val date = dateFormat.parse(dateString)
-            return date!!.before(currentDate) // Mengembalikan true jika tanggal alert telah lewat
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return false // Kembalikan false jika gagal mengonversi string ke tanggal
-        }
+    fun isAlertExpired(alertDate: Date): Boolean {
+        val currentDate = Calendar.getInstance()
+        currentDate.add(Calendar.DAY_OF_YEAR, -1) // Mengurangi satu hari dari tanggal sekarang
+        val expired = alertDate.before(currentDate.time)
+        Log.d("NOTIF_DEBUG", "Current Date: $currentDate, Alert Date: $alertDate, Is Expired: $expired")
+        return expired // Mengembalikan true jika tanggal alert telah lewat
     }
+
+    fun isSameDay(date1: Date?, date2: Date): Boolean {
+        val calendar1 = Calendar.getInstance()
+        val calendar2 = Calendar.getInstance()
+        if (date1 != null) {
+            calendar1.time = date1
+        }
+        calendar2.time = date2
+        val sameDay = calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+                calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR)
+        Log.d("NOTIF_DEBUG", "Date1: $date1, Date2: $date2, Is Same Day: $sameDay")
+        return sameDay
+    }
+
 
     private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()

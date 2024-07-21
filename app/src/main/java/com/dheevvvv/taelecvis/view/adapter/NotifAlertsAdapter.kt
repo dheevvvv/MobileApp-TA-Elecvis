@@ -48,6 +48,7 @@ class NotifAlertsAdapter(private val context: Context ,private val alerts: List<
             onClick?.invoke(list)
         }
 
+
     }
 
     override fun getItemCount(): Int {
@@ -97,9 +98,11 @@ class NotifAlertsAdapter(private val context: Context ,private val alerts: List<
         return String.format("%02d-%s-%04d", day, monthName, year)
     }
 
-    private fun isDatePassed(date: Date): Boolean {
-        val currentDate = Calendar.getInstance().time
-        return date.before(currentDate)
+    private fun isDatePassed(date: Date?): Boolean {
+        if (date == null) return false
+        val currentDate = Calendar.getInstance()
+        currentDate.add(Calendar.DAY_OF_YEAR, -1) // Mengurangi satu hari dari tanggal sekarang
+        return date.before(currentDate.time)
     }
 
 }

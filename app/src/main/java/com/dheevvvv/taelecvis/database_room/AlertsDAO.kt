@@ -24,6 +24,6 @@ interface AlertsDAO {
     @Query("SELECT statusActive FROM notification_alerts_table WHERE alertsId = :alertsId AND userId = :userId")
     fun getStatusActive(alertsId: Int, userId: Int) : Boolean
 
-    @Query("SELECT * FROM notification_alerts_table WHERE statusActive = 1 AND userId = :userId")
+    @Query("SELECT * FROM notification_alerts_table WHERE userId = :userId AND statusActive = true")
     fun getActiveAlerts(userId: Int) : List<AlertsData>
 }
