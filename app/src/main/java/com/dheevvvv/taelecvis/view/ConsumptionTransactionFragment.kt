@@ -154,7 +154,8 @@ class ConsumptionTransactionFragment : Fragment() {
             .toFloat()
 
         val totalEnergyKwh = totalEnergy / 1000
-        val estimatedPrice = totalEnergyKwh * 1500
+        val pricePerKwh = 1559
+        val estimatedPrice = totalEnergyKwh * pricePerKwh
 
         // Calculate composition of sub-metering Wh
         val subMetering1Energy = filteredData.sumOf { it.subMetering1.toDouble() }.toFloat()
@@ -166,14 +167,19 @@ class ConsumptionTransactionFragment : Fragment() {
         val subMetering2EnergykWh = filteredData.sumOf { it.subMetering2.toDouble() / 1000 }.toFloat()
         val subMetering3EnergykWh = filteredData.sumOf { it.subMetering3.toDouble() / 1000 }.toFloat()
 
+        //calculate estimated for each submeter
+        val estimatedSub1 = subMetering1EnergykWh * pricePerKwh
+        val estimatedSub2 = subMetering2EnergykWh * pricePerKwh
+        val estimatedSub3 = subMetering3EnergykWh * pricePerKwh
+
         binding.tvTotalKwh.setText("$totalEnergyKwh kWh")
         binding.tvTotalPrice.setText(formatToRupiah(estimatedPrice.toInt()))
         binding.tvTotalKwhKitchen.setText("$subMetering1EnergykWh kWh")
         binding.tvTotalKwhLoundryRoom.setText("$subMetering2EnergykWh kWh")
         binding.tvTotalKwhHeater.setText("$subMetering3EnergykWh kWh")
-        binding.tvTotalWhKitchen.setText("$subMetering1Energy Wh")
-        binding.tvTotalWhLoundryRoom.setText("$subMetering2Energy Wh")
-        binding.tvTotalWhHeater.setText("$subMetering3Energy Wh")
+        binding.tvTotalWhKitchen.setText(formatToRupiah(estimatedSub1.toInt()))
+        binding.tvTotalWhLoundryRoom.setText(formatToRupiah(estimatedSub2.toInt()))
+        binding.tvTotalWhHeater.setText(formatToRupiah(estimatedSub3.toInt()))
 
     }
 

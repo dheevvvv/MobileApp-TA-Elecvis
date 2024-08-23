@@ -145,57 +145,70 @@ class ReportFragment : Fragment() {
 
 
         binding.cvBulanIni.setOnClickListener {
-            val option = "MingguIni"
-            val filteredDates = filterDates(selectedStartDate, selectedEndDate, option)
-            val filteredStartDate = filteredDates.first
-            val filteredEndDate = filteredDates.second
-            val (totalEnergy, estimatedPrice) = calculateSubMetering(datas, filteredStartDate, filteredEndDate)
-            binding.tvPengeluaranKwh.text = formatDecimal(totalEnergy)
-            binding.tvPengeluaranRupiah.text = formatToIDR(estimatedPrice)
-            binding.cvBulanLalu.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
-            binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
-
+            if (selectedStartDate!="" && selectedEndDate!="" ){
+                val option = "MingguIni"
+                val filteredDates = filterDates(selectedStartDate, selectedEndDate, option)
+                val filteredStartDate = filteredDates.first
+                val filteredEndDate = filteredDates.second
+                val (totalEnergy, estimatedPrice) = calculateSubMetering(datas, filteredStartDate, filteredEndDate)
+                binding.tvPengeluaranKwh.text = formatDecimal(totalEnergy) + "kWh"
+                binding.tvPengeluaranRupiah.text = formatToIDR(estimatedPrice)
+                binding.cvBulanLalu.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
+                binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
+            } else{
+                Toast.makeText(context, "Silahkan Pilih Periode Tanggal Terlebiih Dahulu", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.cvBulanLalu.setOnClickListener {
-            val option2 = "MingguLalu"
-            val filteredDates2 = filterDates(selectedStartDate, selectedEndDate, option2)
-            val filteredStartDate2 = filteredDates2.first
-            val filteredEndDate2 = filteredDates2.second
-            val option = "MingguIni"
-            val filteredDates = filterDates(selectedStartDate, selectedEndDate, option)
-            val filteredStartDate = filteredDates.first
-            val filteredEndDate = filteredDates.second
-            val (totalEnergy, estimatedPrice) = calculateSubMetering(datas, filteredStartDate2, filteredEndDate2)
-            val (energyDifference, priceDifference, pricePercentageDiff) = calculateWeeklyEnergyAndPriceDifference(datas, filteredStartDate, filteredEndDate, filteredStartDate2, filteredEndDate2,
-                1500F
-            )
-            binding.tvPengeluaranRupiah.text = formatToIDR(estimatedPrice)
-            binding.tvPengeluaranKwh.text = formatDecimal(totalEnergy)
+            if (selectedStartDate!="" && selectedEndDate!=""){
+                val option2 = "MingguLalu"
+                val filteredDates2 = filterDates(selectedStartDate, selectedEndDate, option2)
+                val filteredStartDate2 = filteredDates2.first
+                val filteredEndDate2 = filteredDates2.second
+                val option = "MingguIni"
+                val filteredDates = filterDates(selectedStartDate, selectedEndDate, option)
+                val filteredStartDate = filteredDates.first
+                val filteredEndDate = filteredDates.second
+                val (totalEnergy, estimatedPrice) = calculateSubMetering(datas, filteredStartDate2, filteredEndDate2)
+                val (energyDifference, priceDifference, pricePercentageDiff) = calculateWeeklyEnergyAndPriceDifference(datas, filteredStartDate, filteredEndDate, filteredStartDate2, filteredEndDate2,
+                    1500F
+                )
+                binding.tvPengeluaranRupiah.text = formatToIDR(estimatedPrice)
+                binding.tvPengeluaranKwh.text = formatDecimal(totalEnergy) + "kWh"
 
-            binding.tvSelisihKwh.text = formatDecimal(energyDifference) + "kWh"
-            binding.tvSelisihRp.text = formatToIDR(priceDifference)
-            if (priceDifference < 0) {
-                binding.tvHematBoros.text = "Boros"
-                binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.red))
-                binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.white2)
-                val absoluteValue = Math.abs(pricePercentageDiff)
-                binding.circularProgressBar.progress = absoluteValue.toInt()
+                binding.tvSelisihKwh.text = formatDecimal(energyDifference) + "kWh"
+                binding.tvSelisihRp.text = formatToIDR(priceDifference)
+                if (priceDifference < 0) {
+                    binding.tvHematBoros.text = "Boros"
+                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.white2)
+                    val absoluteValue = Math.abs(pricePercentageDiff)
+                    binding.circularProgressBar.progress = absoluteValue.toInt()
+                } else if (priceDifference>0){
+                    binding.tvHematBoros.text = "Hemat"
+                    binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+                    binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+                    binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.green))
+                    binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.white2)
+                    val absoluteValue = Math.abs(pricePercentageDiff)
+                    binding.circularProgressBar.progress = absoluteValue.toInt()
+                }
+
+                if (!pricePercentageDiff.isNaN() && !pricePercentageDiff.isInfinite()){
+                    binding.progressText.text = String.format("%.2f %%", pricePercentageDiff)
+                } else{
+                    binding.progressText.text = "0.0%"
+                }
+
+                binding.cvBulanLalu.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
+                binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
             } else{
-                binding.tvHematBoros.text = "Hemat"
-                binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.green))
-                binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(), R.color.white2)
-                val absoluteValue = Math.abs(pricePercentageDiff)
-                binding.circularProgressBar.progress = absoluteValue.toInt()
+                Toast.makeText(context, "Silahkan Pilih Tanggal Terlebih Dahulu", Toast.LENGTH_SHORT).show()
             }
 
-            binding.progressText.text = String.format("%.2f %%", pricePercentageDiff)
-            binding.cvBulanLalu.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_green))
-            binding.cvBulanIni.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white2))
         }
 
         binding.btnUnduhPdf.setOnClickListener {

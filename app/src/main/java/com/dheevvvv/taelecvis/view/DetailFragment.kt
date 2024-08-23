@@ -359,7 +359,7 @@ class DetailFragment : Fragment() {
                         yAxis.axisMinimum = 0f
 
                         barChart.invalidate()
-                        binding.tvTitleDetail.text = "Intensitas Listrik"
+                        binding.tvTitleDetail.text = "Intensitas/Arus Listrik"
                         binding.mcPier.visibility = View.GONE
                         binding.mcChart.visibility = View.GONE
 

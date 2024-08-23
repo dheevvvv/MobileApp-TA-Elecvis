@@ -119,42 +119,54 @@ class RecomendationFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun AverageVoltage(avg:Float){
-        binding.tv80.setText("> 220 volt")
-        binding.tv40.setText("< 220 volt")
+        binding.tv80.setText("> 242 V atau <198 V")
+        binding.tv40.setText("198 V ≤ V ≤ 242 V")
         binding.tvNetral.setText("Stabil")
         binding.tvOver.setText("Warning")
         val actualValue = averageVoltage
-        if (actualValue > THRESHOLD_VALUE_VOLTASE_TEGANGAN) {
+        if (actualValue > THRESHOLD_VALUE_VOLTASE_TEGANGAN_ATAS) {
             // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
             binding.tvRecommendation.text = getString(R.string.rekom_voltase_warning)
-            val selisih = actualValue - THRESHOLD_VALUE_VOLTASE_TEGANGAN
-            val persentase = selisih / THRESHOLD_VALUE_VOLTASE_TEGANGAN * 100
+            val selisih = actualValue - THRESHOLD_VALUE_VOLTASE_TEGANGAN_ATAS
+            val persentase = selisih / THRESHOLD_VALUE_VOLTASE_TEGANGAN_ATAS * 100
             binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-            binding.progressText.setText("${persentase.toInt()} %")
+            binding.progressText.setText(String.format("%.2f %%", persentase))
             binding.tvHematBoros.setText("Warning")
             binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.red))
             binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
             binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
             binding.circularProgressBar.progress = persentase.toInt()
-        } else {
+        } else if (actualValue >= THRESHOLD_VALUE_VOLTASE_TEGANGAN_BAWAH && actualValue <= THRESHOLD_VALUE_VOLTASE_TEGANGAN_ATAS){
             // Jika nilai puncak belum melebihi ambang batas, berikan rekomendasi lain
             binding.tvRecommendation.text = getString(R.string.rekom_voltase_aman)
-            val selisih = THRESHOLD_VALUE_VOLTASE_TEGANGAN - actualValue
-            val persentase = selisih / THRESHOLD_VALUE_VOLTASE_TEGANGAN * 100
+            val selisih = THRESHOLD_VALUE_VOLTASE_TEGANGAN_ATAS - actualValue
+            val persentase = selisih / THRESHOLD_VALUE_VOLTASE_TEGANGAN_ATAS * 100
             binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-            binding.progressText.setText("${persentase.toInt()} %")
+            binding.progressText.setText(String.format("%.2f %%", persentase))
             binding.tvHematBoros.setText("Stabil")
             binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.green))
             binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
             binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.circularProgressBar.progress = persentase.toInt()
+        } else if (actualValue < THRESHOLD_VALUE_VOLTASE_TEGANGAN_BAWAH){
+            // Jika nilai puncak melebihi ambang batas, berikan rekomendasi sesuai
+            binding.tvRecommendation.text = getString(R.string.rekom_voltase_warning)
+            val selisih = actualValue - THRESHOLD_VALUE_VOLTASE_TEGANGAN_BAWAH
+            val persentase = selisih / THRESHOLD_VALUE_VOLTASE_TEGANGAN_BAWAH * 100
+            binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.progressText.setText(String.format("%.2f %%", persentase))
+            binding.tvHematBoros.setText("Warning")
+            binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.red))
+            binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
+            binding.tvHematBoros.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
             binding.circularProgressBar.progress = persentase.toInt()
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun Intensitas(avg:Float){
-        binding.tv80.setText("> 15 ampere")
-        binding.tv40.setText("< 15 ampere")
+        binding.tv80.setText("> 32 A (ampere)")
+        binding.tv40.setText("<= 32 A(ampere)")
         binding.tvNetral.setText("Aman")
         binding.tvOver.setText("Warning")
         val actualValue = averageIntensitas
@@ -164,7 +176,7 @@ class RecomendationFragment : Fragment() {
             val selisih = actualValue - THRESHOLD_VALUE_INTENSITAS_LISTRIK
             val persentase = selisih / THRESHOLD_VALUE_INTENSITAS_LISTRIK * 100
             binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-            binding.progressText.setText("${persentase.toInt()} %")
+            binding.progressText.setText(String.format("%.2f %%", persentase))
             binding.tvHematBoros.setText("Warning")
             binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.red))
             binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
@@ -176,7 +188,7 @@ class RecomendationFragment : Fragment() {
             val selisih = THRESHOLD_VALUE_INTENSITAS_LISTRIK - actualValue
             val persentase = selisih / THRESHOLD_VALUE_INTENSITAS_LISTRIK * 100
             binding.progressText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-            binding.progressText.setText("${persentase.toInt()} %")
+            binding.progressText.setText(String.format("%.2f %%", persentase))
             binding.tvHematBoros.setText("Aman")
             binding.circularProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(),R.color.green))
             binding.circularProgressBar.trackColor = ContextCompat.getColor(requireContext(),R.color.grey)
@@ -263,8 +275,9 @@ class RecomendationFragment : Fragment() {
     companion object {
         private const val THRESHOLD_VALUE_TREN_KONSUMSI_HARIAN = 0.15
         private const val THRESHOLD_VALUE_PUNCAK_LISTRIK = 0.9
-        private const val THRESHOLD_VALUE_INTENSITAS_LISTRIK = 15
-        private const val THRESHOLD_VALUE_VOLTASE_TEGANGAN = 220
+        private const val THRESHOLD_VALUE_INTENSITAS_LISTRIK = 32
+        private const val THRESHOLD_VALUE_VOLTASE_TEGANGAN_ATAS = 242
+        private const val THRESHOLD_VALUE_VOLTASE_TEGANGAN_BAWAH = 198
         private const val THRESHOLD_VALUE_SUBMETER = 400
         fun newInstance(dataId:Int): RecomendationFragment {
             val fragment = RecomendationFragment()

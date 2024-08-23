@@ -39,8 +39,8 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 
-private const val LOW_VOLTAGE_THRESHOLD = 100
-private const val HIGH_VOLTAGE_THRESHOLD = 240 // batas tinggi tegangan
+private const val LOW_VOLTAGE_THRESHOLD = 198
+private const val HIGH_VOLTAGE_THRESHOLD = 242 // batas tinggi tegangan
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -527,7 +527,7 @@ class HomeFragment : Fragment() {
         }
 
         // Create dataset for average voltages
-        val dataSet = BarDataSet(entries, "Average Voltage")
+        val dataSet = BarDataSet(entries, "Normal Voltage")
         dataSet.color = Color.BLUE // Set color for the bars
 
         // Create dataset for disturbed points
